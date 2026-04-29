@@ -1,0 +1,31 @@
+<div class="saas-page pbi-page">
+  <div class="saas-shell">
+    <header class="topbar saas-panel">
+      <div>
+        <p class="eyebrow">BI Workspace</p>
+        <h1 class="brand">Power BI Financial Dashboard</h1>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="saas-btn saas-btn-secondary theme-toggle-btn" (click)="toggleTheme()">
+          {{ isDarkMode ? 'Light' : 'Dark' }}
+        </button>
+        <a class="back-link saas-btn saas-btn-secondary" routerLink="/">Back to Portfolio</a>
+      </div>
+    </header>
+
+    <section class="dashboard-section saas-panel">
+      <div class="hero-copy">
+        <div class="badge">Live Financial Analytics</div>
+        <p class="eyebrow">Power BI Report</p>
+        <h2>Power BI Financial Dashboard</h2>
+        <p>Analyse automatique des indicateurs financiers pour suivre la performance, la marge et la dynamique de croissance en temps reel.</p>
+        <div class="action-row">
+          <button id="openReportBtn" class="saas-btn saas-btn-primary" (click)="openReport()">Open Report ↗</button>
+        </div>
+      </div>
+      <div class="dashboard-wrapper">
+        <iframe title="Getting Started in Power BI" [src]="safeReportUrl" allowfullscreen></iframe>
+      </div>
+    </section>
+  </div>
+</div>

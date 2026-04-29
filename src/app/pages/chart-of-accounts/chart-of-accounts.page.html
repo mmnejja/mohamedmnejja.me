@@ -1,0 +1,28 @@
+<div class="saas-page coa-page">
+  <div class="saas-shell">
+    <header class="topbar saas-panel">
+      <div class="title-wrap">
+        <p class="eyebrow">AI Finance Assistant</p>
+        <h1>Chart of Accounts AI Assistant</h1>
+        <p>Ask for an account name and get the correct account number from your AI workflow.</p>
+      </div>
+      <div class="actions">
+        <span class="status-pill">Realtime Response</span>
+        <button type="button" class="saas-btn saas-btn-secondary theme-toggle-btn" (click)="toggleTheme()">
+          {{ isDarkMode ? 'Light' : 'Dark' }}
+        </button>
+        <a class="home-link saas-btn saas-btn-secondary" routerLink="/">Back to Portfolio</a>
+      </div>
+    </header>
+
+    <main class="chat-shell saas-panel" aria-label="Chart of Accounts AI chat">
+      <section class="messages" aria-live="polite" aria-label="Messages">
+        <div class="msg" *ngFor="let msg of messages" [ngClass]="msg.role">{{ msg.content }}</div>
+      </section>
+      <form class="input-wrap" [formGroup]="form" (ngSubmit)="send()">
+        <textarea formControlName="input" placeholder="Type an account name, for example: Office supplies" rows="1"></textarea>
+        <button id="sendBtn" class="saas-btn saas-btn-primary" type="submit" [disabled]="sending">Send</button>
+      </form>
+    </main>
+  </div>
+</div>
