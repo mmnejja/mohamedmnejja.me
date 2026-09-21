@@ -1,0 +1,57 @@
+<div class="page-shell">
+  <section class="hero-copy">
+    <h1>Send your report to n8n in one step</h1>
+    <p>
+      Upload a CSRD HTML report, trigger the automation workflow, and let n8n handle the email and AI processing.
+    </p>
+
+
+    <div class="info-panel">
+      <h3>What happens after upload</h3>
+      <ul>
+        <li *ngFor="let step of steps">{{ step }}</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card csrd-card">
+      <div class="card-header">
+      <div>
+        <h2>Submit your CSRD HTML report</h2>
+      </div>
+      <div class="status-pill" [class.status-pill-loading]="loading">
+        <span class="spinner" *ngIf="loading"></span>
+        <span>{{ loading ? 'Sending to n8n' : '' }}</span>
+      </div>
+    </div>
+
+    <form #formRef="ngForm" (ngSubmit)="onSubmit(formRef)" novalidate>
+      <label class="field">
+        <span>Name</span>
+        <input name="name" ngModel placeholder="Jane Doe" required autocomplete="name" />
+        <small>We use this to personalize the workflow response.</small>
+      </label>
+
+      <label class="field">
+        <span>Email</span>
+        <input name="email" type="email" ngModel placeholder="jane@company.com" required autocomplete="email" />
+        <small>The result is sent back through your n8n automation.</small>
+      </label>
+
+      <label class="field file-field">
+        <span>HTML report</span>
+        <input type="file" accept=".html,text/html" (change)="onFileChange($event)" required />
+        <p class="file-hint">Only .html files are accepted.</p>
+        <p class="file-name" *ngIf="fileName">Selected: {{ fileName }}</p>
+      </label>
+
+
+      <div class="feedback feedback-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="feedback feedback-success" *ngIf="message">{{ message }}</div>
+      <button type="submit" class="submit-btn" [disabled]="loading">
+        <span class="spinner" *ngIf="loading"></span>
+        <span>{{ loading ? 'Uploading...' : 'Send to n8n' }}</span>
+      </button>
+    </form>
+  </section>
+</div>

@@ -1,29 +1,25 @@
-<div class="saas-page csrd-page">
-  <div class="ambient ambient-a" aria-hidden="true"></div>
-  <div class="ambient ambient-b" aria-hidden="true"></div>
-  <div class="saas-shell">
-    <header class="topbar saas-panel">
-      <div class="brand"><span class="brand-dot" aria-hidden="true"></span><span>CSRD Reporting Simulation</span></div>
-      <div class="header-actions">
-        <button type="button" class="saas-btn saas-btn-secondary theme-toggle-btn" (click)="toggleTheme()">
-          {{ isDarkMode ? 'Light' : 'Dark' }}
-        </button>
-        <a class="back-link saas-btn saas-btn-secondary" routerLink="/">Back to Portfolio</a>
+<section class="hero hero-compact">
+  <div class="container">
+    <div class="hero-content compact">
+      <h1>Upload, automate, and review CSRD reports faster</h1>
+      <p class="hero-subtitle">
+        Send HTML reports into n8n for email, Gmail, and AI processing without leaving this page.
+      </p>
+
+      <div class="hero-stats compact-stats">
+        <div class="stat-card" *ngFor="let stat of heroStats">
+          <span>{{ stat.value }}</span>
+          <p>{{ stat.label }}</p>
+        </div>
       </div>
-    </header>
-    <main class="layout">
-      <section class="card hero saas-panel"><p class="eyebrow">ESG reporting workflow</p><h1>Submit a CSRD report by email</h1><p class="lead">Upload an HTML report, validate the submission, and send it directly to our secure backend.</p></section>
-      <section class="card form-wrap saas-panel">
-        <h2>Send report</h2>
-        <p class="form-intro">Please complete the form and upload a .html report.</p>
-        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-          <div class="field"><label for="name">Name</label><input id="name" type="text" formControlName="name" placeholder="Your name" /></div>
-          <div class="field"><label for="email">Email</label><input id="email" type="email" formControlName="email" placeholder="you@company.com" /></div>
-          <div class="field"><label for="reportFile">HTML report</label><input id="reportFile" type="file" accept=".html,text/html" (change)="onFileChange($event)" /><p class="hint">Only .html files are accepted.</p></div>
-          <button class="submit-btn saas-btn saas-btn-primary" type="submit" [class.is-loading]="loading" [disabled]="loading"><span class="spinner" aria-hidden="true"></span><span class="btn-label">Send CSRD Report</span></button>
-          <p class="status" [class.success]="statusType === 'success'" [class.error]="statusType === 'error'">{{ status }}</p>
-        </form>
-      </section>
-    </main>
+
+      <div class="hero-actions compact-actions">
+        <a class="btn btn-small" routerLink="/csrd-reporting-simulation">Open Simulation</a>
+        <a class="btn btn-outline" href="https://mohamedmnejja.me//csrd-reporting-simulation" target="_blank" rel="noopener">Learn CSRD</a>
+        <a class="btn btn-primary" routerLink="/csrd-reporting-simulation">Begin Training</a>
+      </div>
+
+      <p class="cta-note">One screen. One action. No scrolling needed.</p>
+    </div>
   </div>
-</div>
+</section>

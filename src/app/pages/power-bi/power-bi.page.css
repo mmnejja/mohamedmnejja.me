@@ -1,114 +1,18 @@
-:host{display:block}
-
-.pbi-page {
-  padding: 1.2rem 0;
-  font-family: inherit;
+.hero {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }
 
-.topbar {
-  margin-bottom: 1rem;
-  padding: 1rem 1.2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
+.hero-content {
+  max-width: 700px;
 }
 
-.brand {
-  margin: 0;
-  font-size: clamp(1.15rem, 2vw, 1.55rem);
-}
-
-.eyebrow {
-  color: var(--saas-accent);
-  text-transform: uppercase;
-  letter-spacing: 0.13em;
-  font-weight: 700;
-  font-size: 0.74rem;
-}
-
-.dashboard-section {
-  padding: 1.25rem;
-  display: grid;
-  gap: 1rem;
-}
-
-.hero-copy h2 {
-  font-size: clamp(1.25rem, 2.4vw, 2rem);
-  margin: 0.4rem 0;
-}
-
-.hero-copy p {
-  color: var(--saas-muted);
-  max-width: 72ch;
-}
-
-.badge {
-  width: fit-content;
-  background: rgba(38, 194, 129, 0.16);
-  border: 1px solid rgba(38, 194, 129, 0.35);
-  color: var(--saas-text);
-  border-radius: 999px;
-  font-size: 0.72rem;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  font-weight: 800;
-  padding: 0.34rem 0.7rem;
-  margin-bottom: 0.6rem;
-}
-
-.action-row {
+.hero-content h1 {
   margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
-.dashboard-wrapper {
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid var(--saas-border);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03), 0 18px 42px rgba(10, 37, 64, 0.28);
-}
-
-.dashboard-wrapper iframe {
-  width: 100%;
-  min-height: 620px;
-  border: 0;
-  background: #0c152d;
-}
-
-.back-link {
-  text-decoration: none;
-}
-
-.header-actions {
-  display: flex;
-  gap: 0.6rem;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-@media (max-width: 900px) {
-  .topbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .header-actions {
-    width: 100%;
-    justify-content: flex-start;
-  }
-}
-
-@media (max-width: 680px) {
-  .pbi-page {
-    padding: 0.5rem 0;
-  }
-
-  .dashboard-section {
-    padding: 0.9rem;
-  }
-
-  .dashboard-wrapper iframe {
-    min-height: 460px;
-  }
+.hero-subtitle {
+  font-size: 1.1rem;
+  line-height: 1.8;
 }

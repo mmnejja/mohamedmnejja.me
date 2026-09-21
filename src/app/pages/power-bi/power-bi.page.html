@@ -1,31 +1,61 @@
-<div class="saas-page pbi-page">
-  <div class="saas-shell">
-    <header class="topbar saas-panel">
-      <div>
-        <p class="eyebrow">BI Workspace</p>
-        <h1 class="brand">Power BI Financial Dashboard</h1>
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <span class="eyebrow">Business Intelligence</span>
+      <h1>Power BI Financial Dashboard</h1>
+      <p class="hero-subtitle">
+        Advanced financial analytics with interactive dashboards. Transform your data into actionable insights
+        with Power BI's cutting-edge visualization technology.
+      </p>
+      <div class="hero-actions">
+        <button class="btn btn-small">Open Report</button>
+        <button class="btn btn-outline">Documentation</button>
       </div>
-      <div class="header-actions">
-        <button type="button" class="saas-btn saas-btn-secondary theme-toggle-btn" (click)="toggleTheme()">
-          {{ isDarkMode ? 'Light' : 'Dark' }}
-        </button>
-        <a class="back-link saas-btn saas-btn-secondary" routerLink="/">Back to Portfolio</a>
-      </div>
-    </header>
-
-    <section class="dashboard-section saas-panel">
-      <div class="hero-copy">
-        <div class="badge">Live Financial Analytics</div>
-        <p class="eyebrow">Power BI Report</p>
-        <h2>Power BI Financial Dashboard</h2>
-        <p>Analyse automatique des indicateurs financiers pour suivre la performance, la marge et la dynamique de croissance en temps reel.</p>
-        <div class="action-row">
-          <button id="openReportBtn" class="saas-btn saas-btn-primary" (click)="openReport()">Open Report ↗</button>
-        </div>
-      </div>
-      <div class="dashboard-wrapper">
-        <iframe title="Getting Started in Power BI" [src]="safeReportUrl" allowfullscreen></iframe>
-      </div>
-    </section>
+    </div>
   </div>
-</div>
+</section>
+
+<!-- Dashboards Section -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Dashboards</span>
+      <h2>Comprehensive Analytics</h2>
+    </div>
+    <div class="grid-2">
+      <div *ngFor="let dashboard of dashboards" class="card">
+        <h3>{{ dashboard.title }}</h3>
+        <p>{{ dashboard.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Why Choose Us</span>
+      <h2>Key Advantages</h2>
+    </div>
+    <div class="card highlight">
+      <ul class="list">
+        <li *ngFor="let benefit of benefits">{{ benefit }}</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section section-alt">
+  <div class="container">
+    <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+      <h2>Make Data-Driven Decisions</h2>
+      <p style="margin-top: 1rem; margin-bottom: 2rem;">
+        Start tracking your financial metrics with interactive Power BI dashboards today.
+      </p>
+      <button class="btn btn-primary">Get Started Now</button>
+    </div>
+  </div>
+</section>

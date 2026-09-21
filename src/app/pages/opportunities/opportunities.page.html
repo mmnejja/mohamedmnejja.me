@@ -1,0 +1,51 @@
+<section class="opportunities-page">
+  <div class="container">
+    <header class="page-header">
+      <span class="eyebrow">Career Opportunities</span>
+      <h1>Career Opportunities</h1>
+      <p>
+        These are selected career opportunities aligned with my professional profile in accounting,
+        audit, finance, and business performance.
+      </p>
+    </header>
+
+    <div class="opportunity-grid">
+      <article class="opportunity-card" *ngFor="let opportunity of opportunities">
+        <div class="opportunity-header">
+          <span class="opportunity-badge">{{ opportunity.badge }}</span>
+        </div>
+
+        <a
+          class="opportunity-main"
+          [href]="opportunity.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          [attr.aria-label]="'View opportunity: ' + opportunity.title"
+        >
+          <h2>{{ opportunity.title }}</h2>
+          <p>{{ opportunity.description }}</p>
+        </a>
+
+        <div class="opportunity-footer">
+          <span class="opportunity-meta">LinkedIn opportunity</span>
+          <a
+            class="apply-btn"
+            [href]="opportunity.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            [attr.aria-label]="'Apply on LinkedIn for ' + opportunity.title"
+          >
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                fill="currentColor"
+                d="M6.94 8.5A1.5 1.5 0 1 1 6.94 5.5a1.5 1.5 0 0 1 0 3zm-1.42 1.73h2.84V18h-2.84zm5.03 0h2.72v1.39h.04c.38-.72 1.31-1.48 2.7-1.48 2.89 0 3.42 1.9 3.42 4.37V18h-2.84v-16.8c0-1.1-.02-2.52-1.54-2.52-1.55 0-1.78 1.2-1.78 2.45V18h-2.84z"
+              ></path>
+            </svg>
+            <span>Apply on LinkedIn</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

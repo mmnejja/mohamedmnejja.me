@@ -1,28 +1,61 @@
-<div class="saas-page coa-page">
-  <div class="saas-shell">
-    <header class="topbar saas-panel">
-      <div class="title-wrap">
-        <p class="eyebrow">AI Finance Assistant</p>
-        <h1>Chart of Accounts AI Assistant</h1>
-        <p>Ask for an account name and get the correct account number from your AI workflow.</p>
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <span class="eyebrow">AI-Powered Solution</span>
+      <h1>Chart of Accounts AI</h1>
+      <p class="hero-subtitle">
+        Streamline your accounting structure with intelligent, AI-powered Chart of Accounts management.
+        Get smart suggestions, ensure compliance, and scale effortlessly.
+      </p>
+      <div class="hero-actions">
+        <button class="btn btn-small">Open Assistant</button>
+        <button class="btn btn-outline">Learn More</button>
       </div>
-      <div class="actions">
-        <span class="status-pill">Realtime Response</span>
-        <button type="button" class="saas-btn saas-btn-secondary theme-toggle-btn" (click)="toggleTheme()">
-          {{ isDarkMode ? 'Light' : 'Dark' }}
-        </button>
-        <a class="home-link saas-btn saas-btn-secondary" routerLink="/">Back to Portfolio</a>
-      </div>
-    </header>
-
-    <main class="chat-shell saas-panel" aria-label="Chart of Accounts AI chat">
-      <section class="messages" aria-live="polite" aria-label="Messages">
-        <div class="msg" *ngFor="let msg of messages" [ngClass]="msg.role">{{ msg.content }}</div>
-      </section>
-      <form class="input-wrap" [formGroup]="form" (ngSubmit)="send()">
-        <textarea formControlName="input" placeholder="Type an account name, for example: Office supplies" rows="1"></textarea>
-        <button id="sendBtn" class="saas-btn saas-btn-primary" type="submit" [disabled]="sending">Send</button>
-      </form>
-    </main>
+    </div>
   </div>
-</div>
+</section>
+
+<!-- Features Section -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Features</span>
+      <h2>Powerful Capabilities</h2>
+    </div>
+    <div class="grid-2">
+      <div *ngFor="let feature of features" class="card">
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Why Choose Us</span>
+      <h2>Key Benefits</h2>
+    </div>
+    <div class="card highlight">
+      <ul class="list">
+        <li *ngFor="let benefit of benefits">{{ benefit }}</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section section-alt">
+  <div class="container">
+    <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+      <h2>Ready to Transform Your Accounting?</h2>
+      <p style="margin-top: 1rem; margin-bottom: 2rem;">
+        Start using Chart of Accounts AI today and automate your financial structure management.
+      </p>
+      <button class="btn btn-primary">Request a Demo</button>
+    </div>
+  </div>
+</section>

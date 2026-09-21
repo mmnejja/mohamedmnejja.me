@@ -6,6 +6,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/home/home.page').then((m) => m.HomePageComponent)
   },
   {
+    path: 'opportunities',
+    loadComponent: () =>
+      import('./pages/opportunities/opportunities.page').then((m) => m.OpportunitiesPageComponent)
+  },
+  {
     path: 'chart-of-accounts-ai',
     loadComponent: () =>
       import('./pages/chart-of-accounts/chart-of-accounts.page').then((m) => m.ChartOfAccountsPageComponent)
@@ -16,7 +21,16 @@ export const routes: Routes = [
   },
   {
     path: 'csrd-reporting-simulation',
-    loadComponent: () => import('./pages/csrd-reporting/csrd-reporting.page').then((m) => m.CsrdReportingPageComponent)
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/csrd-form/csrd-form.component').then((m) => m.CsrdFormComponent)
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent)
+      }
+    ]
   },
   {
     path: '**',
