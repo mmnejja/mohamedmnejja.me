@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules/
 dist/
 .angular/
@@ -13,3 +14,20 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+=======
+node_modules/
+dist/
+.angular/
+out-tsc/
+.env
+.env.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+>>>>>>> 4ba68aba3d9b7c39ac77f2d69d8772537f0fcf44
