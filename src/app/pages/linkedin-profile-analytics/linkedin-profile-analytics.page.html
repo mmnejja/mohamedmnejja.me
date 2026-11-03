@@ -1,6 +1,17 @@
-<iframe
-  class="dashboard-frame"
-  src="assets/dash-branded.html"
-  title="LinkedIn Profile Views Analytics Dashboard"
-  loading="eager">
-</iframe>
+<section #dashboardShell class="dashboard-shell" [class.expanded]="isFullscreen">
+  <iframe
+    class="dashboard-frame"
+    src="assets/dash-branded.html"
+    title="LinkedIn Profile Views Analytics Dashboard"
+    loading="eager">
+  </iframe>
+  <button
+    class="fullscreen-button"
+    type="button"
+    (click)="toggleFullscreen()"
+    [attr.aria-label]="isFullscreen ? 'Exit full screen' : 'Open full screen'"
+    [attr.title]="isFullscreen ? 'Exit full screen' : 'Open full screen'">
+    <span aria-hidden="true">{{ isFullscreen ? '⤢' : '⛶' }}</span>
+    <span class="fullscreen-label">{{ isFullscreen ? 'Exit Full Screen' : 'Full Screen' }}</span>
+  </button>
+</section>
