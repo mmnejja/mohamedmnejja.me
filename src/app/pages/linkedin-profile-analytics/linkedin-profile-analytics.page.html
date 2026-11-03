@@ -1,10 +1,7 @@
 <section #dashboardShell class="dashboard-shell" [class.expanded]="isFullscreen">
-  <iframe
-    class="dashboard-frame"
-    src="assets/dash-branded.html"
-    title="LinkedIn Profile Views Analytics Dashboard"
-    loading="eager">
-  </iframe>
+  <div #dashboardHost class="dashboard-runtime" aria-label="LinkedIn Profile Views Analytics Dashboard">
+    <p *ngIf="loadError" class="dashboard-error">{{ loadError }}</p>
+  </div>
   <button
     class="fullscreen-button"
     type="button"
