@@ -30,11 +30,11 @@ export class HomePageComponent {
       route: '/chart-of-accounts-ai'
     },
     {
-      title: 'Power BI Financial Dashboard',
-      description: 'Comprehensive financial analytics dashboard with Power BI integration',
-      tags: ['Power BI', 'Analytics', 'Dashboard'],
-      actionLabel: 'Open Report',
-      route: '/power-bi-financial-dashboard'
+      title: 'LinkedIn Profile Views Analytics',
+      description: 'Interactive analytics dashboard for LinkedIn profile viewer insights',
+      tags: ['LinkedIn', 'Analytics', 'Dashboard'],
+      actionLabel: 'Open Dashboard',
+      route: '/linkedin-profile-analytics'
     },
     {
       title: 'CSRD Reporting Simulation',

@@ -16,8 +16,16 @@ export const routes: Routes = [
       import('./pages/chart-of-accounts/chart-of-accounts.page').then((m) => m.ChartOfAccountsPageComponent)
   },
   {
+    path: 'linkedin-profile-analytics',
+    loadComponent: () =>
+      import('./pages/linkedin-profile-analytics/linkedin-profile-analytics.page').then(
+        (m) => m.LinkedinProfileAnalyticsPageComponent
+      )
+  },
+  {
     path: 'power-bi-financial-dashboard',
-    loadComponent: () => import('./pages/power-bi/power-bi.page').then((m) => m.PowerBiPageComponent)
+    redirectTo: 'linkedin-profile-analytics',
+    pathMatch: 'full'
   },
   {
     path: 'csrd-reporting-simulation',
