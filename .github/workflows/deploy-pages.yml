@@ -44,8 +44,10 @@ jobs:
       - name: Publish build to configured Pages source
         run: |
           cp -R dist/mohamedmnejja-portfolio/. .
+          mkdir -p linkedin-profile-analytics
+          cp dist/mohamedmnejja-portfolio/index.html linkedin-profile-analytics/index.html
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add 404.html .nojekyll CNAME index.html assets 3rdpartylicenses.txt *.js *.css
+          git add 404.html .nojekyll CNAME index.html linkedin-profile-analytics assets 3rdpartylicenses.txt *.js *.css
           git commit -m "Deploy Angular site [skip ci]" || echo "No generated files changed"
           git push
