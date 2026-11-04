@@ -1,19 +1,11 @@
-<section #dashboardShell class="dashboard-shell" [class.expanded]="isFullscreen">
-  <a
-    class="back-home"
-    href="https://mohamedmnejja.me/"
-    aria-label="Back to Portfolio"
-  >Back to Portfolio</a>
-  <div #dashboardHost class="dashboard-runtime" aria-label="LinkedIn Profile Views Analytics Dashboard">
-    <p *ngIf="loadError" class="dashboard-error">{{ loadError }}</p>
-  </div>
-  <button
-    class="fullscreen-button"
-    type="button"
-    (click)="toggleFullscreen()"
-    [attr.aria-label]="isFullscreen ? 'Exit full screen' : 'Open full screen'"
-    [attr.title]="isFullscreen ? 'Exit full screen' : 'Open full screen'">
-    <span aria-hidden="true">{{ isFullscreen ? '⤢' : '⛶' }}</span>
-    <span class="fullscreen-label">{{ isFullscreen ? 'Exit Full Screen' : 'Full Screen' }}</span>
-  </button>
+<section class="dashboard-shell">
+  <a class="back-home" href="https://mohamedmnejja.me/index.html" aria-label="Back to Portfolio">
+    Back to Portfolio
+  </a>
+  <iframe
+    class="dashboard-frame"
+    src="assets/linkedin-profile-analytics.html"
+    title="LinkedIn Profile Views Analytics Dashboard"
+    loading="eager">
+  </iframe>
 </section>

@@ -3,35 +3,22 @@
 }
 
 .dashboard-shell {
-  position: relative;
   width: 100%;
-  height: 100vh;
   min-height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background: #f5f7fa;
-}
-
-.dashboard-runtime {
-  display: block;
-  width: 100%;
-  min-height: calc(100vh - 180px);
+  padding: 1rem 1rem 2rem;
   background: #f5f7fa;
 }
 
 .back-home {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  z-index: 10;
-  transform: translateX(-50%);
-  padding: 7px 14px;
+  display: block;
+  width: fit-content;
+  margin: 0 auto 1rem;
+  padding: 0.45rem 0.9rem;
   border: 1px solid #00a86b;
   border-radius: 999px;
   color: #fff;
   background: #0a2540;
-  box-shadow: 0 4px 12px rgba(10, 37, 64, 0.2);
-  font: 600 13px/1.2 Inter, system-ui, sans-serif;
+  font: 600 0.8125rem/1.2 Inter, system-ui, sans-serif;
   text-decoration: none;
 }
 
@@ -39,78 +26,22 @@
   background: #007a4d;
 }
 
-.dashboard-error {
-  margin: 0;
-  padding: 2rem;
-  color: #c0392b;
-}
-
-.fullscreen-button {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 20;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid #00a86b;
-  border-radius: 999px;
-  padding: 10px 16px;
-  color: #fff;
-  background: #0a2540;
-  box-shadow: 0 8px 20px rgba(10, 37, 64, 0.22);
-  cursor: pointer;
-  font: 600 13px/1.2 Inter, system-ui, sans-serif;
-  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
-}
-
-.fullscreen-button:hover {
-  background: #007a4d;
-  box-shadow: 0 10px 24px rgba(10, 37, 64, 0.3);
-  transform: translateY(-2px);
-}
-
-.fullscreen-button span:first-child {
-  font-size: 18px;
-  line-height: 1;
-}
-
-.dashboard-shell.expanded {
-  height: 100vh;
-  min-height: 100vh;
-}
-
-.dashboard-shell.expanded .dashboard-runtime {
-  min-height: 100vh;
-}
-
-:host-context(body.dashboard-fullscreen-fallback) {
-  overflow: hidden;
-}
-
-:host-context(body.dashboard-fullscreen-fallback) .dashboard-shell {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  width: 100vw;
-  height: 100vh;
-  min-height: 100vh;
-  overflow: auto;
-}
-
-:host-context(body.dashboard-fullscreen-fallback) .dashboard-runtime {
-  height: 100%;
-  min-height: 100vh;
+.dashboard-frame {
+  display: block;
+  width: 100%;
+  min-height: 2400px;
+  height: calc(100vh - 5rem);
+  border: 0;
+  background: #f5f7fa;
 }
 
 @media (max-width: 640px) {
-  .fullscreen-button {
-    right: 14px;
-    bottom: 14px;
-    padding: 11px;
+  .dashboard-shell {
+    padding: 0.75rem 0.5rem 1.5rem;
   }
 
-  .fullscreen-label {
-    display: none;
+  .dashboard-frame {
+    min-height: 2800px;
+    height: calc(100vh - 4.5rem);
   }
 }
