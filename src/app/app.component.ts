@@ -24,7 +24,6 @@ export class AppComponent implements OnInit {
       fragment: null,
       sublinks: [
         { label: 'Chart of Accounts', route: '/', fragment: 'chart-of-accounts' },
-        { label: 'LinkedIn Profile Analytics', route: '/linkedin-profile-analytics', fragment: undefined },
         { label: 'CSRD Reporting', route: '/', fragment: 'csrd-reporting' }
       ]
     },

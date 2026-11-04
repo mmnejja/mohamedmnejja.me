@@ -30,13 +30,6 @@ export class HomePageComponent {
       route: '/chart-of-accounts-ai'
     },
     {
-      title: 'LinkedIn Profile Views Analytics',
-      description: 'Interactive analytics dashboard for LinkedIn profile viewer insights',
-      tags: ['LinkedIn', 'Analytics', 'Dashboard'],
-      actionLabel: 'Open Dashboard',
-      route: '/linkedin-profile-analytics'
-    },
-    {
       title: 'CSRD Reporting Simulation',
       description: 'Corporate Sustainability Reporting Directive compliance simulation tool',
       tags: ['Sustainability', 'Reporting', 'Compliance'],
