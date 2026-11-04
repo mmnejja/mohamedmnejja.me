@@ -1,4 +1,9 @@
 <section #dashboardShell class="dashboard-shell" [class.expanded]="isFullscreen">
+  <a
+    class="back-home"
+    href="https://mohamedmnejja.me/"
+    aria-label="Back to Portfolio"
+  >Back to Portfolio</a>
   <div #dashboardHost class="dashboard-runtime" aria-label="LinkedIn Profile Views Analytics Dashboard">
     <p *ngIf="loadError" class="dashboard-error">{{ loadError }}</p>
   </div>

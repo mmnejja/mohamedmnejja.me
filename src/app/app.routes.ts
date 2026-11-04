@@ -28,6 +28,13 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'linkedin-profile-analytics',
+    loadComponent: () =>
+      import('./pages/linkedin-profile-analytics/linkedin-profile-analytics.page').then(
+        (m) => m.LinkedinProfileAnalyticsPageComponent
+      )
+  },
+  {
     path: 'csrd-reporting-simulation',
     children: [
       {

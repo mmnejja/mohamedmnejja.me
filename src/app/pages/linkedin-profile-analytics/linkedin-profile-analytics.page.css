@@ -5,8 +5,10 @@
 .dashboard-shell {
   position: relative;
   width: 100%;
-  min-height: calc(100vh - 180px);
-  overflow: hidden;
+  height: 100vh;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: #f5f7fa;
 }
 
@@ -15,6 +17,26 @@
   width: 100%;
   min-height: calc(100vh - 180px);
   background: #f5f7fa;
+}
+
+.back-home {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  z-index: 10;
+  transform: translateX(-50%);
+  padding: 7px 14px;
+  border: 1px solid #00a86b;
+  border-radius: 999px;
+  color: #fff;
+  background: #0a2540;
+  box-shadow: 0 4px 12px rgba(10, 37, 64, 0.2);
+  font: 600 13px/1.2 Inter, system-ui, sans-serif;
+  text-decoration: none;
+}
+
+.back-home:hover {
+  background: #007a4d;
 }
 
 .dashboard-error {
@@ -54,6 +76,7 @@
 }
 
 .dashboard-shell.expanded {
+  height: 100vh;
   min-height: 100vh;
 }
 

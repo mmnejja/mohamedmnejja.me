@@ -30,7 +30,7 @@ export class LinkedinProfileAnalyticsPageComponent implements AfterViewInit, OnD
 
   private async loadDashboard() {
     try {
-      const response = await fetch('assets/dash-pro.html');
+      const response = await fetch('assets/dash-branded.html');
       if (!response.ok) {
         throw new Error(`Dashboard request failed with status ${response.status}`);
       }
@@ -68,7 +68,10 @@ export class LinkedinProfileAnalyticsPageComponent implements AfterViewInit, OnD
             document.body.appendChild(node);
           });
         } else {
-          node.textContent = script.textContent;
+          node.textContent = (script.textContent || '').replace(
+            /document\.documentElement/g,
+            "document.querySelector('.dashboard-runtime')"
+          );
           document.body.appendChild(node);
         }
         this.injectedNodes.push(node);
@@ -92,7 +95,12 @@ export class LinkedinProfileAnalyticsPageComponent implements AfterViewInit, OnD
           if (!value) {
             return value;
           }
-          const normalized = value.replace(/^:root\b/, '.dashboard-runtime').replace(/^body\b/, '.dashboard-runtime');
+          const normalized = value
+            .replace(/^:root:not/, '.dashboard-runtime:not')
+            .replace(/^:root(?=\[)/, '.dashboard-runtime')
+            .replace(/^:root\b/, '.dashboard-runtime')
+            .replace(/^\[dir=rtl\]/, '.dashboard-runtime[dir=rtl]')
+            .replace(/^body\b/, '.dashboard-runtime');
           return normalized === '.dashboard-runtime' ? normalized : `.dashboard-runtime ${normalized}`;
         })
         .join(', ');
