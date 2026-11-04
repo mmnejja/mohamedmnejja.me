@@ -30,6 +30,13 @@ export class HomePageComponent {
       route: '/chart-of-accounts-ai'
     },
     {
+      title: 'LinkedIn Profile Analytics',
+      description: 'An interactive dashboard that analyzes LinkedIn profile viewers, identifies the companies and industries viewing my profile, and provides insights into professional networking opportunities.',
+      tags: ['Data Analytics', 'Business Intelligence', 'HTML', 'CSS', 'JavaScript', 'Chart.js'],
+      actionLabel: 'Live Demo',
+      route: '/linkedin-profile-analytics'
+    },
+    {
       title: 'CSRD Reporting Simulation',
       description: 'Corporate Sustainability Reporting Directive compliance simulation tool',
       tags: ['Sustainability', 'Reporting', 'Compliance'],

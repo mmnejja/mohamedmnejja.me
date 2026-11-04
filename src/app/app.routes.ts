@@ -16,6 +16,13 @@ export const routes: Routes = [
       import('./pages/chart-of-accounts/chart-of-accounts.page').then((m) => m.ChartOfAccountsPageComponent)
   },
   {
+    path: 'linkedin-profile-analytics',
+    loadComponent: () =>
+      import('./pages/linkedin-profile-analytics/linkedin-profile-analytics.page').then(
+        (m) => m.LinkedinProfileAnalyticsPageComponent
+      )
+  },
+  {
     path: 'csrd-reporting-simulation',
     children: [
       {
