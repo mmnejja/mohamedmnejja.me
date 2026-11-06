@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
       sublinks: [
         { label: 'Chart of Accounts', route: '/', fragment: 'chart-of-accounts' },
         {
-          label: 'Business Plan Prévisionnel – Étude de Rentabilité',
+          label: 'Business Plan Profitability',
           route: '/business-plan-profitability'
         }
       ]

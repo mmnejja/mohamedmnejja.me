@@ -31,7 +31,7 @@ export class HomePageComponent {
       route: '/chart-of-accounts-ai'
     },
     {
-      title: 'Business Plan Prévisionnel – Étude de Rentabilité',
+      title: 'Business Plan Profitability',
       description: 'Financial planning and investment profitability analysis tool.',
       tags: ['Finance', 'Planning', 'Profitability'],
       actionLabel: 'Open Business Plan',
