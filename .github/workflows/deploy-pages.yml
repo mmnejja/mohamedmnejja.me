@@ -30,10 +30,13 @@ jobs:
         run: npm ci
 
       - name: Build Angular application
-        run: npx ng build --configuration production
+        run: npx ng build --configuration production --base-href /
 
       - name: Add SPA fallback
-        run: cp dist/mohamedmnejja-portfolio/index.html dist/mohamedmnejja-portfolio/404.html
+        run: |
+          cp dist/mohamedmnejja-portfolio/index.html dist/mohamedmnejja-portfolio/404.html
+          test -s dist/mohamedmnejja-portfolio/404.html
+          grep -q '<base href="/">' dist/mohamedmnejja-portfolio/404.html
 
       - name: Add .nojekyll
         run: touch dist/mohamedmnejja-portfolio/.nojekyll
@@ -48,3 +51,4 @@ jobs:
           external_repository: mmnejja/mmnejja.github.io
           publish_branch: main
           publish_dir: ./dist/mohamedmnejja-portfolio
+          force_orphan: true

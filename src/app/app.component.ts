@@ -21,15 +21,18 @@ export class AppComponent implements OnInit {
     { 
       label: 'Projects', 
       route: '/', 
-      fragment: null,
+      fragment: 'projects',
       sublinks: [
         { label: 'Chart of Accounts', route: '/', fragment: 'chart-of-accounts' },
-        { label: 'LinkedIn Profile Analytics', route: '/linkedin-profile-analytics', fragment: undefined },
-        { label: 'CSRD Reporting', route: '/', fragment: 'csrd-reporting' }
+        {
+          label: 'Business Plan Prévisionnel – Étude de Rentabilité',
+          route: '/business-plan-profitability'
+        }
       ]
     },
     { label: 'Blog', route: '/', fragment: 'blog' },
     { label: 'Contact', route: '/', fragment: 'contact' },
+    { label: 'LinkedIn Analytics', route: '/linkedin-profile-analytics' },
     { label: 'Opportunities', route: '/opportunities' }
   ];
 

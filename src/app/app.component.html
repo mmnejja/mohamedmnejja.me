@@ -22,6 +22,7 @@
         <div *ngIf="link.sublinks" class="dropdown-wrapper">
           <a 
             [routerLink]="link.route"
+            [fragment]="link.fragment || undefined"
             class="dropdown-toggle">
             {{ link.label }}
           </a>

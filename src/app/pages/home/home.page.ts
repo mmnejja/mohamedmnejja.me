@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import emailjs from '@emailjs/browser';
 
 @Component({
@@ -7,7 +8,7 @@ import emailjs from '@emailjs/browser';
   standalone: true,
   templateUrl: './home.page.html',
   styleUrl: './home.page.css',
-  imports: [CommonModule]
+  imports: [CommonModule, RouterLink]
 })
 export class HomePageComponent {
   academicJourney = [
@@ -30,18 +31,11 @@ export class HomePageComponent {
       route: '/chart-of-accounts-ai'
     },
     {
-      title: 'LinkedIn Profile Analytics',
-      description: 'An interactive dashboard that analyzes LinkedIn profile viewers, identifies the companies and industries viewing my profile, and provides insights into professional networking opportunities.',
-      tags: ['Data Analytics', 'Business Intelligence', 'HTML', 'CSS', 'JavaScript', 'Chart.js'],
-      actionLabel: 'Live Demo',
-      route: '/linkedin-profile-analytics'
-    },
-    {
-      title: 'CSRD Reporting Simulation',
-      description: 'Corporate Sustainability Reporting Directive compliance simulation tool',
-      tags: ['Sustainability', 'Reporting', 'Compliance'],
-      actionLabel: 'Open Simulation',
-      route: '/csrd-reporting-simulation'
+      title: 'Business Plan Prévisionnel – Étude de Rentabilité',
+      description: 'Financial planning and investment profitability analysis tool.',
+      tags: ['Finance', 'Planning', 'Profitability'],
+      actionLabel: 'Open Business Plan',
+      route: '/business-plan-profitability'
     }
   ];
 

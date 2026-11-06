@@ -13,7 +13,6 @@ A modern, responsive Angular portfolio website featuring AI-powered financial so
 - 📊 **Project Pages**: Dedicated pages for:
   - Chart of Accounts AI
   - Power BI Financial Dashboard
-  - CSRD Reporting Simulation
 
 ## Project Structure
 
@@ -27,7 +26,6 @@ src/
 │       ├── home/                 # Home page component
 │       ├── chart-of-accounts/    # Chart of Accounts page
 │       ├── power-bi/             # Power BI dashboard page
-│       └── csrd-reporting/       # CSRD Reporting page
 ├── style.css                      # Global styles with CSS variables
 ├── main.ts                        # Application bootstrap
 └── index.html                     # Root HTML file
@@ -90,7 +88,6 @@ Automatically applied when `.dark` class is added to body
 - **Home** (`/`): Landing page with hero, projects, skills, about, and contact
 - **Chart of Accounts** (`/chart-of-accounts-ai`): AI-powered accounting solution
 - **Power BI Dashboard** (`/power-bi-financial-dashboard`): Financial analytics
-- **CSRD Reporting** (`/csrd-reporting-simulation`): Sustainability compliance
 
 ## Customization
 
@@ -221,7 +218,6 @@ A modern, responsive Angular portfolio website featuring AI-powered financial so
 - 📊 **Project Pages**: Dedicated pages for:
   - Chart of Accounts AI
   - Power BI Financial Dashboard
-  - CSRD Reporting Simulation
 
 ## Project Structure
 
@@ -235,7 +231,6 @@ src/
 │       ├── home/                 # Home page component
 │       ├── chart-of-accounts/    # Chart of Accounts page
 │       ├── power-bi/             # Power BI dashboard page
-│       └── csrd-reporting/       # CSRD Reporting page
 ├── style.css                      # Global styles with CSS variables
 ├── main.ts                        # Application bootstrap
 └── index.html                     # Root HTML file
@@ -298,7 +293,6 @@ Automatically applied when `.dark` class is added to body
 - **Home** (`/`): Landing page with hero, projects, skills, about, and contact
 - **Chart of Accounts** (`/chart-of-accounts-ai`): AI-powered accounting solution
 - **Power BI Dashboard** (`/power-bi-financial-dashboard`): Financial analytics
-- **CSRD Reporting** (`/csrd-reporting-simulation`): Sustainability compliance
 
 ## Customization
 

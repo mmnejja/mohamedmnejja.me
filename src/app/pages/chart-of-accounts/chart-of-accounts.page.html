@@ -1,61 +1,10 @@
-<!-- Hero Section -->
-<section class="hero">
-  <div class="container">
-    <div class="hero-content">
-      <span class="eyebrow">AI-Powered Solution</span>
-      <h1>Chart of Accounts AI</h1>
-      <p class="hero-subtitle">
-        Streamline your accounting structure with intelligent, AI-powered Chart of Accounts management.
-        Get smart suggestions, ensure compliance, and scale effortlessly.
-      </p>
-      <div class="hero-actions">
-        <button class="btn btn-small">Open Assistant</button>
-        <button class="btn btn-outline">Learn More</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Features Section -->
-<section class="section section-alt">
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">Features</span>
-      <h2>Powerful Capabilities</h2>
-    </div>
-    <div class="grid-2">
-      <div *ngFor="let feature of features" class="card">
-        <h3>{{ feature.title }}</h3>
-        <p>{{ feature.description }}</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Benefits Section -->
-<section class="section">
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">Why Choose Us</span>
-      <h2>Key Benefits</h2>
-    </div>
-    <div class="card highlight">
-      <ul class="list">
-        <li *ngFor="let benefit of benefits">{{ benefit }}</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- CTA Section -->
-<section class="section section-alt">
-  <div class="container">
-    <div style="text-align: center; max-width: 600px; margin: 0 auto;">
-      <h2>Ready to Transform Your Accounting?</h2>
-      <p style="margin-top: 1rem; margin-bottom: 2rem;">
-        Start using Chart of Accounts AI today and automate your financial structure management.
-      </p>
-      <button class="btn btn-primary">Request a Demo</button>
-    </div>
-  </div>
+<section class="dashboard-shell">
+  <a class="back-home" routerLink="/" aria-label="Back to Portfolio">
+    Back to Portfolio
+  </a>
+  <iframe
+    class="dashboard-frame"
+    src="assets/tunisian-chart-of-accounts-pro.html"
+    title="Tunisian Chart of Accounts">
+  </iframe>
 </section>

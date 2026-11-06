@@ -115,7 +115,7 @@
 }
 
 /* Remove the green highlight bar for the featured card in Chart of Accounts on home */
-#chart-of-accounts .project-featured {
+#projects .project-featured {
   border-left: none;
   /* match the card padding so content aligns with the other project cards */
   padding-left: 1.4rem;

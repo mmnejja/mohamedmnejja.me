@@ -9,7 +9,6 @@ You now have a complete, production-ready Angular portfolio website with:
 1. **Home Page** (`/`) - Hero, projects, skills, about, contact
 2. **Chart of Accounts** (`/chart-of-accounts-ai`) - AI financial solution
 3. **Power BI Dashboard** (`/power-bi-financial-dashboard`) - Analytics solution
-4. **CSRD Reporting** (`/csrd-reporting-simulation`) - Sustainability compliance
 
 ### 🎨 **Modern Features**
 - ✅ Beautiful SaaS-inspired design with glassmorphism
@@ -46,10 +45,6 @@ mohamedmnejjaV2 thinkpad/
 │   │   │   │   ├── power-bi.page.html
 │   │   │   │   └── power-bi.page.css
 │   │   │   │
-│   │   │   └── 📁 csrd-reporting/
-│   │   │       ├── csrd-reporting.page.ts
-│   │   │       ├── csrd-reporting.page.html
-│   │   │       └── csrd-reporting.page.css
 │   │   │
 │   │   ├── app.component.ts            # Main component with header/footer
 │   │   ├── app.component.html          # Navigation template
@@ -158,7 +153,6 @@ npm test
 | `/` | HomePageComponent | Landing page with hero, projects, skills |
 | `/chart-of-accounts-ai` | ChartOfAccountsPageComponent | AI accounting solution showcase |
 | `/power-bi-financial-dashboard` | PowerBiPageComponent | Financial dashboard showcase |
-| `/csrd-reporting-simulation` | CsrdReportingPageComponent | Sustainability reporting showcase |
 
 ---
 
@@ -348,7 +342,6 @@ You now have a complete, production-ready Angular portfolio website with:
 1. **Home Page** (`/`) - Hero, projects, skills, about, contact
 2. **Chart of Accounts** (`/chart-of-accounts-ai`) - AI financial solution
 3. **Power BI Dashboard** (`/power-bi-financial-dashboard`) - Analytics solution
-4. **CSRD Reporting** (`/csrd-reporting-simulation`) - Sustainability compliance
 
 ### 🎨 **Modern Features**
 - ✅ Beautiful SaaS-inspired design with glassmorphism
@@ -385,10 +378,6 @@ mohamedmnejjaV2 thinkpad/
 │   │   │   │   ├── power-bi.page.html
 │   │   │   │   └── power-bi.page.css
 │   │   │   │
-│   │   │   └── 📁 csrd-reporting/
-│   │   │       ├── csrd-reporting.page.ts
-│   │   │       ├── csrd-reporting.page.html
-│   │   │       └── csrd-reporting.page.css
 │   │   │
 │   │   ├── app.component.ts            # Main component with header/footer
 │   │   ├── app.component.html          # Navigation template
@@ -497,7 +486,6 @@ npm test
 | `/` | HomePageComponent | Landing page with hero, projects, skills |
 | `/chart-of-accounts-ai` | ChartOfAccountsPageComponent | AI accounting solution showcase |
 | `/power-bi-financial-dashboard` | PowerBiPageComponent | Financial dashboard showcase |
-| `/csrd-reporting-simulation` | CsrdReportingPageComponent | Sustainability reporting showcase |
 
 ---
 

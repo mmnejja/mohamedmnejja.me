@@ -23,17 +23,9 @@ export const routes: Routes = [
       )
   },
   {
-    path: 'csrd-reporting-simulation',
-    children: [
-      {
-        path: '',
-        loadComponent: () => import('./features/csrd-form/csrd-form.component').then((m) => m.CsrdFormComponent)
-      },
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent)
-      }
-    ]
+    path: 'business-plan-profitability',
+    loadComponent: () =>
+      import('./pages/business-plan/business-plan.page').then((m) => m.BusinessPlanPageComponent)
   },
   {
     path: '**',

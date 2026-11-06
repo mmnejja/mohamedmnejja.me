@@ -45,7 +45,6 @@ Navigate to: **http://localhost:4200/**
 - `src/app/pages/home/` - Home/landing page
 - `src/app/pages/chart-of-accounts/` - Chart of Accounts page
 - `src/app/pages/power-bi/` - Power BI Dashboard page
-- `src/app/pages/csrd-reporting/` - CSRD Reporting page
 
 ### Main App Files
 - `src/app/app.component.ts` - Main component with header/footer
@@ -62,7 +61,6 @@ Navigate to: **http://localhost:4200/**
 | `/` | Home |
 | `/chart-of-accounts-ai` | Chart of Accounts |
 | `/power-bi-financial-dashboard` | Power BI Dashboard |
-| `/csrd-reporting-simulation` | CSRD Reporting |
 
 ---
 
@@ -203,7 +201,6 @@ Navigate to: **http://localhost:4200/**
 - `src/app/pages/home/` - Home/landing page
 - `src/app/pages/chart-of-accounts/` - Chart of Accounts page
 - `src/app/pages/power-bi/` - Power BI Dashboard page
-- `src/app/pages/csrd-reporting/` - CSRD Reporting page
 
 ### Main App Files
 - `src/app/app.component.ts` - Main component with header/footer
@@ -220,7 +217,6 @@ Navigate to: **http://localhost:4200/**
 | `/` | Home |
 | `/chart-of-accounts-ai` | Chart of Accounts |
 | `/power-bi-financial-dashboard` | Power BI Dashboard |
-| `/csrd-reporting-simulation` | CSRD Reporting |
 
 ---
 

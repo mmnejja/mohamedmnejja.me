@@ -77,7 +77,6 @@ The compiled files will be output to the `dist/` directory.
 │   │   │   ├── home/
 │   │   │   ├── chart-of-accounts/
 │   │   │   ├── power-bi/
-│   │   │   └── csrd-reporting/
 │   │   ├── app.component.ts          # Main component
 │   │   ├── app.routes.ts             # Route configuration
 │   │   └── ...
@@ -286,7 +285,6 @@ The compiled files will be output to the `dist/` directory.
 │   │   │   ├── home/
 │   │   │   ├── chart-of-accounts/
 │   │   │   ├── power-bi/
-│   │   │   └── csrd-reporting/
 │   │   ├── app.component.ts          # Main component
 │   │   ├── app.routes.ts             # Route configuration
 │   │   └── ...
