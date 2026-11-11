@@ -1,0 +1,1585 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Audit Sampling Tool</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: slim icon rail + sticky top bar + single scrolling workspace; Big Four SaaS look (navy chrome, emerald action, semantic risk colours) */
+:root{
+  --navy:#0A2540; --emerald:#00A86B; --high:#E63946; --med:#F4A261; --low:#2A9D8F;
+  --bg:#F5F7FA; --surface:#FFFFFF; --surface2:#EFF3F8; --text:#0C1928; --muted:#5A6B7E; --border:#E8EDF2; --border2:#D5DDE7;
+  --primary:#0A2540; --primary-ink:#FFFFFF; --rail:#0A2540; --rail-ink:#B9C7D8; --emerald-ink:#007A4D;
+  --high-bg:#FDECEE; --med-bg:#FEF1E6; --low-bg:#E3F4F1; --info-bg:#E8F0FA;
+  --b1:#2A9D8F; --b2:#8DB580; --b3:#EBCB6B; --b4:#F4A261; --b5:#E63946;
+  --paper:#FFFFFF; --paper-ink:#101820; --paper-line:#C9D2DD; --shadow:0 1px 2px rgba(10,37,64,.06),0 4px 14px rgba(10,37,64,.05);
+  --sans:'IBM Plex Sans','IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif; --ar:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+.seg{display:inline-flex;border:1px solid var(--border2);border-radius:7px;overflow:hidden}
+.seg button{background:var(--surface);border:0;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)}
+.seg button+button{border-inline-start:1px solid var(--border2)}
+.seg button[aria-pressed="true"]{background:var(--primary);color:var(--primary-ink)}
+.seg button:focus-visible{outline:2px solid var(--emerald);outline-offset:-2px}
+html[lang="ar"] .subar,html[lang="ar"] #sub{display:none}
+html[dir="rtl"] .kpi .v{unicode-bidi:plaintext;text-align:right}
+html[dir="rtl"] .field label,html[dir="rtl"] .lbl{letter-spacing:0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0A1522; --surface:#10233A; --surface2:#16304D; --text:#E7EEF6; --muted:#93A6BA; --border:#1E3550; --border2:#2A4766;
+  --primary:#2F6DB5; --rail:#06121F; --emerald-ink:#2EE0A0; --high-bg:#3A1D27; --med-bg:#3A2C20; --low-bg:#14363A; --info-bg:#173452;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1522; --surface:#10233A; --surface2:#16304D; --text:#E7EEF6; --muted:#93A6BA; --border:#1E3550; --border2:#2A4766;
+  --primary:#2F6DB5; --rail:#06121F; --emerald-ink:#2EE0A0; --high-bg:#3A1D27; --med-bg:#3A2C20; --low-bg:#14363A; --info-bg:#173452;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--text);font:14px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+.ar{font-family:var(--ar);direction:rtl;unicode-bidi:isolate}
+.num,td.n,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.app{display:grid;grid-template-columns:76px minmax(0,1fr);min-height:100vh}
+.rail{background:var(--rail);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:stretch;padding:14px 0;gap:4px;z-index:20}
+.logo{width:36px;height:36px;margin:0 auto 12px;border-radius:9px;background:var(--emerald);display:grid;place-items:center;color:#fff}
+.nav{background:none;border:0;color:var(--rail-ink);padding:9px 2px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-size:10.5px;line-height:1.15;text-align:center;border-inline-start:3px solid transparent;transition:background .15s,color .15s}
+.nav svg{width:20px;height:20px}
+.nav:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav[aria-current="page"]{color:#fff;background:rgba(255,255,255,.1);border-inline-start-color:var(--emerald)}
+.nav:focus-visible,.btn:focus-visible,.tab:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--emerald);outline-offset:2px}
+.top{position:sticky;top:0;z-index:15;background:var(--surface);border-bottom:1px solid var(--border);padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top h1{margin:0;font-size:17px;font-weight:600;line-height:1.2;text-wrap:balance}
+.top .sub{display:block;direction:ltr;unicode-bidi:plaintext;text-align:left;font-size:12.5px;color:var(--muted);font-weight:400}
+.top .grow{flex:1;min-width:160px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border2);border-radius:99px;padding:3px 11px;font-size:12px;background:var(--surface2);white-space:nowrap}
+.page{padding:20px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px));max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+section.view[hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;box-shadow:var(--shadow);min-width:0}
+.card h2{margin:0 0 2px;font-size:15px;font-weight:600}
+.card .hint{margin:0 0 14px;color:var(--muted);font-size:12.5px}
+.grid{display:grid;gap:16px}
+.g4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.kpi{display:flex;flex-direction:column;gap:2px}
+.kpi .l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.kpi .v{font:500 24px/1.2 var(--mono);font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--muted)}
+.kpi.hi{border-top:3px solid var(--high)} .kpi.me{border-top:3px solid var(--med)} .kpi.lo{border-top:3px solid var(--low)} .kpi.em{border-top:3px solid var(--emerald)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--border2);background:var(--surface);color:var(--text);border-radius:7px;padding:7px 13px;cursor:pointer;font-weight:500;font-size:13px;transition:transform .12s,background .15s,box-shadow .15s}
+.btn:hover{background:var(--surface2)} .btn:active{transform:translateY(1px)}
+.btn.pri{background:var(--primary);color:var(--primary-ink);border-color:transparent}
+.btn.pri:hover{filter:brightness(1.12)}
+.btn.em{background:var(--emerald);color:#fff;border-color:transparent}
+.btn.em:hover{filter:brightness(1.06)}
+.btn.sm{padding:4px 9px;font-size:12px}
+.btn svg{width:15px;height:15px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label,.lbl{font-size:12px;font-weight:500;color:var(--muted)}
+.field input,.field select,.field textarea,.inp{background:var(--surface);border:1px solid var(--border2);border-radius:7px;padding:7px 10px;min-width:0;width:100%}
+textarea{resize:vertical;min-height:70px}
+.form{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))}
+.form .wide{grid-column:1/-1}
+.tbl{overflow-x:auto;border:1px solid var(--border);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{background:var(--surface2);text-align:start;font-weight:600;font-size:12px;letter-spacing:.02em;padding:8px 10px;white-space:nowrap;position:sticky;top:0}
+td.mono{white-space:nowrap}
+td{padding:7px 10px;border-top:1px solid var(--border);vertical-align:middle}
+td.n,th.n{text-align:end;white-space:nowrap}
+tbody tr:hover{background:var(--surface2)}
+tr.sel{background:var(--info-bg)}
+.pill{display:inline-block;border-radius:99px;padding:1px 9px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.pill.High{background:var(--high-bg);color:var(--high)} .pill.Medium{background:var(--med-bg);color:#C2691D} .pill.Low{background:var(--low-bg);color:var(--low)}
+.pill.Pending{background:var(--surface2);color:var(--muted)} .pill.Tested{background:var(--low-bg);color:var(--low)} .pill.Exception{background:var(--high-bg);color:var(--high)}
+:root[data-theme="dark"] .pill.Medium{color:var(--med)}
+.seg{display:inline-flex;border:1px solid var(--border2);border-radius:7px;overflow:hidden}
+.seg button{background:var(--surface);border:0;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)}
+.seg button+button{border-inline-start:1px solid var(--border2)}
+.seg button[aria-pressed="true"]{background:var(--primary);color:var(--primary-ink)}
+.seg button:focus-visible{outline:2px solid var(--emerald);outline-offset:-2px}
+html[lang="ar"] .subar,html[lang="ar"] #sub{display:none}
+html[dir="rtl"] .field label,html[dir="rtl"] .lbl{letter-spacing:0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pill.Medium{color:var(--med)}}
+.bar{height:6px;border-radius:3px;background:var(--surface2);overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;border-radius:3px}
+.flag{display:inline-block;font-size:11px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0 5px;margin:1px 2px 1px 0;color:var(--muted)}
+.drop{border:2px dashed var(--border2);border-radius:10px;padding:30px 16px;text-align:center;background:var(--surface2);cursor:pointer;transition:border-color .15s,background .15s}
+.drop.over,.drop:hover{border-color:var(--emerald);background:var(--low-bg)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--border);margin-bottom:16px}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:8px 12px;cursor:pointer;color:var(--muted);font-weight:500}
+.tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--emerald)}
+.note{background:var(--info-bg);border-radius:8px;padding:10px 12px;font-size:12.5px}
+.note.warn{background:var(--med-bg)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-inline-end:5px}
+.scrim{position:fixed;inset:0;background:rgba(6,18,31,.55);z-index:40;display:grid;place-items:center;padding:16px}
+.scrim[hidden]{display:none}
+.modal{background:var(--surface);border-radius:12px;max-width:980px;width:100%;max-height:90vh;overflow:auto;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:14px}
+.modal h2{margin:0;font-size:17px}
+.drawer{position:fixed;top:0;inset-inline-end:0;bottom:0;width:min(440px,100%);background:var(--surface);border-inline-start:1px solid var(--border2);z-index:30;padding:18px;overflow:auto;box-shadow:-10px 0 40px rgba(0,0,0,.2);display:flex;flex-direction:column;gap:12px}
+.drawer[hidden]{display:none}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--navy);color:#fff;padding:9px 16px;border-radius:8px;z-index:60;font-size:13px;box-shadow:var(--shadow)}
+.toast[hidden]{display:none}
+.paper{background:var(--paper);color:var(--paper-ink);border:1px solid var(--paper-line);border-radius:4px;padding:34px 38px;box-shadow:var(--shadow);font-family:'IBM Plex Sans','Segoe UI',sans-serif}
+.paper h2{font-size:20px;margin:0 0 4px;letter-spacing:.01em}
+.paper .wp{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;border-bottom:2px solid var(--paper-ink);padding-bottom:10px;margin-bottom:14px;font-size:12px}
+.paper h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin:20px 0 6px;border-bottom:1px solid var(--paper-line);padding-bottom:3px}
+.paper table{font-size:12.5px} .paper th{background:#EEF2F6;color:#101820} .paper td,.paper th{border-top:1px solid var(--paper-line)}
+.paper dl{display:grid;grid-template-columns:minmax(150px,200px) 1fr;gap:5px 14px;margin:0;font-size:13px}
+.paper dt{color:#4A5866} .paper dd{margin:0}
+.paper .inp{background:#fff;color:#101820;border-color:var(--paper-line)}
+.sig{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:30px;font-size:12px}
+.sig div{border-top:1px solid var(--paper-ink);padding-top:4px}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.trail{max-height:280px;overflow:auto;font-size:12.5px;display:flex;flex-direction:column;gap:6px}
+.trail div{display:grid;grid-template-columns:150px 1fr;gap:10px;border-bottom:1px solid var(--border);padding-bottom:5px}
+.lvl{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:start;cursor:pointer;width:100%;font:inherit;color:inherit}
+.lvl:hover{background:var(--surface2)} .lvl[aria-pressed="true"]{outline:2px solid var(--emerald);outline-offset:-2px}
+.lvl .big{font:500 28px/1.1 var(--mono)} .lvl .big small{font:400 13px var(--sans);color:var(--muted);margin-inline-start:8px}
+.cplist{display:flex;flex-direction:column;max-height:340px;overflow:auto}
+.cprow{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:3px 10px;align-items:center;background:none;border:0;border-bottom:1px solid var(--border);padding:7px 4px;text-align:start;cursor:pointer;width:100%;font:inherit;color:inherit}
+.cprow:hover{background:var(--surface2)} .cprow[aria-pressed="true"]{background:var(--info-bg)}
+.cprow .bar{grid-column:2/4}
+.cph{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.cpnone{color:var(--muted);font-size:12.5px;padding:3px 4px}
+.heat{text-align:end;font-family:var(--mono);font-weight:500}
+.sel-sm{padding:3px 6px;border:1px solid var(--border2);border-radius:6px;background:var(--surface);font-size:12px;max-width:170px}
+.bands{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:6px}
+.bands i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:5px}
+button.chip{cursor:pointer;font:inherit;font-size:12px;color:inherit} button.chip:hover{border-color:var(--emerald)}
+@media (max-width:760px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .rail{position:fixed;top:auto;bottom:0;left:0;right:0;height:auto;flex-direction:row;padding:0 0 env(safe-area-inset-bottom,0px);z-index:25;justify-content:space-around}
+  .logo{display:none} .nav{flex:1;border-inline-start:0;border-top:3px solid transparent;padding:7px 0 6px;font-size:9.5px}
+  .nav[aria-current="page"]{border-top-color:var(--emerald);border-inline-start:0}
+  .page{padding-bottom:96px}
+  .paper{padding:20px 16px} .paper dl{grid-template-columns:1fr} .trail div{grid-template-columns:1fr}
+}
+@media print{
+  body{background:#fff}.rail,.top,.noprint,.drawer,.toast{display:none!important}
+  .app{display:block}.page{padding:0;max-width:none}.paper{border:0;box-shadow:none;padding:0}
+  section.view:not(#v-workpaper){display:none!important}.card:not(.paper){display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-dash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></symbol>
+<symbol id="i-import" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 002 2h12a2 2 0 002-2v-4"/></symbol>
+<symbol id="i-risk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2zM12 10v5M12 18h.01"/></symbol>
+<symbol id="i-samp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 8v6l-4 2v-8z"/></symbol>
+<symbol id="i-res" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2h9"/></symbol>
+<symbol id="i-wp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V8zM14 3v5h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 19h16"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A9 9 0 1111 3a7 7 0 0010 10z"/></symbol>
+</defs></svg>
+
+<div class="app">
+<nav class="rail" aria-label="Main">
+  <div class="logo" aria-hidden="true"><svg width="20" height="20"><use href="#i-samp"/></svg></div>
+  <button class="nav" data-v="dashboard"><svg><use href="#i-dash"/></svg>Dashboard</button>
+  <button class="nav" data-v="import"><svg><use href="#i-import"/></svg>Import</button>
+  <button class="nav" data-v="risk"><svg><use href="#i-risk"/></svg>Risk</button>
+  <button class="nav" data-v="sampling"><svg><use href="#i-samp"/></svg>Sampling</button>
+  <button class="nav" data-v="results"><svg><use href="#i-res"/></svg>Results</button>
+  <button class="nav" data-v="tasks"><svg><use href="#i-res"/></svg>Tasks</button>
+  <button class="nav" data-v="engage"><svg><use href="#i-dash"/></svg>Engagement</button>
+  <button class="nav" data-v="workpaper"><svg><use href="#i-wp"/></svg>Working Paper</button>
+</nav>
+<main>
+  <header class="top">
+    <div class="grow"><h1 id="ttl">Dashboard</h1><span class="sub ar" id="sub"></span></div>
+    <span class="chip" id="chipDs"></span>
+    <button class="chip" id="chipMat" title="Edit materiality"></button>
+    <div class="seg" id="langSeg" role="group" aria-label="Language"><button data-l="en" aria-pressed="true">EN</button><button data-l="fr" aria-pressed="false">FR</button><button data-l="ar" aria-pressed="false">AR</button></div>
+    <button class="btn sm" id="themeBtn" title="Toggle theme"><svg><use href="#i-moon"/></svg></button>
+  </header>
+  <div class="page">
+  <div class="note warn row" id="stale" hidden style="justify-content:space-between"><span>You must re-run your analysis to apply recent updates.</span><button class="btn sm pri" id="rerun">Re-run analysis</button></div>
+
+  <section class="view" id="v-dashboard"><div id="dash" class="grid" style="gap:18px"></div></section>
+
+  <section class="view" id="v-import" hidden>
+    <div class="grid g2">
+      <div class="card">
+        <h2>Upload CSV <span class="subar" style="color:var(--muted);font-weight:400;font-size:13px">· <bdi class="ar">رفع ملف CSV</bdi></span></h2>
+        <p class="hint">UTF-8 and Arabic (Windows-1256) files are detected automatically. Comma, semicolon and tab delimiters are supported.</p>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload CSV file">
+          <svg width="30" height="30" style="color:var(--emerald)"><use href="#i-import"/></svg>
+          <div style="font-weight:500;margin-top:6px">Drop a CSV file here, or click to browse</div>
+          <div class="ar subar" style="color:var(--muted);font-size:13px">اسحب الملف هنا أو اضغط للاختيار</div>
+          <input type="file" id="file" accept=".csv,.txt,text/csv" hidden>
+        </div>
+        <div class="row" style="margin-top:12px"><button class="btn" id="demoBtn">Load BUILDER INC demo dataset</button><button class="btn" id="tplBtn"><svg><use href="#i-dl"/></svg>CSV template</button></div>
+      </div>
+      <div class="card">
+        <h2>Engagement settings <span class="subar" style="color:var(--muted);font-weight:400;font-size:13px">· <bdi class="ar">إعدادات المهمة</bdi></span></h2>
+        <p class="hint">Materiality drives the High Monetary Value control point and the default tolerable misstatement.</p>
+        <div class="form">
+          <div class="field wide"><label for="engName">Engagement</label><input id="engName"></div>
+          <div class="field"><label for="matIn">Materiality ($)</label><input id="matIn" type="number" min="1" step="100"></div>
+          <div class="field"><label for="period">Reporting period</label><input id="period"></div>
+        </div>
+        <div class="note" style="margin-top:14px" id="dsNote"></div>
+      </div>
+    </div>
+    <div class="card"><h2>Current population</h2><p class="hint">First 15 transactions of the loaded dataset.</p><div class="tbl" id="popPrev"></div></div>
+  </section>
+
+  <section class="view" id="v-risk" hidden><div id="riskV" style="display:flex;flex-direction:column;gap:18px"></div></section>
+
+  <section class="view" id="v-sampling" hidden>
+    <div class="card">
+      <h2>Sample size calculator <span class="subar" style="color:var(--muted);font-weight:400;font-size:13px">· <bdi class="ar">حاسبة حجم العينة</bdi></span></h2>
+      <p class="hint">ISA 530 / AICPA audit sampling guide. Attribute sampling for control tests and rates; MUS (value) sampling for substantive tests of balances.</p>
+      <div class="form">
+        <div class="field"><label for="cApproach">Approach</label><select id="cApproach"><option value="attr">Attribute (deviation rate)</option><option value="mus">Monetary unit (misstatement)</option></select></div>
+        <div class="field"><label for="cConf">Confidence level</label><select id="cConf"><option value="0.90">90%</option><option value="0.95" selected>95%</option><option value="0.99">99%</option></select></div>
+        <div class="field"><label for="cN">Population items (N)</label><input id="cN" type="number" min="1"></div>
+        <div class="field mus-only"><label for="cBV">Population value ($)</label><input id="cBV" type="number" min="0"></div>
+        <div class="field attr-only"><label for="cTol">Tolerable error rate (%)</label><input id="cTol" type="number" value="5" min="0.1" max="50" step="0.1"></div>
+        <div class="field attr-only"><label for="cExp">Expected error rate (%)</label><input id="cExp" type="number" value="1" min="0" max="49" step="0.1"></div>
+        <div class="field attr-only"><label for="cPrec">Precision (%) · blank = tolerable − expected</label><input id="cPrec" type="number" min="0.1" max="50" step="0.1" placeholder="auto"></div>
+        <div class="field mus-only"><label for="cTM">Tolerable misstatement ($)</label><input id="cTM" type="number" min="1"></div>
+        <div class="field mus-only"><label for="cEM">Expected misstatement ($)</label><input id="cEM" type="number" min="0" value="0"></div>
+        <div class="field"><label for="cFpc">Finite population correction</label><select id="cFpc"><option value="1">Apply FPC</option><option value="0">No FPC</option></select></div>
+      </div>
+      <div class="row" style="margin-top:14px;align-items:stretch">
+        <div class="card" style="flex:1;min-width:220px;padding:14px;box-shadow:none;background:var(--surface2)"><div class="kpi em" style="border:0"><span class="l">Calculated sample size</span><span class="v" id="cOut">–</span><span class="s" id="cFormula"></span></div></div>
+        <div style="display:flex;align-items:flex-end"><button class="btn em" id="useN">Use this size below</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Selection methods <span class="subar" style="color:var(--muted);font-weight:400;font-size:13px">· <bdi class="ar">طرق المعاينة</bdi></span></h2>
+      <div class="tabs" role="tablist" id="mTabs">
+        <button class="tab" role="tab" data-m="random" aria-selected="true">Random</button>
+        <button class="tab" role="tab" data-m="systematic" aria-selected="false">Systematic</button>
+        <button class="tab" role="tab" data-m="stratified" aria-selected="false">Stratified</button>
+        <button class="tab" role="tab" data-m="mus" aria-selected="false">Monetary Unit (MUS)</button>
+        <button class="tab" role="tab" data-m="haphazard" aria-selected="false">Haphazard</button>
+      </div>
+      <div class="form" id="commonForm">
+        <div class="field"><label for="sPop">Population to sample</label><select id="sPop"><option value="all">All transactions</option><option value="sig">Significant accounts only</option><option value="risk">High and medium risk only</option></select></div>
+        <div class="field"><label for="sN">Sample size (n)</label><input id="sN" type="number" min="1" value="25"></div>
+        <div class="field" id="seedF"><label for="sSeed">Random seed (reproducible)</label><input id="sSeed" type="number" value="2023"></div>
+        <div class="field"><label for="sAppend">If a sample already exists</label><select id="sAppend"><option value="0">Replace it</option><option value="1">Add to it</option></select></div>
+      </div>
+      <div id="mp-random" class="mp note" style="margin-top:12px">Every item has the same chance of selection. A seeded shuffle picks items without replacement, so the same seed always returns the same sample.</div>
+      <div id="mp-systematic" class="mp" hidden>
+        <div class="note" style="margin:12px 0">Interval k = N ÷ n. Items are ordered by date, then every k-th item is taken from the chosen start position.</div>
+        <div class="form"><div class="field"><label for="sStart">Start position (1 – k) · 0 = from seed</label><input id="sStart" type="number" min="0" value="0"></div><div class="field"><label>Interval k</label><div class="inp mono" id="kOut">–</div></div></div>
+      </div>
+      <div id="mp-stratified" class="mp" hidden>
+        <div class="form" style="margin-top:12px">
+          <div class="field"><label for="stBy">Stratify by</label><select id="stBy"><option value="account">Account</option><option value="vendor">Vendor / Customer</option><option value="level">Risk tier</option></select></div>
+          <div class="field"><label for="stAlloc">Allocation</label><select id="stAlloc"><option value="prop">Proportional to item count</option><option value="equal">Equal per stratum</option><option value="risk">Risk-weighted</option></select></div>
+        </div>
+      </div>
+      <div id="mp-mus" class="mp" hidden>
+        <div class="note" style="margin:12px 0">Interval = positive book value ÷ n. Items at or above the interval are selected with certainty. Negative and zero entries cannot be reached by dollar units, so they are isolated and added as separate review items.</div>
+        <div class="form"><div class="field"><label>Sampling interval ($)</label><div class="inp mono" id="musOut">–</div></div></div>
+      </div>
+      <div id="mp-haphazard" class="mp" hidden>
+        <div class="note warn" style="margin:12px 0">Non-statistical. Pick items manually and record why. The rationale is mandatory and is stored with each item in the audit trail.</div>
+        <div class="row" style="margin-bottom:8px"><input class="inp" id="hSearch" placeholder="Search population…" style="max-width:300px"><span class="chip" id="hCount">0 picked</span></div>
+        <div class="tbl" style="max-height:280px" id="hTbl"></div>
+        <div class="field" style="margin-top:10px"><label for="hWhy">Rationale for selection (required)</label><textarea id="hWhy" placeholder="e.g. Items near period end with unusual descriptions; auditor judgement after reading the ledger."></textarea></div>
+      </div>
+      <div class="row" style="margin-top:14px"><button class="btn em" id="runBtn"><svg><use href="#i-play"/></svg><span id="runLbl">Select sample</span></button><button class="btn" id="clearBtn">Clear sample</button></div>
+    </div>
+    <div class="card" id="sumCard"></div>
+  </section>
+
+  <section class="view" id="v-results" hidden>
+    <div class="card">
+      <div class="row" style="margin-bottom:12px">
+        <input class="inp" id="rSearch" placeholder="Search ID, description, account…" style="max-width:280px" aria-label="Search">
+        <select class="inp" id="rStatus" style="max-width:150px" aria-label="Status"><option value="">All statuses</option><option>Pending</option><option>Tested</option><option>Exception</option></select>
+        <select class="inp" id="rLevel" style="max-width:150px" aria-label="Risk"><option value="">All risk</option><option>High</option><option>Medium</option><option>Low</option></select>
+        <span class="chip" id="rCount"></span>
+      </div>
+      <div class="tbl" id="rTbl"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-tasks" hidden>
+    <div class="grid g4" id="tkKpi"></div>
+    <div class="card"><div class="row" style="margin-bottom:12px">
+      <input class="inp" id="tkQ" placeholder="Search task ID, description…" style="max-width:240px" aria-label="Search">
+      <select class="inp" id="tkSt" style="max-width:150px" aria-label="Task status"><option value="">All statuses</option><option>Open</option><option>Completed</option><option>Approved</option><option>Overdue</option></select>
+      <select class="inp" id="tkAs" style="max-width:170px" aria-label="Assigned to"></select>
+      <button class="btn sm" id="tkReset">Reset filter</button><span class="chip" id="tkCnt"></span>
+      <span style="flex:1"></span><button class="btn sm" id="tkBulk">Assign filtered…</button><button class="btn sm pri" id="tkExp">Export</button></div>
+      <div class="tbl" id="tkTbl"></div></div>
+  </section>
+
+  <section class="view" id="v-engage" hidden>
+    <div class="card"><h2>Engagement settings</h2><p class="hint">Engagement set-up as in the audit platform. Changing the period or fiscal year requires a re-run.</p>
+      <div class="form" id="esForm"></div><div class="row end" style="margin-top:12px"><button class="btn em" id="esSave">Save</button></div></div>
+    <div class="card"><h2>Data integrity checks</h2><p class="hint">Balance, completeness and period roll-forward checks on the loaded ledger.</p><div id="chk"></div></div>
+    <div class="card"><h2>Data table</h2><p class="hint">Advanced filters on the full population.</p>
+      <div class="form" id="dtF"></div><div class="row" style="margin:10px 0"><button class="btn sm" id="dtReset">Reset filter</button><span class="chip" id="dtCnt"></span></div><div class="tbl" id="dtTbl"></div></div>
+    <div class="card"><h2>Annotations</h2><p class="hint">Observations tied to a page of the analysis.</p>
+      <div class="form"><div class="field"><label for="anN">Name</label><input id="anN"></div><div class="field"><label for="anP">Page</label><select id="anP"><option>Risk overview</option><option>Sampling</option><option>Trends</option><option>Ratios</option><option>Results</option></select></div><div class="field wide"><label for="anD">Annotation description</label><textarea id="anD"></textarea></div></div>
+      <div class="row end" style="margin:10px 0"><button class="btn em" id="anAdd">Add annotation</button></div><div class="tbl" id="anTbl"></div></div>
+  </section>
+
+  <section class="view" id="v-workpaper" hidden>
+    <div class="card noprint">
+      <h2>Working paper setup <span class="subar" style="color:var(--muted);font-weight:400;font-size:13px">· <bdi class="ar">إعداد ورقة العمل</bdi></span></h2>
+      <div class="form" style="margin-top:12px">
+        <div class="field"><label for="wAud">Auditor name</label><input id="wAud" placeholder="Prepared by"></div>
+        <div class="field"><label for="wRev">Reviewer</label><input id="wRev" placeholder="Reviewed by"></div>
+        <div class="field"><label for="wRef">Reference</label><input id="wRef" value="WP-A.1"></div>
+        <div class="field wide"><label for="wScope">Scoping decisions</label><textarea id="wScope"></textarea></div>
+        <div class="field wide"><label for="wConc">Concluding statement</label><textarea id="wConc" style="min-height:96px"></textarea></div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="wSuggest">Suggest conclusion wording</button>
+        <button class="btn pri" id="exPaper"><svg><use href="#i-dl"/></svg>Working paper (print / PDF)</button>
+        <button class="btn" id="exSample"><svg><use href="#i-dl"/></svg>Sample CSV</button>
+        <button class="btn" id="exExc"><svg><use href="#i-dl"/></svg>Exceptions CSV</button>
+        <button class="btn" id="exPop"><svg><use href="#i-dl"/></svg>Full population CSV</button>
+      </div>
+    </div>
+    <div class="paper" id="paper"></div>
+    <div class="card noprint"><h2>Audit trail <span class="subar" style="color:var(--muted);font-weight:400;font-size:13px">· <bdi class="ar">سجل التدقيق</bdi></span></h2><p class="hint">Every import, selection and test update is logged with a timestamp.</p><div class="trail" id="trail"></div></div>
+  </section>
+
+  </div>
+</main>
+</div>
+
+<div class="scrim" id="mapModal" hidden><div class="modal" role="dialog" aria-modal="true" aria-label="Map columns">
+  <div><h2>Map columns <span class="subar" style="color:var(--muted);font-weight:400;font-size:13px">· <bdi class="ar">مطابقة الأعمدة</bdi></span></h2><p class="hint" id="mapInfo" style="margin:4px 0 0"></p></div>
+  <div class="form" id="mapForm"></div>
+  <div class="tbl" id="mapPrev" style="max-height:230px"></div>
+  <div class="row end"><button class="btn" id="mapCancel">Cancel</button><button class="btn em" id="mapOk">Import transactions</button></div>
+</div></div>
+<div class="scrim" id="txtModal" hidden><div class="modal" role="dialog" aria-modal="true" aria-label="Export text">
+  <div><h2 id="txtTitle">Export</h2><p class="hint" style="margin:4px 0 0">Saving files is not available in this view. Copy the text and paste it into a file.</p></div>
+  <textarea id="txtBody" class="inp" style="min-height:280px;font-family:var(--mono);font-size:12px" readonly></textarea>
+  <div class="row end"><button class="btn" id="txtCopy">Copy</button><button class="btn pri" id="txtClose">Close</button></div>
+</div></div>
+<aside class="drawer" id="drawer" hidden aria-label="Transaction test"></aside>
+<div class="toast" id="toast" hidden></div>
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>(n<0?'-':'')+'$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmt0=n=>(n<0?'-':'')+'$'+Math.abs(Math.round(n)).toLocaleString('en-US');
+const pc=(a,b)=>b?a/b*100:0;
+const sum=(a,f)=>a.reduce((s,x)=>s+f(x),0);
+const KEY='ast-v1';
+let S={ds:{name:'BUILDER INC · General Ledger (demo)',demo:true},mat:10000,eng:'BUILDER INC',period:'2023-01-01 – 2023-09-30',tx:[],sample:[],log:[],wp:{aud:'',rev:'',ref:'WP-A.1',scope:'',conc:''}};
+let toastT;
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2600)}
+function logEv(a,d){S.log.unshift({ts:new Date().toISOString().replace('T',' ').slice(0,19)+' UTC',a:a,d:d||''});if(S.log.length>400)S.log.length=400}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function loadSaved(){try{const j=localStorage.getItem(KEY);if(j){const o=JSON.parse(j);if(o&&o.tx&&o.tx.length){S=Object.assign(S,o);return true}}}catch(e){}return false}
+
+/* ---------- deterministic RNG ---------- */
+function rng(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+/* ---------- demo dataset (BUILDER INC chart of accounts, synthetic entries) ---------- */
+function demoData(){
+  const R=rng(20230306),pick=a=>a[Math.floor(R()*a.length)];
+  const T=[
+    ['12000','Accounts Receivable','Progress billing invoice',['Maple Ridge Homes','Northgate Developments','Cedar Point Condos','Lakeshore Builders'],[2800,9400],1],
+    ['21000','Accounts Payable','Supplier invoice – lumber',['Laurentide Lumber','Pinecrest Timber'],[1900,9200],1],
+    ['21000','Accounts Payable','Supplier invoice – hardware',['Beacon Hardware Supply','Ironside Fasteners'],[600,6100],1],
+    ['50100','Material: Drywall','Drywall materials for job site',['Summit Drywall Co'],[1500,8800],1],
+    ['50300','Material: Lumber','Framing lumber delivery',['Laurentide Lumber','Pinecrest Timber'],[2100,9700],1],
+    ['50400','Material: Roofing','Roofing shingles and underlay',['Apex Roofing Supply'],[1800,9100],1],
+    ['54100','Wages & Salaries','Payroll run – bi-weekly',['Payroll'],[6800,9900],1],
+    ['51600','Equipment Rental','Excavator rental',['Heavy Haul Rentals'],[700,5400],1],
+    ['51700','Freight Expense','Freight inbound',['Northline Freight'],[180,2300],1],
+    ['56100','Accounting & Legal','Professional fees',['Delacroix & Partners'],[900,4200],1],
+    ['56850','Insurance','Liability insurance premium',['Fortis Insurance'],[1100,3900],1],
+    ['56900','Interest & Bank Charges','Monthly bank charges',['TD Bank'],[40,640],1],
+    ['42100','Sales: Drywall','Sales invoice – drywall',['Maple Ridge Homes','Cedar Point Condos'],[2200,9300],1],
+    ['42300','Sales: Lumber','Sales invoice – lumber',['Northgate Developments','Lakeshore Builders'],[3100,9800],1],
+    ['10600','TD Bank Current','Customer receipt deposit',['Maple Ridge Homes','Lakeshore Builders'],[2500,9600],1]
+  ];
+  const out=[];const day=n=>new Date(Date.UTC(2023,0,1+n));
+  for(let i=0;i<52;i++){
+    const t=pick(T);let d=day(1+Math.floor(R()*271));const w=d.getUTCDay();
+    if(R()>0.12){if(w===6)d=day(Math.round((d-day(0))/864e5)-1);else if(w===0)d=day(Math.round((d-day(0))/864e5)+1)}
+    let a=t[4][0]+R()*(t[4][1]-t[4][0]);if(R()<0.1)a=10400+R()*17500;
+    a=Math.round(a*100)/100;
+    out.push({date:d.toISOString().slice(0,10),account:t[0]+' '+t[1],desc:t[2],vendor:pick(t[3]),amount:a,user:R()<0.85?'Steve Smith':'AP Auto-Post'});
+  }
+  const sp=[
+    ['2023-03-18','51300','Adjustment Write-off','Miscellaneous adjustment – inventory true-up','—',48500],
+    ['2023-06-30','15700','Roofing Material','Manual journal – reclass to contract assets','—',396900],
+    ['2023-07-15','51300','Adjustment Write-off','Misc adjustment – write-off of aged stock','—',18250],
+    ['2023-08-26','40900','Other Services','Miscellaneous consulting income – no support on file','Walker & Pine Consulting',67750],
+    ['2023-02-11','56400','Courier & Postage','Courier – miscellaneous charges','Swift Courier',4200],
+    ['2023-04-29','56500','Currency Exchange & Rounding','Adjustment – rounding difference','—',1800],
+    ['2023-05-31','54950','Subcontractors','Manual journal – subcontractor accrual','Ridgeline Framing',12400],
+    ['2023-09-29','51600','Equipment Rental','Equipment rental – lump sum','Heavy Haul Rentals',25000],
+    ['2023-09-28','21000','Accounts Payable','Manual journal – period-end accrual','—',15300],
+    ['2023-05-12','10600','TD Bank Current','Voided cheque – zero value','—',0],
+    ['2023-07-21','42300','Sales: Lumber','Credit note – returned lumber','Maple Ridge Homes',-1250],
+    ['2023-03-09','21000','Accounts Payable','Supplier credit – damaged drywall','Summit Drywall Co',-2640.5],
+    ['2023-08-04','12000','Accounts Receivable','Credit note – pricing correction','Cedar Point Condos',-3180]
+  ];
+  sp.forEach(s=>out.push({date:s[0],account:s[1]+' '+s[2],desc:s[3],vendor:s[4],amount:s[5],user:'Steve Smith'}));
+  out.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+  out.forEach((o,i)=>{o.id='JE-2023-'+String(i+1).padStart(4,'0')});
+  return out;
+}
+
+/* ---------- MindBridge-style risk engine ---------- */
+const KW=/miscellaneous|\bmisc\b|adjust|write[- ]?off|suspense|reversal|reclass|plug|متنوع|تسوية|تعديل|عكس|مصروفات أخرى/i;
+const ODD=/adjust|misc|suspense|rounding|write[- ]?off|exchange|تسوية|متنوع/i;
+const MAN=/manual|journal|يدوي/i;
+function scoreAll(){
+  const m=S.mat,seen={};
+  S.tx.forEach(t=>{const k=t.vendor+'|'+Math.abs(t.amount)+'|'+t.account;if(t.vendor&&t.vendor!=='—'&&t.amount)seen[k]=(seen[k]||0)+1});
+  S.tx.forEach(t=>{
+    const a=Math.abs(t.amount),f=[];let s=0;
+    if(a>m){s+=35;f.push('High monetary value')}
+    if(a>=5*m){s+=25;f.push('Extreme amount')}
+    if(KW.test(t.desc)){s+=25;f.push('Suspicious keyword')}
+    if(t.date){const w=new Date(t.date+'T00:00:00Z').getUTCDay();if(w===0||w===6){s+=15;f.push('Weekend posting')}}
+    if(MAN.test(t.desc)||!t.user){s+=10;f.push('Manual entry')}
+    if(a>=1000&&a%500===0){s+=10;f.push('Round amount')}
+    if(ODD.test(t.account)){s+=10;f.push('Unusual account')}
+    if(seen[t.vendor+'|'+a+'|'+t.account]>1){s+=10;f.push('Possible duplicate')}
+    if(t.amount<0){s+=5;f.push('Credit / reversal')}
+    if(/high|عالي/i.test(t.cat||'')){s+=10;f.push('Source flagged high')}
+    t.risk=Math.min(100,s);t.flags=f;t.level=t.risk>=60?'High':t.risk>=35?'Medium':'Low';
+  });
+}
+function stats(pop){
+  pop=pop||S.tx;const L={High:[],Medium:[],Low:[]};pop.forEach(t=>L[t.level].push(t));
+  const gross=sum(pop,t=>Math.abs(t.amount));
+  return {L,gross,n:pop.length,g:{High:sum(L.High,t=>Math.abs(t.amount)),Medium:sum(L.Medium,t=>Math.abs(t.amount)),Low:sum(L.Low,t=>Math.abs(t.amount))}};
+}
+function setTx(rows,name,demo){
+  S.tx=rows.map(r=>Object.assign({status:'Pending',mis:0,obs:'',act:'',cat:''},r));
+  S.sample=[];S.ds={name:name,demo:!!demo};scoreAll();
+  logEv(demo?'Demo dataset loaded':'CSV imported',name+' · '+S.tx.length+' transactions · materiality '+fmt0(S.mat));
+  save();
+}
+
+/* ---------- CSV parsing ---------- */
+function decodeBuf(buf){
+  try{return new TextDecoder('utf-8',{fatal:true}).decode(buf)}catch(e){}
+  try{return new TextDecoder('windows-1256').decode(buf)}catch(e){return new TextDecoder('utf-8').decode(buf)}
+}
+function parseCSV(text){
+  text=text.replace(/^﻿/,'');
+  const first=text.split(/\r?\n/)[0]||'',cnt=c=>first.split(c).length-1;
+  const d=[['\t',cnt('\t')],[';',cnt(';')],[',',cnt(',')]].sort((a,b)=>b[1]-a[1])[0][0];
+  const rows=[];let row=[],f='',q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;
+    else if(c===d){row.push(f);f=''}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(f);f='';rows.push(row);row=[]}
+    else f+=c;
+  }
+  if(f!==''||row.length){row.push(f);rows.push(row)}
+  return rows.filter(r=>r.some(x=>x.trim()!==''));
+}
+function toNum(s){
+  if(s==null)return NaN;s=String(s).trim();if(!s)return NaN;
+  s=s.replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/٫/g,'.').replace(/٬/g,',');
+  let neg=/^\(.*\)$/.test(s)||/^-/.test(s)||/-$/.test(s)||/cr$/i.test(s);
+  s=s.replace(/[^0-9.,]/g,'');if(!s)return NaN;
+  const lc=s.lastIndexOf(','),ld=s.lastIndexOf('.');
+  if(lc>-1&&ld>-1){s=lc>ld?s.replace(/\./g,'').replace(',','.'):s.replace(/,/g,'')}
+  else if(lc>-1){s=/,\d{1,2}$/.test(s)&&s.split(',').length===2?s.replace(',','.'):s.replace(/,/g,'')}
+  const n=parseFloat(s);return isNaN(n)?NaN:(neg?-n:n);
+}
+function toDate(s){
+  s=String(s||'').trim().replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c));let m;
+  if(m=s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/))return m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0');
+  if(m=s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/)){let a=+m[1],b=+m[2];if(a<=12&&b>12){const t=a;a=b;b=t}return m[3]+'-'+String(b).padStart(2,'0')+'-'+String(a).padStart(2,'0')}
+  const d=new Date(s);return isNaN(d)?null:d.toISOString().slice(0,10);
+}
+const FIELDS=[
+  ['date','Date','التاريخ',/date|posted|effective|تاريخ/i],
+  ['amount','Amount','المبلغ',/amount|value|total|net|debit|مبلغ|قيمة/i],
+  ['desc','Description','الوصف',/desc|memo|narr|detail|particular|بيان|وصف/i],
+  ['account','Account','الحساب',/account|acct|\bgl\b|حساب/i],
+  ['vendor','Vendor / Customer','المورد / العميل',/vendor|supplier|customer|payee|party|name|مورد|عميل/i],
+  ['user','User','المستخدم',/user|preparer|posted.?by|entered|created|مستخدم|منشئ/i],
+  ['cat','Risk / Category','المخاطر / التصنيف',/risk|categ|type|class|تصنيف|فئة|مخاطر/i],
+  ['id','Transaction ID','رقم العملية',/id|entry|journal|\bje\b|ref|voucher|number|رقم|معرف|قيد/i]
+];
+function autoMap(head){
+  const used={},map={};
+  FIELDS.forEach(f=>{const i=head.findIndex((h,k)=>!used[k]&&f[3].test(h));if(i>-1){map[f[0]]=i;used[i]=1}else map[f[0]]=-1});
+  return map;
+}
+function buildRows(rows,map){
+  const out=[];let skipped=0;
+  rows.slice(1).forEach((r,i)=>{
+    const g=k=>map[k]>-1?(r[map[k]]||'').trim():'';
+    const amt=toNum(g('amount'));if(isNaN(amt)){skipped++;return}
+    out.push({id:g('id')||'R-'+String(i+1).padStart(5,'0'),date:toDate(g('date'))||'',desc:g('desc'),account:g('account')||'Unmapped',amount:amt,vendor:g('vendor')||'—',user:g('user'),cat:g('cat')});
+  });
+  return {out:out,skipped:skipped};
+}
+
+/* ---------- sample size calculator (ISA 530 / AICPA) ---------- */
+const Z={0.9:1.645,0.95:1.96,0.99:2.576},RFAC={0.9:2.31,0.95:3.0,0.99:4.61},EFAC={0.9:1.5,0.95:1.6,0.99:1.9};
+function calcSize(o){
+  let n0,f;
+  if(o.approach==='attr'){
+    if(!(o.tol>0)||o.exp>=o.tol)return {err:'Expected rate must be lower than the tolerable rate.'};
+    if(o.exp<=0){n0=Math.log(1-o.conf)/Math.log(1-o.tol);f='n = ln(1 − CL) ÷ ln(1 − TER)'}
+    else{const e=o.prec>0?o.prec:o.tol-o.exp,z=Z[o.conf];n0=z*z*o.exp*(1-o.exp)/(e*e);f='n = z² · p(1 − p) ÷ e²   (z = '+z+')'}
+  }else{
+    const den=o.TM-o.EM*EFAC[o.conf];
+    if(!(o.BV>0)||!(den>0))return {err:'Tolerable misstatement must exceed expected misstatement × expansion factor.'};
+    n0=o.BV*RFAC[o.conf]/den;f='n = BV × RF ÷ (TM − EM × EF)   (RF = '+RFAC[o.conf]+', EF = '+EFAC[o.conf]+')';
+  }
+  let n=n0;
+  if(o.fpc&&o.N>0){n=n0/(1+(n0-1)/o.N);f+=' · FPC applied'}
+  n=Math.max(1,Math.ceil(n));if(o.N>0)n=Math.min(n,o.N);
+  return {n:n,n0:Math.ceil(n0),f:f};
+}
+
+/* ---------- selection engines ---------- */
+const byDate=(a,b)=>(a.date+a.id)<(b.date+b.id)?-1:1;
+function shuffleIdx(len,R){const a=[...Array(len).keys()];for(let i=len-1;i>0;i--){const j=Math.floor(R()*(i+1));const t=a[i];a[i]=a[j];a[j]=t}return a}
+function selRandom(pop,n,seed){
+  const R=rng(seed);return {sel:shuffleIdx(pop.length,R).slice(0,n).map(i=>({id:pop[i].id,why:'Random draw (seed '+seed+')'})),note:'Simple random sample without replacement · seed '+seed};
+}
+function selSystematic(pop,n,seed,start){
+  const s=[...pop].sort(byDate),k=s.length/n,R=rng(seed);
+  const off=start>0?Math.min(start,Math.ceil(k))-1:R()*k,out=[];
+  for(let i=0;i<n;i++){const p=Math.floor(off+i*k);if(p<s.length)out.push({id:s[p].id,why:'Every '+k.toFixed(2)+'th item, position '+(p+1)})}
+  return {sel:out,note:'Interval k = '+s.length+' ÷ '+n+' = '+k.toFixed(2)+' · start offset '+off.toFixed(2)};
+}
+function allocate(n,w,cap){
+  const K=w.length,a=Array(K).fill(0);let left=n,open=[...Array(K).keys()];
+  while(left>0&&open.length){
+    const W=sum(open,i=>w[i]),q=open.map(i=>W>0?left*w[i]/W:left/open.length),fl=q.map(Math.floor);
+    let rem=left-fl.reduce((s,x)=>s+x,0);
+    const ord=open.map((i,j)=>[q[j]-fl[j],j]).sort((x,y)=>y[0]-x[0]);
+    for(let r=0;r<rem;r++)fl[ord[r][1]]++;
+    let used=0;const next=[];
+    open.forEach((i,j)=>{const g=Math.min(fl[j],cap[i]-a[i]);a[i]+=g;used+=g;if(a[i]<cap[i])next.push(i)});
+    if(!used)break;left-=used;open=next;
+  }
+  return a;
+}
+function selStratified(pop,n,seed,by,alloc){
+  const g={};
+  pop.forEach(t=>{const k=by==='account'?t.account:by==='vendor'?t.vendor:t.level;(g[k]=g[k]||[]).push(t)});
+  const keys=Object.keys(g).sort(),R=rng(seed);
+  const w=keys.map(k=>alloc==='equal'?1:alloc==='risk'?sum(g[k],t=>t.risk)+0.001:g[k].length);
+  const a=allocate(Math.min(n,pop.length),w,keys.map(k=>g[k].length)),out=[],tab=[];
+  keys.forEach((k,i)=>{
+    const idx=shuffleIdx(g[k].length,R).slice(0,a[i]);
+    idx.forEach(j=>out.push({id:g[k][j].id,why:'Stratum: '+k}));
+    tab.push({k:k,size:g[k].length,val:sum(g[k],t=>Math.abs(t.amount)),n:a[i]});
+  });
+  return {sel:out,strata:tab,note:'Stratified by '+(by==='level'?'risk tier':by)+' · '+({prop:'proportional',equal:'equal',risk:'risk-weighted'}[alloc])+' allocation · '+keys.length+' strata'};
+}
+function selMUS(pop,n,seed){
+  const pos=pop.filter(t=>t.amount>0).sort(byDate),iso=pop.filter(t=>t.amount<=0);
+  const total=sum(pos,t=>t.amount);if(!pos.length)return {err:'No positive balances to sample.'};
+  const iv=total/n,start=rng(seed)()*iv,out=[];let cum=0,pt=start,key=0;
+  pos.forEach(t=>{
+    const first=pt;cum+=t.amount;let hit=false;
+    while(pt<cum){hit=true;pt+=iv}
+    if(hit){const cert=t.amount>=iv;if(cert)key++;out.push({id:t.id,why:cert?'Key item ≥ interval':'Dollar unit '+fmt0(first)+' of '+fmt0(total)})}
+  });
+  iso.forEach(t=>out.push({id:t.id,isolated:true,why:'Negative / zero entry isolated for separate review'}));
+  return {sel:out,interval:iv,key:key,iso:iso.length,note:'Interval '+fmt0(iv)+' · random start '+fmt0(start)+' · '+key+' key item(s) at or above the interval · '+iso.length+' negative/zero entr'+(iso.length===1?'y':'ies')+' isolated'};
+}
+function applySample(sel,method,append){
+  const keep=append?S.sample:[],have=new Set(keep.map(x=>x.id)),ts=new Date().toISOString().slice(0,10);
+  if(!append){const drop=new Set(S.sample.map(x=>x.id));sel.forEach(s=>drop.delete(s.id));S.tx.forEach(t=>{if(drop.has(t.id)){t.status='Pending';t.mis=0;t.obs='';t.act=''}})}
+  const add=sel.filter(s=>!have.has(s.id)).map(s=>({id:s.id,method:method,why:s.why||'',isolated:!!s.isolated,ts:ts}));
+  S.sample=keep.concat(add);return add.length;
+}
+const txMap=()=>{const m={};S.tx.forEach(t=>m[t.id]=t);return m};
+function sampleItems(){const m=txMap();return S.sample.map(s=>({s:s,t:m[s.id]})).filter(x=>x.t)}
+function sampleStats(){
+  const it=sampleItems(),st=stats(),val=sum(it,x=>Math.abs(x.t.amount));
+  const ex=it.filter(x=>x.t.status==='Exception'),tested=it.filter(x=>x.t.status!=='Pending');
+  const hi=it.filter(x=>x.t.level==='High').length;
+  return {n:it.length,val:val,covV:pc(val,st.gross),covN:pc(it.length,st.n),ex:ex.length,tested:tested.length,mis:sum(it,x=>x.t.status==='Exception'?Math.abs(+x.t.mis||0):0),hi:hi,hiTot:st.L.High.length};
+}
+
+/* ---------- shell: routing, theme, export helper ---------- */
+const V={dashboard:['Dashboard','لوحة التحكم والتحليلات'],import:['Import & Mapping','استيراد وإعداد البيانات'],risk:['Risk Analysis','تحليل المخاطر والنقاط'],sampling:['Sampling Methods & Calculator','طرق المعاينة وحاسبة العينة'],results:['Sample Results & Exception Tracking','نتائج العينة ومتابعة الأخطاء'],workpaper:['Audit Trail & Working Paper Export','ملف التوثيق وتقرير التدقيق']};
+V.tasks=['Task Manager & Audit Plan','مدير المهام وخطة التدقيق'];V.engage=['Engagement, Checks & Data Table','المهمة والفحوصات وجدول البيانات'];
+let cur='dashboard';const R_={};
+function go(v){
+  if(!V[v])v='dashboard';cur=v;
+  $$('.view').forEach(e=>e.hidden=e.id!=='v-'+v);
+  $$('.nav').forEach(b=>{if(b.dataset.v===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  $('#ttl').textContent=V[v][0];$('#sub').textContent=V[v][1];
+  chips();R_[v]();closeDrawer();window.scrollTo(0,0);
+  if(location.hash!=='#'+v)location.hash=v;
+}
+function chips(){$('#chipDs').textContent=S.ds.name+' · '+S.tx.length+' items';$('#chipMat').textContent='Materiality '+fmt0(S.mat)}
+function refresh(){chips();R_[cur]();save()}
+let dlNs;
+async function getDl(){
+  if(dlNs!==undefined)return dlNs;
+  try{dlNs=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){dlNs=null}
+  return dlNs;
+}
+function showText(title,text){$('#txtTitle').textContent=title;$('#txtBody').value=text;$('#txtModal').hidden=false}
+async function saveFile(name,text){
+  const d=await getDl();
+  if(d){try{await d.save({filename:name,data:text});toast('Ready: '+name);return}catch(e){if(e&&e.code==='declined')return}}
+  showText(name,text);
+}
+function csvCell(v){v=v==null?'':String(v);return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+function toCSV(head,rows){return '﻿'+[head].concat(rows).map(r=>r.map(csvCell).join(',')).join('\r\n')}
+const CLS={High:'high',Medium:'med',Low:'low'};
+const rbar=t=>'<div class="bar" title="'+t.risk+'%"><i style="width:'+t.risk+'%;background:var(--'+CLS[t.level]+')"></i></div>';
+const flags=t=>t.flags.map(f=>'<span class="flag">'+esc(f)+'</span>').join('');
+
+/* ---------- charts ---------- */
+function donut(){
+  const st=stats(),C=2*Math.PI*54;let off=0;
+  const segs=['High','Medium','Low'].map(k=>{const d=st.L[k].length/(st.n||1)*C;const s='<circle r="54" cx="70" cy="70" fill="none" stroke-width="18" style="stroke:var(--'+CLS[k]+')" stroke-dasharray="'+d+' '+(C-d)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 70 70)"><title>'+k+': '+st.L[k].length+'</title></circle>';off+=d;return s}).join('');
+  return '<svg viewBox="0 0 140 140" width="160" height="160" role="img" aria-label="Risk distribution doughnut"><circle r="54" cx="70" cy="70" fill="none" stroke-width="18" style="stroke:var(--surface2)"/>'+segs+'<text x="70" y="70" text-anchor="middle" style="fill:var(--text);font:500 24px var(--mono)">'+st.n+'</text><text x="70" y="87" text-anchor="middle" style="fill:var(--muted);font:11px var(--sans)">transactions</text></svg>';
+}
+function monthChart(pop){
+  const m={};(pop||S.tx).forEach(t=>{const k=(t.date||'').slice(0,7)||'n/a';(m[k]=m[k]||{High:0,Medium:0,Low:0})[t.level]++});
+  const ks=Object.keys(m).sort(),W=640,H=240,l=36,r=8,tp=10,b=28;if(!ks.length)return '';
+  const mx=Math.max(1,...ks.map(k=>m[k].High+m[k].Medium+m[k].Low));
+  const step=[1,2,5,10,20,50,100,200,500,1000,2000,5000].find(s=>mx/s<=5)||10000,top=Math.ceil(mx/step)*step;
+  const pw=(W-l-r)/ks.length,bw=Math.min(46,pw*.62),y=v=>tp+(H-tp-b)*(1-v/top);let g='',bars='';
+  for(let v=0;v<=top;v+=step)g+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(v)+'" y2="'+y(v)+'" style="stroke:var(--border)"/><text x="'+(l-6)+'" y="'+(y(v)+3)+'" text-anchor="end" style="fill:var(--muted);font:10px var(--mono)">'+v+'</text>';
+  ks.forEach((k,i)=>{
+    const x=l+pw*i+(pw-bw)/2;let acc=0;
+    ['Low','Medium','High'].forEach(lv=>{const c=m[k][lv];if(!c)return;bars+='<rect x="'+x+'" y="'+y(acc+c)+'" width="'+bw+'" height="'+(y(acc)-y(acc+c))+'" rx="1.5" style="fill:var(--'+CLS[lv]+')"><title>'+k+' · '+lv+': '+c+'</title></rect>';acc+=c});
+    const lab=k==='n/a'?k:new Date(k+'-01T00:00:00Z').toLocaleString('en',{month:'short',timeZone:'UTC'})+' '+k.slice(2,4);
+    bars+='<text x="'+(x+bw/2)+'" y="'+(H-10)+'" text-anchor="middle" style="fill:var(--muted);font:10.5px var(--sans)">'+lab+'</text>';
+  });
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="Monthly risk distribution">'+g+bars+'</svg>';
+}
+const legend=()=>'<div class="legend"><span><i style="background:var(--high)"></i>High</span><span><i style="background:var(--med)"></i>Medium</span><span><i style="background:var(--low)"></i>Low</span></div>';
+function txTable(rows,extra){
+  if(!rows.length)return '<div class="empty">No transactions.</div>';
+  return '<table><thead><tr><th>ID</th><th>Date</th><th>Description</th><th>Account</th><th class="n">Amount</th><th>Risk</th><th>Level</th>'+(extra?'<th>Control points</th>':'')+'</tr></thead><tbody>'+rows.map(t=>'<tr><td class="mono">'+esc(t.id)+'</td><td class="mono">'+esc(t.date)+'</td><td>'+esc(t.desc)+'</td><td>'+esc(t.account)+'</td><td class="n">'+fmt(t.amount)+'</td><td style="min-width:90px"><span class="num" style="font-size:12px">'+t.risk+'%</span>'+rbar(t)+'</td><td><span class="pill '+t.level+'">'+t.level+'</span></td>'+(extra?'<td>'+flags(t)+'</td>':'')+'</tr>').join('')+'</tbody></table>';
+}
+
+/* ---------- dashboard ---------- */
+R_.dashboard=function(){
+  const st=stats(),ss=sampleStats(),it=sampleItems();
+  const k=(cls,l,v,s)=>'<div class="card kpi '+cls+'"><span class="l">'+l+'</span><span class="v">'+v+'</span><span class="s">'+s+'</span></div>';
+  const cnt=s=>it.filter(x=>x.t.status===s).length,tot=it.length||1;
+  const bys={};it.forEach(x=>bys[x.s.method]=(bys[x.s.method]||0)+1);
+  $('#dash').innerHTML=
+  '<div class="grid g4">'+
+  k('em','Population',st.n,fmt0(st.gross)+' gross activity')+
+  k('hi','High risk',st.L.High.length,pc(st.L.High.length,st.n).toFixed(1)+'% of ledger · '+fmt0(st.g.High))+
+  k('me','Medium risk',st.L.Medium.length,pc(st.L.Medium.length,st.n).toFixed(1)+'% of ledger · '+fmt0(st.g.Medium))+
+  k('lo','Low risk',st.L.Low.length,pc(st.L.Low.length,st.n).toFixed(1)+'% of ledger · '+fmt0(st.g.Low))+'</div>'+
+  '<div class="grid g4">'+
+  k('','Sample size',ss.n,ss.covV.toFixed(1)+'% value coverage · '+ss.covN.toFixed(1)+'% of items')+
+  k('','Tested',ss.tested+' / '+ss.n,ss.n?pc(ss.tested,ss.n).toFixed(0)+'% complete':'No sample selected')+
+  k(ss.ex?'hi':'','Exceptions',ss.ex,ss.hi+' of '+ss.hiTot+' high-risk items in sample')+
+  k(ss.mis>S.mat?'hi':'','Misstatements found',fmt0(ss.mis),pc(ss.mis,S.mat).toFixed(0)+'% of materiality')+'</div>'+
+  '<div class="grid g2"><div class="card"><h2>Risk distribution <span class="subar" style="color:var(--muted);font-weight:400;font-size:13px">· <bdi class="ar">توزيع المخاطر</bdi></span></h2><p class="hint">MindBridge-style scoring of 100% of the population.</p>'+
+  '<div class="row" style="gap:24px">'+donut()+'<div style="display:flex;flex-direction:column;gap:10px;font-size:13px">'+['High','Medium','Low'].map(l=>'<div><span class="pill '+l+'">'+l+'</span> <span class="num">'+st.L[l].length+'</span> items · <span class="num">'+fmt0(st.g[l])+'</span></div>').join('')+'</div></div></div>'+
+  '<div class="card"><h2>Monthly distribution <span class="subar" style="color:var(--muted);font-weight:400;font-size:13px">· <bdi class="ar">التوزيع الشهري</bdi></span></h2><p class="hint">Transactions per month by risk level.</p>'+monthChart()+legend()+'</div></div>'+
+  '<div class="grid g2"><div class="card"><h2>Testing progress</h2><p class="hint">Status of items in the current sample.</p>'+
+  (it.length?'<div style="display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--surface2)"><i style="width:'+pc(cnt('Tested'),tot)+'%;background:var(--low)"></i><i style="width:'+pc(cnt('Exception'),tot)+'%;background:var(--high)"></i></div><div class="legend" style="margin-top:10px"><span><i style="background:var(--low)"></i>Tested '+cnt('Tested')+'</span><span><i style="background:var(--high)"></i>Exception '+cnt('Exception')+'</span><span><i style="background:var(--surface2);border:1px solid var(--border2)"></i>Pending '+cnt('Pending')+'</span></div><p class="hint" style="margin-top:12px">Methods used: '+Object.keys(bys).map(m=>esc(m)+' ('+bys[m]+')').join(', ')+'</p>':'<div class="empty">No sample yet. Open Sampling to select one.</div>')+'</div>'+
+  '<div class="card"><h2>Highest-risk items</h2><p class="hint">Top 6 by risk score.</p><div class="tbl">'+txTable([...S.tx].sort((a,b)=>b.risk-a.risk||Math.abs(b.amount)-Math.abs(a.amount)).slice(0,6))+'</div></div></div>';
+};
+
+/* ---------- import & mapping ---------- */
+let pend=null;
+R_.import=function(){
+  $('#engName').value=S.eng;$('#matIn').value=S.mat;$('#period').value=S.period;
+  $('#dsNote').innerHTML='<b>'+esc(S.ds.name)+'</b><br>'+(S.ds.demo?'Demo data: the chart of accounts, period, materiality and user come from the BUILDER INC case files. Individual entries are generated for practice because the case exports hold monthly account totals, not journal lines.':'Imported from your CSV.')+'<br>'+S.tx.length+' transactions · '+fmt0(stats().gross)+' gross.';
+  $('#popPrev').innerHTML='<table><thead><tr><th>ID</th><th>Date</th><th>Description</th><th>Account</th><th>Vendor / Customer</th><th>User</th><th class="n">Amount</th></tr></thead><tbody>'+S.tx.slice(0,15).map(t=>'<tr><td class="mono">'+esc(t.id)+'</td><td class="mono">'+esc(t.date)+'</td><td>'+esc(t.desc)+'</td><td>'+esc(t.account)+'</td><td>'+esc(t.vendor)+'</td><td>'+esc(t.user)+'</td><td class="n">'+fmt(t.amount)+'</td></tr>').join('')+'</tbody></table>';
+};
+function mapPreview(){
+  const m=pend.map,h=pend.rows[0],mapped=new Set(Object.values(m));
+  $('#mapPrev').innerHTML='<table><thead><tr>'+h.map((x,i)=>'<th'+(mapped.has(i)?' style="color:var(--emerald-ink)"':'')+'>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+pend.rows.slice(1,7).map(r=>'<tr>'+h.map((_,i)=>'<td>'+esc(r[i])+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+}
+function openMap(rows,name){
+  pend={rows:rows,name:name,map:autoMap(rows[0])};
+  $('#mapInfo').textContent=name+' · '+(rows.length-1)+' data rows · '+rows[0].length+' columns. Check the detected columns, then import.';
+  $('#mapForm').innerHTML=FIELDS.map(f=>'<div class="field"><label for="mp-'+f[0]+'">'+f[1]+' <span class="ar subar">'+f[2]+'</span>'+(f[0]==='amount'?' *':'')+'</label><select id="mp-'+f[0]+'"><option value="-1">— not mapped —</option>'+rows[0].map((h,i)=>'<option value="'+i+'"'+(pend.map[f[0]]===i?' selected':'')+'>'+esc(h||'Column '+(i+1))+'</option>').join('')+'</select></div>').join('');
+  FIELDS.forEach(f=>{$('#mp-'+f[0]).onchange=e=>{pend.map[f[0]]=+e.target.value;mapPreview()}});
+  mapPreview();$('#mapModal').hidden=false;
+}
+function handleFile(file){
+  if(!file)return;
+  const fr=new FileReader();
+  fr.onload=()=>{const rows=parseCSV(decodeBuf(fr.result));if(rows.length<2){toast('The file has no data rows.');return}openMap(rows,file.name)};
+  fr.onerror=()=>toast('Could not read the file.');
+  fr.readAsArrayBuffer(file);
+}
+function bindImport(){
+  const d=$('#drop'),f=$('#file');
+  d.onclick=()=>f.click();d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f.click()}};
+  f.onchange=()=>{handleFile(f.files[0]);f.value=''};
+  ['dragenter','dragover'].forEach(ev=>d.addEventListener(ev,e=>{e.preventDefault();d.classList.add('over')}));
+  ['dragleave','drop'].forEach(ev=>d.addEventListener(ev,e=>{e.preventDefault();d.classList.remove('over')}));
+  d.addEventListener('drop',e=>handleFile(e.dataTransfer.files[0]));
+  $('#mapCancel').onclick=()=>{$('#mapModal').hidden=true;pend=null};
+  $('#mapOk').onclick=()=>{
+    if(pend.map.amount<0){toast('Map the Amount column first.');return}
+    const r=buildRows(pend.rows,pend.map);if(!r.out.length){toast('No valid amounts found in the mapped column.');return}
+    setTx(r.out,pend.name,false);$('#mapModal').hidden=true;
+    toast(r.out.length+' transactions imported'+(r.skipped?' · '+r.skipped+' rows skipped':''));pend=null;go('risk');
+  };
+  $('#demoBtn').onclick=()=>{setTx(demoData(),'BUILDER INC · General Ledger (demo)',true);toast('Demo dataset loaded');refresh()};
+  $('#tplBtn').onclick=()=>saveFile('audit-sampling-template.csv',toCSV(['Transaction ID','Date','Description','Account','Amount','Vendor/Customer','User','Risk/Category'],[['JE-0001','2023-01-15','Supplier invoice','21000 Accounts Payable','4250.00','Laurentide Lumber','Steve Smith',''],['JE-0002','2023-01-21','Miscellaneous adjustment','51300 Adjustment Write-off','12500.00','—','Steve Smith','']]));
+  $('#engName').onchange=e=>{S.eng=e.target.value;save()};
+  $('#period').onchange=e=>{S.period=e.target.value;save()};
+  $('#matIn').onchange=e=>{const v=+e.target.value;if(v>0){S.mat=v;scoreAll();logEv('Materiality changed',fmt0(v));refresh();toast('Risk scores recalculated')}};
+  $('#txtClose').onclick=()=>$('#txtModal').hidden=true;
+  $('#txtCopy').onclick=()=>{const t=$('#txtBody');t.select();try{navigator.clipboard.writeText(t.value).then(()=>toast('Copied'),()=>{document.execCommand('copy');toast('Copied')})}catch(e){document.execCommand('copy');toast('Copied')}};
+}
+
+/* ---------- i18n: dictionary (en | fr | ar) ---------- */
+let LANG='en';
+const D={fr:{},ar:{}},RX=[];
+function addDict(t){t.trim().split('\n').forEach(l=>{const p=l.split('|');if(p.length>=3){const k=p[0].trim();D.fr[k]=p[1].trim();D.ar[k]=p[2].trim()}})}
+const L3=(en,fr,ar)=>LANG==='fr'?fr:LANG==='ar'?ar:en;
+addDict(`
+Tasks|Tâches|المهام
+Engagement|Mission|المهمة
+Engagement settings|Paramètres de la mission|إعدادات المهمة
+Data integrity checks|Contrôles d'intégrité des données|فحوصات سلامة البيانات
+Data table|Table de données|جدول البيانات
+Annotations|Annotations|الملاحظات
+Reset filter|Réinitialiser le filtre|إعادة تعيين التصفية
+Re-run analysis|Relancer l'analyse|إعادة تشغيل التحليل
+You must re-run your analysis to apply recent updates.|Vous devez relancer l'analyse pour appliquer les mises à jour récentes.|يجب إعادة تشغيل التحليل لتطبيق التحديثات الأخيرة.
+Open|Ouvert|مفتوح
+Completed|Terminé|مكتمل
+Approved|Approuvé|معتمد
+Overdue|En retard|متأخر
+All tasks|Toutes les tâches|كل المهام
+Assigned to|Assigné à|مسند إلى
+Approval by|Approbation par|اعتماد من
+Export|Exporter|تصدير
+Save|Enregistrer|حفظ
+Comments|Commentaires|التعليقات
+History|Historique|السجل
+`);
+addDict(`
+Dashboard|Tableau de bord|لوحة التحكم
+Import|Import|استيراد
+Risk|Risques|المخاطر
+Sampling|Échantillonnage|المعاينة
+Results|Résultats|النتائج
+Working Paper|Feuille de travail|ورقة العمل
+Import & Mapping|Import et mappage|الاستيراد والمطابقة
+Risk Analysis|Analyse des risques|تحليل المخاطر
+Sampling Methods & Calculator|Méthodes d'échantillonnage et calculateur|طرق المعاينة وحاسبة العينة
+Sample Results & Exception Tracking|Résultats de l'échantillon et suivi des anomalies|نتائج العينة ومتابعة الأخطاء
+Audit Trail & Working Paper Export|Piste d'audit et export de la feuille de travail|ملف التوثيق وتقرير التدقيق
+Toggle theme|Changer de thème|تبديل المظهر
+Language|Langue|اللغة
+Main|Principal|الرئيسية
+BUILDER INC · General Ledger (demo)|BUILDER INC · Grand livre (démo)|BUILDER INC · دفتر الأستاذ (تجريبي)
+Upload CSV|Importer un CSV|رفع ملف CSV
+UTF-8 and Arabic (Windows-1256) files are detected automatically. Comma, semicolon and tab delimiters are supported.|Les fichiers UTF-8 et arabes (Windows-1256) sont détectés automatiquement. Séparateurs virgule, point-virgule et tabulation pris en charge.|يتم اكتشاف ملفات UTF-8 والعربية (Windows-1256) تلقائياً. الفواصل المدعومة: الفاصلة، الفاصلة المنقوطة، والتبويب.
+Drop a CSV file here, or click to browse|Déposez un fichier CSV ici ou cliquez pour parcourir|أفلت ملف CSV هنا أو اضغط للاستعراض
+Upload CSV file|Importer un fichier CSV|رفع ملف CSV
+Load BUILDER INC demo dataset|Charger le jeu de démonstration BUILDER INC|تحميل بيانات BUILDER INC التجريبية
+CSV template|Modèle CSV|نموذج CSV
+Engagement settings|Paramètres de la mission|إعدادات المهمة
+Materiality drives the High Monetary Value control point and the default tolerable misstatement.|Le seuil de signification détermine le point de contrôle de valeur monétaire élevée et l'anomalie tolérable par défaut.|تحدد الأهمية النسبية نقطة الرقابة للقيمة النقدية العالية والتحريف المقبول الافتراضي.
+Engagement|Mission|المهمة
+Materiality ($)|Seuil de signification ($)|الأهمية النسبية ($)
+Reporting period|Période de reporting|فترة التقرير
+Current population|Population actuelle|المجتمع الحالي
+First 15 transactions of the loaded dataset.|15 premières opérations du jeu de données chargé.|أول 15 عملية من البيانات المحملة.
+Demo data: the chart of accounts, period, materiality and user come from the BUILDER INC case files. Individual entries are generated for practice because the case exports hold monthly account totals, not journal lines.|Données de démonstration : le plan comptable, la période, le seuil et l'utilisateur proviennent des fichiers du cas BUILDER INC. Les écritures sont générées pour l'entraînement car les exports du cas contiennent des totaux mensuels par compte, pas des lignes de journal.|بيانات تجريبية: دليل الحسابات والفترة والأهمية النسبية والمستخدم مأخوذة من ملفات حالة BUILDER INC. القيود مولّدة للتدريب لأن ملفات الحالة تحتوي مجاميع شهرية للحسابات وليس قيود اليومية.
+Imported from your CSV.|Importé depuis votre CSV.|تم الاستيراد من ملف CSV الخاص بك.
+ID|ID|المعرف
+Date|Date|التاريخ
+Description|Description|الوصف
+Account|Compte|الحساب
+Vendor / Customer|Fournisseur / Client|المورد / العميل
+Vendor|Fournisseur|المورد
+User|Utilisateur|المستخدم
+Amount|Montant|المبلغ
+Risk / Category|Risque / Catégorie|المخاطر / التصنيف
+Transaction ID|ID de l'opération|رقم العملية
+— not mapped —|— non mappé —|— غير مطابق —
+Map columns|Mapper les colonnes|مطابقة الأعمدة
+Cancel|Annuler|إلغاء
+Import transactions|Importer les opérations|استيراد العمليات
+Sample size calculator|Calculateur de taille d'échantillon|حاسبة حجم العينة
+ISA 530 / AICPA audit sampling guide. Attribute sampling for control tests and rates; MUS (value) sampling for substantive tests of balances.|Guide d'échantillonnage ISA 530 / AICPA. Échantillonnage par attributs pour les tests de contrôle et les taux ; MUS (valeur) pour les contrôles de substance des soldes.|دليل المعاينة وفق ISA 530 / AICPA. معاينة الخصائص لاختبارات الرقابة والنسب، ومعاينة الوحدة النقدية (MUS) للاختبارات الجوهرية للأرصدة.
+Approach|Approche|الأسلوب
+Attribute (deviation rate)|Attributs (taux de déviation)|الخصائص (معدل الانحراف)
+Monetary unit (misstatement)|Unité monétaire (anomalie)|الوحدة النقدية (التحريف)
+Confidence level|Niveau de confiance|مستوى الثقة
+Population items (N)|Éléments de la population (N)|عناصر المجتمع (N)
+Population value ($)|Valeur de la population ($)|قيمة المجتمع ($)
+Tolerable error rate (%)|Taux d'erreur tolérable (%)|معدل الخطأ المقبول (%)
+Expected error rate (%)|Taux d'erreur attendu (%)|معدل الخطأ المتوقع (%)
+Precision (%) · blank = tolerable − expected|Précision (%) · vide = tolérable − attendu|الدقة (%) · فارغ = المقبول − المتوقع
+auto|auto|تلقائي
+Tolerable misstatement ($)|Anomalie tolérable ($)|التحريف المقبول ($)
+Expected misstatement ($)|Anomalie attendue ($)|التحريف المتوقع ($)
+Finite population correction|Correction de population finie|تصحيح المجتمع المحدود
+Apply FPC|Appliquer la CPF|تطبيق التصحيح
+No FPC|Sans CPF|بدون تصحيح
+Calculated sample size|Taille d'échantillon calculée|حجم العينة المحسوب
+Use this size below|Utiliser cette taille ci-dessous|استخدم هذا الحجم أدناه
+Selection methods|Méthodes de sélection|طرق الاختيار
+Random|Aléatoire|عشوائية
+Systematic|Systématique|منتظمة
+Stratified|Stratifiée|طبقية
+Monetary Unit (MUS)|Unité monétaire (MUS)|الوحدة النقدية (MUS)
+Haphazard|À l'aveugle|عشوائية حرة
+MUS|MUS|MUS
+Sample size (n)|Taille de l'échantillon (n)|حجم العينة (n)
+Random seed (reproducible)|Graine aléatoire (reproductible)|بذرة عشوائية (قابلة للتكرار)
+If a sample already exists|Si un échantillon existe déjà|إذا كانت هناك عينة سابقة
+Replace it|Le remplacer|استبدالها
+Add to it|Y ajouter|الإضافة إليها
+Every item has the same chance of selection. A seeded shuffle picks items without replacement, so the same seed always returns the same sample.|Chaque élément a la même chance d'être sélectionné. Un tirage avec graine choisit les éléments sans remise : la même graine donne toujours le même échantillon.|لكل عنصر نفس فرصة الاختيار. يختار الخلط ببذرة محددة العناصر دون إعادة، فتعطي البذرة نفسها العينة نفسها دائماً.
+Interval k = N ÷ n. Items are ordered by date, then every k-th item is taken from the chosen start position.|Intervalle k = N ÷ n. Les éléments sont triés par date, puis un élément tous les k est pris à partir de la position de départ.|الفترة k = N ÷ n. تُرتب العناصر حسب التاريخ ثم يؤخذ كل عنصر k ابتداءً من موضع البداية المختار.
+Start position (1 – k) · 0 = from seed|Position de départ (1 – k) · 0 = selon la graine|موضع البداية (1 – k) · 0 = من البذرة
+Interval k|Intervalle k|الفترة k
+Stratify by|Stratifier par|التقسيم حسب
+Account|Compte|الحساب
+Risk tier|Niveau de risque|مستوى المخاطر
+Allocation|Allocation|التوزيع
+Proportional to item count|Proportionnelle au nombre d'éléments|متناسب مع عدد العناصر
+Equal per stratum|Égale par strate|متساوٍ لكل طبقة
+Risk-weighted|Pondérée par le risque|مرجّح بالمخاطر
+Interval = positive book value ÷ n. Items at or above the interval are selected with certainty. Negative and zero entries cannot be reached by dollar units, so they are isolated and added as separate review items.|Intervalle = valeur comptable positive ÷ n. Les éléments égaux ou supérieurs à l'intervalle sont sélectionnés d'office. Les écritures négatives ou nulles ne sont pas atteignables par unités monétaires : elles sont isolées et ajoutées pour revue séparée.|الفترة = القيمة الدفترية الموجبة ÷ n. تُختار العناصر التي تساوي الفترة أو تزيد عنها حتماً. لا يمكن الوصول إلى القيود السالبة والصفرية بالوحدات النقدية، لذا تُعزل وتُضاف لمراجعة منفصلة.
+Sampling interval ($)|Intervalle d'échantillonnage ($)|فترة المعاينة ($)
+Non-statistical. Pick items manually and record why. The rationale is mandatory and is stored with each item in the audit trail.|Non statistique. Choisissez les éléments manuellement et justifiez. La justification est obligatoire et conservée avec chaque élément dans la piste d'audit.|غير إحصائية. اختر العناصر يدوياً وسجّل السبب. المبرر إلزامي ويُحفظ مع كل عنصر في سجل التدقيق.
+Search population…|Rechercher dans la population…|ابحث في المجتمع…
+Rationale for selection (required)|Justification de la sélection (obligatoire)|مبرر الاختيار (إلزامي)
+e.g. Items near period end with unusual descriptions; auditor judgement after reading the ledger.|ex. Éléments proches de la clôture avec des libellés inhabituels ; jugement de l'auditeur après lecture du grand livre.|مثال: عناصر قرب نهاية الفترة بأوصاف غير معتادة؛ حكم المدقق بعد قراءة الدفتر.
+Select sample|Sélectionner l'échantillon|اختيار العينة
+Add picked items to sample|Ajouter les éléments choisis|إضافة العناصر المختارة
+Clear sample|Vider l'échantillon|مسح العينة
+Current sample|Échantillon actuel|العينة الحالية
+Items|Éléments|العناصر
+Value covered|Valeur couverte|القيمة المغطاة
+High-risk covered|Risque élevé couvert|عالية المخاطر المغطاة
+Methods|Méthodes|الطرق
+Method|Méthode|الطريقة
+Basis|Base|الأساس
+Level|Niveau|المستوى
+Go to testing|Passer aux tests|الانتقال إلى الاختبار
+Search ID, description, account…|Rechercher ID, description, compte…|ابحث بالمعرف أو الوصف أو الحساب…
+Search|Rechercher|بحث
+All statuses|Tous les statuts|كل الحالات
+All risk|Tous les risques|كل المخاطر
+All levels|Tous les niveaux|كل المستويات
+Filter risk level|Filtrer par niveau de risque|تصفية حسب مستوى المخاطر
+Status|Statut|الحالة
+Pending|En attente|معلّق
+Tested|Testé|تم اختباره
+Exception|Anomalie|خطأ
+Exceptions|Anomalies|الأخطاء
+High|Élevé|مرتفع
+Medium|Moyen|متوسط
+Low|Faible|منخفض
+Misstatement|Anomalie|التحريف
+Test|Tester|اختبار
+The sample is empty. Select a sample in Sampling first.|L'échantillon est vide. Sélectionnez d'abord un échantillon dans Échantillonnage.|العينة فارغة. اختر عينة من قسم المعاينة أولاً.
+No sample selected yet. Choose a method above and select the sample.|Aucun échantillon sélectionné. Choisissez une méthode ci-dessus puis sélectionnez l'échantillon.|لم تُختر عينة بعد. اختر طريقة أعلاه ثم حدد العينة.
+No transactions.|Aucune opération.|لا توجد عمليات.
+No events yet.|Aucun événement.|لا توجد أحداث بعد.
+Transaction|Opération|العملية
+Selected by|Sélectionné par|اختيرت بواسطة
+Testing status|Statut du test|حالة الاختبار
+Misstatement identified ($)|Anomalie identifiée ($)|التحريف المكتشف ($)
+Audit observation|Observation d'audit|ملاحظة التدقيق
+What was inspected and what was found|Ce qui a été examiné et constaté|ما تم فحصه وما تم اكتشافه
+Corrective action recommended|Action corrective recommandée|الإجراء التصحيحي الموصى به
+Save result|Enregistrer le résultat|حفظ النتيجة
+Close|Fermer|إغلاق
+Working paper setup|Configuration de la feuille de travail|إعداد ورقة العمل
+Auditor name|Nom de l'auditeur|اسم المدقق
+Prepared by|Préparé par|أعدّه
+Reviewer|Réviseur|المراجع
+Reviewed by|Revu par|راجعه
+Reference|Référence|المرجع
+Scoping decisions|Décisions de périmètre|قرارات النطاق
+Concluding statement|Conclusion|بيان الخلاصة
+Suggest conclusion wording|Proposer une formulation de conclusion|اقتراح صياغة الخلاصة
+Working paper (print / PDF)|Feuille de travail (impression / PDF)|ورقة العمل (طباعة / PDF)
+Sample CSV|CSV de l'échantillon|CSV العينة
+Exceptions CSV|CSV des anomalies|CSV الأخطاء
+Full population CSV|CSV de la population complète|CSV المجتمع الكامل
+Audit trail|Piste d'audit|سجل التدقيق
+Every import, selection and test update is logged with a timestamp.|Chaque import, sélection et mise à jour de test est journalisé avec un horodatage.|يُسجَّل كل استيراد واختيار وتحديث اختبار مع الوقت.
+Export|Exporter|تصدير
+Saving files is not available in this view. Copy the text and paste it into a file.|L'enregistrement de fichiers n'est pas disponible ici. Copiez le texte et collez-le dans un fichier.|حفظ الملفات غير متاح في هذا العرض. انسخ النص والصقه في ملف.
+Copy|Copier|نسخ
+Audit sampling working paper|Feuille de travail d'échantillonnage d'audit|ورقة عمل معاينة التدقيق
+Audit Sampling & Risk Analytics|Échantillonnage d'audit et analyse des risques|اختيار عينات التدقيق وتحليلات المخاطر
+Overall materiality|Seuil de signification global|الأهمية النسبية الإجمالية
+Dataset|Jeu de données|مجموعة البيانات
+Population|Population|المجتمع
+Risk assessment|Évaluation des risques|تقييم المخاطر
+Items|Éléments|العناصر
+% of ledger|% du grand livre|% من الدفتر
+Gross value|Valeur brute|القيمة الإجمالية
+Not documented.|Non documenté.|غير موثق.
+Sample & coverage|Échantillon et couverture|العينة والتغطية
+Sample size|Taille de l'échantillon|حجم العينة
+High-risk coverage|Couverture du risque élevé|تغطية عالية المخاطر
+Results|Résultats|النتائج
+Known misstatements|Anomalies avérées|التحريفات المعروفة
+Projected misstatement|Anomalie projetée|التحريف المتوقع (المُسقط)
+Observation|Observation|الملاحظة
+Action|Action|الإجراء
+Conclusion|Conclusion|الخلاصة
+Population|Population|المجتمع
+High risk|Risque élevé|مخاطر مرتفعة
+Medium risk|Risque moyen|مخاطر متوسطة
+Low risk|Risque faible|مخاطر منخفضة
+Misstatements found|Anomalies relevées|التحريفات المكتشفة
+Risk distribution|Répartition des risques|توزيع المخاطر
+MindBridge-style scoring of 100% of the population.|Scoring de type MindBridge sur 100 % de la population.|تقييم بأسلوب MindBridge لكامل المجتمع (100%).
+Monthly distribution|Répartition mensuelle|التوزيع الشهري
+Transactions per month by risk level.|Opérations par mois selon le niveau de risque.|العمليات شهرياً حسب مستوى المخاطر.
+Testing progress|Avancement des tests|تقدم الاختبار
+Status of items in the current sample.|Statut des éléments de l'échantillon actuel.|حالة عناصر العينة الحالية.
+Highest-risk items|Éléments les plus risqués|العناصر الأعلى مخاطرة
+Top 6 by risk score.|Top 6 par score de risque.|أعلى 6 حسب درجة المخاطر.
+No sample yet. Open Sampling to select one.|Pas encore d'échantillon. Ouvrez Échantillonnage pour en sélectionner un.|لا توجد عينة بعد. افتح قسم المعاينة لاختيار واحدة.
+Risk distribution doughnut|Anneau de répartition des risques|مخطط دائري لتوزيع المخاطر
+Monthly risk distribution|Répartition mensuelle des risques|التوزيع الشهري للمخاطر
+transactions|opérations|عملية
+Risk breakdown|Détail des risques|تفصيل المخاطر
+Share of transactions by level.|Part des opérations par niveau.|حصة العمليات حسب المستوى.
+Control points|Points de contrôle|نقاط الرقابة
+Tests that raised a transaction score. Points are added, capped at 100. High ≥ 60, Medium ≥ 35.|Tests ayant augmenté le score d'une opération. Les points s'additionnent, plafonnés à 100. Élevé ≥ 60, Moyen ≥ 35.|الاختبارات التي رفعت درجة العملية. تُجمع النقاط بحد أقصى 100. مرتفع ≥ 60، متوسط ≥ 35.
+Control point|Point de contrôle|نقطة الرقابة
+Pts|Pts|نقاط
+Hits|Occurrences|الحالات
+Where risky postings cluster in time.|Où les écritures à risque se concentrent dans le temps.|أين تتركز القيود الخطرة زمنياً.
+Scored transactions|Opérations scorées|العمليات المقيّمة
+Risk|Risque|المخاطر
+High monetary value|Valeur monétaire élevée|قيمة نقدية عالية
+Extreme amount|Montant extrême|مبلغ متطرف
+Suspicious keyword|Mot-clé suspect|كلمة مشبوهة
+Weekend posting|Écriture en week-end|ترحيل في عطلة نهاية الأسبوع
+Manual entry|Écriture manuelle|قيد يدوي
+Round amount|Montant rond|مبلغ مقرّب
+Unusual account|Compte inhabituel|حساب غير معتاد
+Possible duplicate|Doublon possible|تكرار محتمل
+Credit / reversal|Avoir / contrepassation|إشعار دائن / عكس
+Source flagged high|Source signalée élevée|المصدر مصنّف مرتفعاً
+isolated|isolé|معزول
+Upload a file|Importer un fichier|رفع ملف
+`);
+addDict(`
+Demo dataset loaded|Jeu de démonstration chargé|تم تحميل البيانات التجريبية
+Risk scores recalculated|Scores de risque recalculés|أُعيد حساب درجات المخاطر
+The file has no data rows.|Le fichier ne contient aucune ligne de données.|الملف لا يحتوي على صفوف بيانات.
+Could not read the file.|Impossible de lire le fichier.|تعذرت قراءة الملف.
+Map the Amount column first.|Mappez d'abord la colonne Montant.|طابق عمود المبلغ أولاً.
+No valid amounts found in the mapped column.|Aucun montant valide dans la colonne mappée.|لا توجد مبالغ صالحة في العمود المطابق.
+Copied|Copié|تم النسخ
+Load a dataset first.|Chargez d'abord un jeu de données.|حمّل بيانات أولاً.
+Pick at least one item.|Choisissez au moins un élément.|اختر عنصراً واحداً على الأقل.
+Enter an audit rationale (at least 10 characters).|Saisissez une justification d'audit (10 caractères minimum).|أدخل مبرراً للتدقيق (10 أحرف على الأقل).
+Sample cleared|Échantillon vidé|تم مسح العينة
+Fix the calculator inputs first.|Corrigez d'abord les entrées du calculateur.|صحّح مدخلات الحاسبة أولاً.
+Add an observation for the exception.|Ajoutez une observation pour l'anomalie.|أضف ملاحظة للخطأ.
+Expected rate must be lower than the tolerable rate.|Le taux attendu doit être inférieur au taux tolérable.|يجب أن يكون المعدل المتوقع أقل من المعدل المقبول.
+Tolerable misstatement must exceed expected misstatement × expansion factor.|L'anomalie tolérable doit dépasser l'anomalie attendue × facteur d'expansion.|يجب أن يتجاوز التحريف المقبول التحريف المتوقع × عامل التوسع.
+No positive balances to sample.|Aucun solde positif à échantillonner.|لا توجد أرصدة موجبة للمعاينة.
+(ratio of known misstatement to value tested, indicative)|(ratio de l'anomalie avérée sur la valeur testée, indicatif)|(نسبة التحريف المعروف إلى القيمة المختبرة، تقريبي)
+CSV imported|Import CSV|استيراد CSV
+Materiality changed|Seuil modifié|تغيير الأهمية النسبية
+Working paper exported|Feuille de travail exportée|تم تصدير ورقة العمل
+Sample CSV exported|CSV de l'échantillon exporté|تم تصدير CSV العينة
+Exceptions CSV exported|CSV des anomalies exporté|تم تصدير CSV الأخطاء
+Population CSV exported|CSV de la population exporté|تم تصدير CSV المجتمع
+Vendor/Customer|Fournisseur/Client|المورد/العميل
+Risk score|Score de risque|درجة المخاطر
+Risk level|Niveau de risque|مستوى المخاطر
+Selection basis|Base de sélection|أساس الاختيار
+Corrective action|Action corrective|الإجراء التصحيحي
+In sample|Dans l'échantillon|ضمن العينة
+Yes|Oui|نعم
+No|Non|لا
+Transaction test|Test de l'opération|اختبار العملية
+Export text|Texte d'export|نص التصدير
+`);
+/* ---------- phrase rules (applied in order to non-data text) ---------- */
+const MON={Jan:['janv.','يناير'],Feb:['févr.','فبراير'],Mar:['mars','مارس'],Apr:['avr.','أبريل'],May:['mai','مايو'],Jun:['juin','يونيو'],Jul:['juil.','يوليو'],Aug:['août','أغسطس'],Sep:['sept.','سبتمبر'],Oct:['oct.','أكتوبر'],Nov:['nov.','نوفمبر'],Dec:['déc.','ديسمبر']};
+const rule=(re,fr,ar)=>RX.push([re,fr,ar]);
+rule(/BUILDER INC · General Ledger \(demo\)/g,'BUILDER INC · Grand livre (démo)','BUILDER INC · دفتر الأستاذ (تجريبي)');
+rule(/^Materiality (?=\$)/,'Seuil de signification ','الأهمية النسبية ');
+rule(/(\d+) of (\d+) high-risk items in sample/,"$1 sur $2 éléments à risque élevé dans l'échantillon",'$1 من $2 عناصر عالية المخاطر في العينة');
+rule(/(\d+) of (\d+) sample items/,"$1 sur $2 éléments de l'échantillon",'$1 من $2 من عناصر العينة');
+rule(/Showing (\d+) of (\d+) transactions\./,'Affichage de $1 sur $2 opérations.','عرض $1 من $2 عملية.');
+rule(/(\d+) data rows · (\d+) columns\. Check the detected columns, then import\./,'$1 lignes de données · $2 colonnes. Vérifiez les colonnes détectées puis importez.','$1 صف بيانات · $2 عمود. راجع الأعمدة المكتشفة ثم استورد.');
+rule(/(\d+) of (\d+)/g,'$1 sur $2','$1 من $2');
+rule(/High risk/g,'Risque élevé','مخاطر مرتفعة');rule(/Medium risk/g,'Risque moyen','مخاطر متوسطة');rule(/Low risk/g,'Risque faible','مخاطر منخفضة');
+rule(/avg score/,'score moyen','متوسط الدرجة');
+rule(/% of ledger/g,'% du grand livre','% من الدفتر');
+rule(/% of gross value/g,'% de la valeur brute','% من القيمة الإجمالية');
+rule(/% of population/g,'% de la population','% من المجتمع');
+rule(/% of high-risk items/g,'% des éléments à risque élevé','% من العناصر عالية المخاطر');
+rule(/% of materiality/g,'% du seuil de signification','% من الأهمية النسبية');
+rule(/% of items/g,'% des éléments','% من العناصر');
+rule(/% value coverage/g,'% de couverture en valeur','% تغطية بالقيمة');
+rule(/% complete/g,'% terminé','% مكتمل');
+rule(/gross activity/g,"d'activité brute",'نشاط إجمالي');
+rule(/\bgross\b/g,'brut','إجمالي');
+rule(/No sample selected/g,'Aucun échantillon sélectionné','لا توجد عينة مختارة');
+rule(/Methods used:/,'Méthodes utilisées :','الطرق المستخدمة:');
+rule(/\bpicked\b/,'choisi(s)','مختار');
+rule(/(\d+) item\(s\) added to the sample/,"$1 élément(s) ajouté(s) à l'échantillon",'تمت إضافة $1 عنصر إلى العينة');
+rule(/(\d+) transactions imported/,'$1 opérations importées','تم استيراد $1 عملية');
+rule(/· (\d+) rows skipped/,'· $1 lignes ignorées','· تم تجاهل $1 صف');
+rule(/^Saved /,'Enregistré ','تم حفظ ');rule(/^Ready: /,'Prêt : ','جاهز: ');
+rule(/Sample size set to (\d+)/,"Taille de l'échantillon fixée à $1",'تم تحديد حجم العينة: $1');
+rule(/Simple random sample without replacement · seed (\d+)/,'Échantillon aléatoire simple sans remise · graine $1','عينة عشوائية بسيطة دون إعادة · البذرة $1');
+rule(/Random draw \(seed (\d+)\)/,'Tirage aléatoire (graine $1)','سحب عشوائي (البذرة $1)');
+rule(/Interval k = (.+?) · start offset (.+)$/,'Intervalle k = $1 · décalage initial $2','الفترة k = $1 · الإزاحة الأولى $2');
+rule(/Every ([\d.]+)th item, position (\d+)/,'Un élément tous les $1, position $2','كل $1 عنصر، الموضع $2');
+rule(/Stratified by account/,'Stratifiée par compte','طبقية حسب الحساب');rule(/Stratified by vendor/,'Stratifiée par fournisseur','طبقية حسب المورد');rule(/Stratified by risk tier/,'Stratifiée par niveau de risque','طبقية حسب مستوى المخاطر');
+rule(/risk-weighted allocation/,'allocation pondérée par le risque','توزيع مرجّح بالمخاطر');rule(/proportional allocation/,'allocation proportionnelle','توزيع متناسب');rule(/equal allocation/,'allocation égale','توزيع متساوٍ');
+rule(/(\d+) strata/,'$1 strates','$1 طبقة');
+rule(/^Stratum: /,'Strate : ','الطبقة: ');
+rule(/Interval (\$[\d,]+) · random start (\$[\d,]+) · (\d+) key item\(s\) at or above the interval · (\d+) negative\/zero entr(?:y|ies) isolated/,'Intervalle $1 · départ aléatoire $2 · $3 élément(s) clé(s) ≥ intervalle · $4 écriture(s) négative(s)/nulle(s) isolée(s)','الفترة $1 · بداية عشوائية $2 · $3 عنصر رئيسي ≥ الفترة · $4 قيد سالب/صفري معزول');
+rule(/Key item ≥ interval/,'Élément clé ≥ intervalle','عنصر رئيسي ≥ الفترة');
+rule(/Dollar unit (\$[\d,]+) of (\$[\d,]+)/,'Unité monétaire $1 sur $2','الوحدة النقدية $1 من $2');
+rule(/Negative \/ zero entry isolated for separate review/,'Écriture négative / nulle isolée pour revue séparée','قيد سالب / صفري معزول لمراجعة منفصلة');
+rule(/Haphazard selection · (\d+) item\(s\) · rationale: /,"Sélection à l'aveugle · $1 élément(s) · justification : ",'اختيار عشوائي حر · $1 عنصر · المبرر: ');
+rule(/^Sample selected · /,'Échantillon sélectionné · ','تم اختيار العينة · ');
+rule(/^Test updated · /,'Test mis à jour · ','تحديث الاختبار · ');
+rule(/· materiality (\$[\d,]+)/,'· seuil $1','· الأهمية النسبية $1');
+rule(/(\d+) item\(s\)/g,'$1 élément(s)','$1 عنصر');
+rule(/known misstatements/g,'anomalies avérées','تحريفات معروفة');
+rule(/\(ratio of known misstatement to value tested, indicative\)/,"(ratio de l'anomalie avérée sur la valeur testée, indicatif)",'(نسبة التحريف المعروف إلى القيمة المختبرة، تقريبي)');
+rule(/^Pick /,'Choisir ','اختيار ');
+rule(/^Ref: /,'Réf : ','المرجع: ');rule(/^Period: /,'Période : ','الفترة: ');
+rule(/\bPrepared by\b/g,'Préparé par','أعدّه');rule(/\bReviewed by\b/g,'Revu par','راجعه');
+rule(/\bitems\b/g,'éléments','عنصر');rule(/\btransactions\b/g,'opérations','عملية');
+Object.keys(MON).forEach(m=>rule(new RegExp('\\b'+m+'\\b','g'),MON[m][0],MON[m][1]));
+rule(/\bHigh\b/g,'Élevé','مرتفع');rule(/\bMedium\b/g,'Moyen','متوسط');rule(/\bLow\b/g,'Faible','منخفض');
+rule(/\bTested\b/g,'Testé','تم اختباره');rule(/\bPending\b/g,'En attente','معلّق');
+rule(/\bExceptions\b/g,'Anomalies','الأخطاء');rule(/\bException\b/g,'Anomalie','خطأ');
+rule(/\bRandom\b/g,'Aléatoire','عشوائية');rule(/\bSystematic\b/g,'Systématique','منتظمة');rule(/\bStratified\b/g,'Stratifiée','طبقية');rule(/\bHaphazard\b/g,"À l'aveugle",'عشوائية حرة');
+rule(/FPC applied/,'CPF appliquée','تم تطبيق التصحيح');rule(/before FPC/,'avant CPF','قبل التصحيح');
+
+/* ---------- translation engine ---------- */
+const origT=new WeakMap(),origA=new WeakMap(),ATTR=['placeholder','title','aria-label'];
+function trStr(s,exact){
+  if(LANG==='en'||!/[A-Za-z]/.test(s))return s;
+  const k=s.trim(),d=D[LANG][k];
+  if(d!==undefined)return s.replace(k,()=>d);
+  if(exact)return s;
+  const i=LANG==='fr'?1:2;let o=s;
+  for(let j=0;j<RX.length;j++)o=o.replace(RX[j][0],RX[j][i]);
+  return o;
+}
+const exactOnly=p=>(p.tagName==='TD'||p.matches('.drawer dd'))&&!p.classList.contains('tr');
+function trNode(n){
+  const p=n.parentElement;if(!p||p.closest('script,style,textarea'))return;
+  if(!origT.has(n)){if(!/[A-Za-z]/.test(n.nodeValue))return;origT.set(n,n.nodeValue)}
+  const v=trStr(origT.get(n),exactOnly(p));
+  if(n.nodeValue!==v)n.nodeValue=v;
+}
+function trEl(el){
+  ATTR.forEach(a=>{
+    if(!el.hasAttribute||!el.hasAttribute(a))return;
+    let m=origA.get(el);if(!m){m={};origA.set(el,m)}
+    if(!(a in m))m[a]=el.getAttribute(a);
+    const v=trStr(m[a]);if(el.getAttribute(a)!==v)el.setAttribute(a,v);
+  });
+}
+function trTree(root){
+  if(root.nodeType===3){trNode(root);return}
+  if(root.nodeType!==1||root.matches('script,style'))return;
+  trEl(root);root.querySelectorAll('[placeholder],[title],[aria-label]').forEach(trEl);
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))trNode(n);
+}
+function trHTML(h){const d=document.createElement('div');d.innerHTML=h;trTree(d);return d.innerHTML}
+let mo;const CFG={childList:true,subtree:true,characterData:true};
+function startObs(){
+  mo=new MutationObserver(recs=>{
+    mo.disconnect();
+    try{recs.forEach(r=>{if(r.type==='characterData')trNode(r.target);else r.addedNodes.forEach(trTree)})}
+    finally{mo.observe(document.body,CFG)}
+  });
+  mo.observe(document.body,CFG);
+}
+function setLang(l,initial){
+  LANG=l;const h=document.documentElement;h.setAttribute('lang',l);h.setAttribute('dir',l==='ar'?'rtl':'ltr');
+  $$('#langSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l?'true':'false'));
+  try{localStorage.setItem('ast-lang',l)}catch(e){}
+  if(mo)mo.disconnect();trTree(document.body);if(mo)mo.observe(document.body,CFG);
+  if(!initial){chips();R_[cur]()}
+}
+
+/* ---------- language-aware generated text ---------- */
+function genScope(){
+  const st=stats(),ac=acctTable(S.tx),sg=ac.filter(a=>scopeOf(a.acct)==='Significant').length,ns=ac.length-sg;
+  const ex=L3(' Account scoping: '+sg+' significant and '+ns+' not significant (of '+ac.length+' accounts).',' Périmètre par compte : '+sg+' significatifs et '+ns+' non significatifs (sur '+ac.length+' comptes).',' نطاق الحسابات: '+sg+' جوهرية و'+ns+' غير جوهرية (من أصل '+ac.length+' حساباً).');
+  return L3(
+   'Full population of '+st.n+' transactions analysed with the risk engine. All '+st.L.High.length+' high-risk items are in scope for testing. Medium and low-risk items are sampled using the methods documented below. Items below materiality of '+fmt0(S.mat)+' are not individually significant.',
+   'Population complète de '+st.n+' opérations analysée avec le moteur de risques. Les '+st.L.High.length+' éléments à risque élevé sont inclus dans le périmètre de test. Les éléments à risque moyen et faible sont échantillonnés selon les méthodes documentées ci-dessous. Les éléments inférieurs au seuil de signification de '+fmt0(S.mat)+' ne sont pas significatifs individuellement.',
+   'تم تحليل كامل المجتمع المكوّن من '+st.n+' عملية بواسطة محرك المخاطر. جميع العناصر عالية المخاطر ('+st.L.High.length+') ضمن نطاق الاختبار. تُعاين العناصر متوسطة ومنخفضة المخاطر بالطرق الموثقة أدناه. العناصر الأقل من الأهمية النسبية ('+fmt0(S.mat)+') ليست جوهرية بمفردها.')+ex;
+}
+function suggestConc(){
+  const d=wpData(),ss=d.ss,m=S.mat;
+  if(!ss.n)return L3('No sample has been selected yet.',"Aucun échantillon n'a encore été sélectionné.",'لم يتم اختيار عينة بعد.');
+  if(ss.tested<ss.n)return L3(ss.tested+' of '+ss.n+' sample items have been tested. Testing is incomplete and no conclusion can be drawn yet.',ss.tested+' éléments sur '+ss.n+" de l'échantillon ont été testés. Les tests sont incomplets et aucune conclusion ne peut encore être tirée.",'تم اختبار '+ss.tested+' من '+ss.n+' عنصراً من العينة. الاختبار غير مكتمل ولا يمكن استخلاص نتيجة بعد.');
+  if(!ss.ex)return L3('We tested '+ss.n+' items covering '+ss.covV.toFixed(1)+'% of the population by value. No exceptions were noted. Based on the work performed, we conclude that the population is not materially misstated.',
+    'Nous avons testé '+ss.n+' éléments couvrant '+ss.covV.toFixed(1)+' % de la population en valeur. Aucune anomalie n\'a été relevée. Sur la base des travaux réalisés, nous concluons que la population ne comporte pas d\'anomalie significative.',
+    'اختبرنا '+ss.n+' عنصراً تغطي '+ss.covV.toFixed(1)+'% من المجتمع بالقيمة. لم تُسجَّل أي أخطاء. بناءً على العمل المنفذ، نخلص إلى أن المجتمع لا يتضمن تحريفاً جوهرياً.');
+  if(ss.mis>=m)return L3('We tested '+ss.n+' items and identified '+ss.ex+' exception(s) with known misstatements of '+fmt0(ss.mis)+', which is at or above materiality of '+fmt0(m)+'. The result is not satisfactory. Management should investigate and correct the entries, and we should extend testing before concluding.',
+    'Nous avons testé '+ss.n+' éléments et relevé '+ss.ex+' anomalie(s) pour des anomalies avérées de '+fmt0(ss.mis)+', soit un montant égal ou supérieur au seuil de signification de '+fmt0(m)+'. Le résultat n\'est pas satisfaisant. La direction doit investiguer et corriger les écritures, et nous devons étendre les tests avant de conclure.',
+    'اختبرنا '+ss.n+' عنصراً واكتشفنا '+ss.ex+' خطأ بتحريفات معروفة قدرها '+fmt0(ss.mis)+'، وهي تساوي الأهمية النسبية ('+fmt0(m)+') أو تزيد عنها. النتيجة غير مرضية. على الإدارة التحقيق وتصحيح القيود، وعلينا توسيع الاختبار قبل الخلاصة.');
+  return L3('We tested '+ss.n+' items covering '+ss.covV.toFixed(1)+'% of the population by value and identified '+ss.ex+' exception(s) with known misstatements of '+fmt0(ss.mis)+' ('+pc(ss.mis,m).toFixed(0)+'% of materiality '+fmt0(m)+'). The projected misstatement is '+fmt0(d.projected)+'. We recommend that management correct the identified items and we evaluate the effect on the financial statements.',
+    'Nous avons testé '+ss.n+' éléments couvrant '+ss.covV.toFixed(1)+' % de la population en valeur et relevé '+ss.ex+' anomalie(s) pour des anomalies avérées de '+fmt0(ss.mis)+' ('+pc(ss.mis,m).toFixed(0)+' % du seuil de signification de '+fmt0(m)+'). L\'anomalie projetée est de '+fmt0(d.projected)+'. Nous recommandons que la direction corrige les éléments identifiés et que nous évaluions l\'effet sur les états financiers.',
+    'اختبرنا '+ss.n+' عنصراً تغطي '+ss.covV.toFixed(1)+'% من المجتمع بالقيمة واكتشفنا '+ss.ex+' خطأ بتحريفات معروفة قدرها '+fmt0(ss.mis)+' ('+pc(ss.mis,m).toFixed(0)+'% من الأهمية النسبية '+fmt0(m)+'). التحريف المتوقع (المُسقط) '+fmt0(d.projected)+'. نوصي بأن تصحح الإدارة البنود المحددة وأن نقيّم الأثر على القوائم المالية.');
+}
+
+/* ---------- risk workspace (MindBridge-style) ---------- */
+const BAND=s=>s<15?1:s<30?2:s<40?3:s<50?4:5;
+const fmtK=n=>{const a=Math.abs(n);return (n<0?'-':'')+'$'+(a>=1e6?(a/1e6).toFixed(2)+'M':a>=1e3?(a/1e3).toFixed(2)+'k':a.toFixed(0))};
+const fmtS=v=>v>=1e6?(v/1e6)+'M':v>=1e3?(v/1e3)+'k':String(v);
+const mLab=k=>k==='n/a'?k:new Date(k+'-01T00:00:00Z').toLocaleString('en',{month:'short',timeZone:'UTC'})+' '+k.slice(2,4);
+function niceTop(mx){
+  const steps=[];[0,1,2,3,4,5,6,7].forEach(k=>[1,2,5].forEach(m=>steps.push(m*Math.pow(10,k))));
+  const st=steps.find(s=>mx/s<=5)||1e8;return [st,Math.max(st,Math.ceil(mx/st)*st)];
+}
+const CPS=[['High monetary value',35],['Extreme amount',25],['Suspicious keyword',25],['Weekend posting',15],['Manual entry',10],['Round amount',10],['Unusual account',10],['Possible duplicate',10],['Credit / reversal',5],['Source flagged high',10]];
+let RF={acct:'',month:'',level:'',hv:false,cp:''};
+
+function riskPop(skip){
+  return S.tx.filter(t=>(!RF.acct||t.account===RF.acct)&&(!RF.month||(t.date||'').slice(0,7)===RF.month)&&(skip==='level'||!RF.level||t.level===RF.level)&&(!RF.hv||Math.abs(t.amount)>S.mat));
+}
+/* scoping */
+function acctTable(pop){
+  const m={};
+  pop.forEach(t=>{const a=m[t.account]||(m[t.account]={acct:t.account,n:0,gross:0,sc:0,g:{High:0,Medium:0,Low:0},hi:0}),v=Math.abs(t.amount);a.n++;a.gross+=v;a.sc+=t.risk;a.g[t.level]+=v;if(t.level==='High')a.hi++});
+  return Object.keys(m).map(k=>{const a=m[k];a.avg=a.n?Math.round(a.sc/a.n):0;return a}).sort((x,y)=>y.gross-x.gross);
+}
+function autoScope(acct){
+  const r=S.tx.filter(t=>t.account===acct);
+  return (sum(r,t=>Math.abs(t.amount))>=S.mat||r.some(t=>t.level!=='Low'))?'Significant':'Not significant';
+}
+function scopeOf(acct){const o=(S.scope||{})[acct];return o==='sig'?'Significant':o==='insig'?'Not significant':autoScope(acct)}
+function samplePop(){
+  const v=($('#sPop')||{}).value||'all';
+  return v==='sig'?S.tx.filter(t=>scopeOf(t.account)==='Significant'):v==='risk'?S.tx.filter(t=>t.level!=='Low'):S.tx;
+}
+
+/* charts */
+function bandLegend(){return '<div class="bands">'+['0–14.9%','15–29.9%','30–39.9%','40–49.9%','50%+'].map((t,i)=>'<span><i style="background:var(--b'+(i+1)+')"></i>'+t+'</span>').join('')+'</div>'}
+function scatter(pop){
+  const W=640,H=290,l=46,r=14,tp=12,b=44;
+  if(!pop.length)return '<div class="empty">No transactions.</div>';
+  const mx=Math.max(S.mat*1.3,...pop.map(t=>Math.abs(t.amount)));
+  const sx=v=>l+(W-l-r)*Math.sqrt(Math.abs(v)/mx),sy=s=>tp+(H-tp-b)*(1-s/100);let g='';
+  [0,1000,5000,10000,25000,50000,100000,250000,500000,1e6].filter(v=>v<=mx).forEach(v=>{g+='<line x1="'+sx(v)+'" x2="'+sx(v)+'" y1="'+tp+'" y2="'+(H-b)+'" style="stroke:var(--border)"/><text x="'+sx(v)+'" y="'+(H-b+14)+'" text-anchor="middle" style="fill:var(--muted);font:10px var(--mono)">'+fmtS(v)+'</text>'});
+  [0,20,40,60,80,100].forEach(v=>{g+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+sy(v)+'" y2="'+sy(v)+'" style="stroke:var(--border)"/><text x="'+(l-6)+'" y="'+(sy(v)+3)+'" text-anchor="end" style="fill:var(--muted);font:10px var(--mono)">'+v+'</text>'});
+  const mxp=sx(S.mat);
+  g+='<line x1="'+mxp+'" x2="'+mxp+'" y1="'+tp+'" y2="'+(H-b)+'" stroke-dasharray="4 3" style="stroke:var(--muted)"/><text x="'+(mxp+4)+'" y="'+(tp+10)+'" style="fill:var(--muted);font:10px var(--sans)">Materiality</text>';
+  const dots=pop.map(t=>'<circle cx="'+sx(t.amount).toFixed(1)+'" cy="'+sy(t.risk).toFixed(1)+'" r="4.3" style="fill:var(--b'+BAND(t.risk)+');stroke:var(--surface);stroke-width:1" opacity=".9"><title>'+esc(t.id+' · '+t.desc+' · '+fmt(t.amount)+' · '+t.risk+'%')+'</title></circle>').join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="Gross value versus risk score">'+g+dots+'<text x="'+(l+(W-l-r)/2)+'" y="'+(H-6)+'" text-anchor="middle" style="fill:var(--muted);font:11px var(--sans)">Gross monetary value</text><text transform="translate(11 '+(tp+(H-tp-b)/2)+') rotate(-90)" text-anchor="middle" style="fill:var(--muted);font:11px var(--sans)">Risk score</text></svg>';
+}
+function trendChart(pop){
+  const m={};pop.forEach(t=>{const k=(t.date||'').slice(0,7)||'n/a';m[k]=(m[k]||0)+Math.abs(t.amount)});
+  const ks=Object.keys(m).sort();if(!ks.length)return '<div class="empty">No transactions.</div>';
+  const W=640,H=290,l=50,r=16,tp=14,b=32,top=niceTop(Math.max(1,...ks.map(k=>m[k]))),st=top[0],tv=top[1];
+  const sx=i=>ks.length>1?l+(W-l-r)*i/(ks.length-1):l+(W-l-r)/2,sy=v=>tp+(H-tp-b)*(1-v/tv);let g='';
+  for(let v=0;v<=tv;v+=st)g+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+sy(v)+'" y2="'+sy(v)+'" style="stroke:var(--border)"/><text x="'+(l-6)+'" y="'+(sy(v)+3)+'" text-anchor="end" style="fill:var(--muted);font:10px var(--mono)">'+fmtS(v)+'</text>';
+  const pts=ks.map((k,i)=>[sx(i),sy(m[k])]),line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area=line+' L'+pts[pts.length-1][0].toFixed(1)+' '+sy(0)+' L'+pts[0][0].toFixed(1)+' '+sy(0)+' Z';
+  const dots=pts.map((p,i)=>'<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+(i===pts.length-1?5:3.5)+'" style="fill:'+(i===pts.length-1?'var(--primary)':'var(--surface)')+';stroke:var(--primary);stroke-width:2"><title>'+mLab(ks[i])+' · '+fmt0(m[ks[i]])+'</title></circle><text x="'+p[0].toFixed(1)+'" y="'+(H-10)+'" text-anchor="middle" style="fill:var(--muted);font:10.5px var(--sans)">'+mLab(ks[i])+'</text>').join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="Monthly gross activity">'+g+'<path d="'+area+'" style="fill:var(--primary)" opacity=".09"/><path d="'+line+'" fill="none" stroke-width="2.2" style="stroke:var(--primary)"/>'+dots+'</svg>';
+}
+
+/* view */
+R_.risk=function(){
+  const accts=[...new Set(S.tx.map(t=>t.account))].sort(),months=[...new Set(S.tx.map(t=>(t.date||'').slice(0,7)).filter(Boolean))].sort();
+  if(RF.acct&&accts.indexOf(RF.acct)<0)RF.acct='';if(RF.month&&months.indexOf(RF.month)<0)RF.month='';
+  const pop=riskPop(),cardPop=riskPop('level'),cs=stats(cardPop);
+  const cpHits={};pop.forEach(t=>t.flags.forEach(f=>{const c=cpHits[f]||(cpHits[f]={n:0,v:0});c.n++;c.v+=Math.abs(t.amount)}));
+  const act=CPS.filter(c=>cpHits[c[0]]).sort((a,b)=>cpHits[b[0]].n-cpHits[a[0]].n),inact=CPS.filter(c=>!cpHits[c[0]]);
+  const maxN=Math.max(1,...act.map(c=>cpHits[c[0]].n));
+  const rows=pop.filter(t=>!RF.cp||t.flags.indexOf(RF.cp)>-1).sort((a,b)=>b.risk-a.risk||Math.abs(b.amount)-Math.abs(a.amount));
+  const filtered=RF.acct||RF.month||RF.level||RF.hv||RF.cp;
+  const at=acctTable(pop).slice(0,30);
+  const avg=l=>cs.L[l].length?Math.round(sum(cs.L[l],t=>t.risk)/cs.L[l].length):0;
+  const pctB=(v,tot,cls)=>'<td style="min-width:96px"><span class="num" style="font-size:12px">'+pc(v,tot).toFixed(1)+'%</span><div class="bar"><i style="width:'+pc(v,tot)+'%;background:var(--'+cls+')"></i></div></td>';
+  $('#riskV').innerHTML=
+  '<div class="card"><div class="row" style="align-items:flex-end">'+
+    '<div class="field" style="min-width:200px;flex:1"><label for="fAcct">Account</label><select id="fAcct"><option value="">All accounts</option>'+accts.map(a=>'<option value="'+esc(a)+'"'+(a===RF.acct?' selected':'')+'>'+esc(a)+'</option>').join('')+'</select></div>'+
+    '<div class="field" style="min-width:140px"><label for="fMonth">Month</label><select id="fMonth"><option value="">All months</option>'+months.map(k=>'<option value="'+k+'"'+(k===RF.month?' selected':'')+'>'+mLab(k)+'</option>').join('')+'</select></div>'+
+    '<div class="field" style="min-width:130px"><label for="fLevel">Risk level</label><select id="fLevel"><option value="">All levels</option>'+['High','Medium','Low'].map(l=>'<option'+(l===RF.level?' selected':'')+'>'+l+'</option>').join('')+'</select></div>'+
+    '<label class="row" style="gap:6px;padding-bottom:8px;cursor:pointer"><input type="checkbox" id="fHv"'+(RF.hv?' checked':'')+'> Above materiality only</label>'+
+    '<button class="btn" id="fReset"'+(filtered?'':' disabled style="opacity:.5"')+'>Reset filter</button>'+
+    '<span class="chip">'+pop.length+' of '+S.tx.length+' items</span></div></div>'+
+  '<div class="grid g3">'+['High','Medium','Low'].map(l=>'<button class="card lvl" data-lv="'+l+'" aria-pressed="'+(RF.level===l)+'"><span class="pill '+l+'">'+l+' risk</span><span class="big">'+fmtK(cs.g[l])+'<small>Gross activity</small></span><span class="s" style="color:var(--muted);font-size:12.5px">'+cs.L[l].length+' transactions ('+pc(cs.L[l].length,cs.n).toFixed(1)+'%) of the ledger · avg score '+avg(l)+'%</span><div class="bar" style="width:100%"><i style="width:'+pc(cs.g[l],cs.gross)+'%;background:var(--'+CLS[l]+')"></i></div></button>').join('')+'</div>'+
+  '<div class="grid g2"><div class="card"><h2>Transaction risk over time</h2><p class="hint">Transactions per month by risk level.</p>'+monthChart(pop)+legend()+'</div>'+
+  '<div class="card"><h2>Control points</h2><p class="hint">Select a control point to list the transactions it flagged.</p><div class="cph" style="margin-top:0">Contributing to risk score</div><div class="cplist">'+
+    (act.length?act.map(c=>'<button class="cprow" data-cp="'+c[0]+'" aria-pressed="'+(RF.cp===c[0])+'"><b class="num">'+cpHits[c[0]].n+'</b><span>'+c[0]+'</span><span class="chip">+'+c[1]+' pts</span><div class="bar"><i style="width:'+pc(cpHits[c[0]].n,maxN)+'%;background:var(--emerald)"></i></div></button>').join(''):'<div class="empty">No control points raised.</div>')+
+    '</div><div class="cph">Not contributing to risk score</div><div class="cpnone">'+(inact.map(c=>'<span>'+c[0]+'</span>').join(' · ')||'–')+'</div>'+
+    '<div class="cph">Not available in this tool</div><div class="cpnone">Benford\'s Law, sequence gaps, flow analysis and machine-learning tests are not calculated here.</div></div></div>'+
+  '<div class="grid g2"><div class="card"><h2>Gross value vs risk score</h2><p class="hint">Each dot is a transaction. Colour shows the risk band.</p>'+scatter(pop)+bandLegend()+'</div>'+
+  '<div class="card"><h2>Monthly gross activity</h2><p class="hint">Total absolute value posted per month for the current filter.</p>'+trendChart(pop)+'</div></div>'+
+  '<div class="card"><h2>Account risk & scoping</h2><p class="hint">Average risk score and share of value by risk level for each account. Significant accounts feed the sampling population and the working paper.</p><div class="tbl"><table><thead><tr><th>Account</th><th class="n">Entries</th><th class="n">Gross activity</th><th class="n">Risk score</th><th>% value High</th><th>% value Medium</th><th>% value Low</th><th class="n">High entries</th><th>Scoping decision</th></tr></thead><tbody>'+
+    (at.length?at.map(a=>{const sc=(S.scope||{})[a.acct]||'auto';return '<tr><td>'+esc(a.acct)+'</td><td class="n">'+a.n+'</td><td class="n">'+fmt0(a.gross)+'</td><td class="heat" style="background:color-mix(in srgb,var(--b'+BAND(a.avg)+') 45%,var(--surface))">'+a.avg+'%</td>'+pctB(a.g.High,a.gross,'high')+pctB(a.g.Medium,a.gross,'med')+pctB(a.g.Low,a.gross,'low')+'<td class="n">'+a.hi+'</td><td><select class="sel-sm" data-sc="'+esc(a.acct)+'" aria-label="Scoping decision"><option value="auto"'+(sc==='auto'?' selected':'')+'>Auto · '+autoScope(a.acct)+'</option><option value="sig"'+(sc==='sig'?' selected':'')+'>Significant</option><option value="insig"'+(sc==='insig'?' selected':'')+'>Not significant</option></select></td></tr>'}).join(''):'<tr><td colspan="9" class="empty">No transactions.</td></tr>')+'</tbody></table></div></div>'+
+  '<div class="card"><div class="row" style="margin-bottom:10px"><h2 style="margin:0;flex:1">Scored transactions</h2>'+(RF.cp?'<button class="chip" id="cpClear">'+RF.cp+' ✕</button>':'')+'</div><div class="tbl" style="max-height:520px">'+txTable(rows.slice(0,80),true)+'</div>'+(rows.length>80?'<p class="hint" style="margin:8px 0 0">Showing 80 of '+rows.length+' transactions.</p>':'')+'</div>';
+  const re=()=>R_.risk();
+  $('#fAcct').onchange=e=>{RF.acct=e.target.value;re()};$('#fMonth').onchange=e=>{RF.month=e.target.value;re()};$('#fLevel').onchange=e=>{RF.level=e.target.value;re()};
+  $('#fHv').onchange=e=>{RF.hv=e.target.checked;re()};$('#fReset').onclick=()=>{RF={acct:'',month:'',level:'',hv:false,cp:''};re()};
+  $$('#riskV .lvl').forEach(b=>b.onclick=()=>{RF.level=RF.level===b.dataset.lv?'':b.dataset.lv;re()});
+  $$('#riskV .cprow').forEach(b=>b.onclick=()=>{RF.cp=RF.cp===b.dataset.cp?'':b.dataset.cp;re()});
+  const cc=$('#cpClear');if(cc)cc.onclick=()=>{RF.cp='';re()};
+  $$('#riskV [data-sc]').forEach(s=>s.onchange=()=>{
+    if(!S.scope)S.scope={};if(s.value==='auto')delete S.scope[s.dataset.sc];else S.scope[s.dataset.sc]=s.value;
+    logEv('Scoping decision',s.dataset.sc+' · '+scopeOf(s.dataset.sc));save();re();
+  });
+};
+
+/* ---------- translations for this view ---------- */
+addDict(`
+Edit materiality|Modifier le seuil|تعديل الأهمية النسبية
+All accounts|Tous les comptes|كل الحسابات
+Month|Mois|الشهر
+All months|Tous les mois|كل الأشهر
+Risk level|Niveau de risque|مستوى المخاطر
+Above materiality only|Au-dessus du seuil uniquement|فوق الأهمية النسبية فقط
+Reset filter|Réinitialiser le filtre|إعادة ضبط المرشح
+Gross activity|Activité brute|النشاط الإجمالي
+Transaction risk over time|Risque des opérations dans le temps|مخاطر العمليات عبر الزمن
+Select a control point to list the transactions it flagged.|Sélectionnez un point de contrôle pour lister les opérations signalées.|اختر نقطة رقابة لعرض العمليات التي أبلغت عنها.
+Contributing to risk score|Contribuent au score de risque|تساهم في درجة المخاطر
+Not contributing to risk score|Ne contribuent pas au score de risque|لا تساهم في درجة المخاطر
+Not available in this tool|Non disponibles dans cet outil|غير متاحة في هذه الأداة
+No control points raised.|Aucun point de contrôle déclenché.|لم تُسجَّل نقاط رقابة.
+Benford's Law, sequence gaps, flow analysis and machine-learning tests are not calculated here.|La loi de Benford, les ruptures de séquence, l'analyse des flux et les tests d'apprentissage automatique ne sont pas calculés ici.|قانون بنفورد وفجوات التسلسل وتحليل التدفق واختبارات التعلم الآلي لا تُحسب هنا.
+Gross value vs risk score|Valeur brute vs score de risque|القيمة الإجمالية مقابل درجة المخاطر
+Each dot is a transaction. Colour shows the risk band.|Chaque point est une opération. La couleur indique la tranche de risque.|كل نقطة تمثل عملية. اللون يبين شريحة المخاطر.
+Gross monetary value|Valeur monétaire brute|القيمة النقدية الإجمالية
+Risk score|Score de risque|درجة المخاطر
+Gross value versus risk score|Valeur brute par rapport au score de risque|القيمة الإجمالية مقابل درجة المخاطر
+Monthly gross activity|Activité brute mensuelle|النشاط الإجمالي الشهري
+Total absolute value posted per month for the current filter.|Valeur absolue totale comptabilisée par mois pour le filtre actuel.|إجمالي القيمة المطلقة المرحّلة شهرياً وفق المرشح الحالي.
+Materiality|Seuil|الأهمية النسبية
+Account risk & scoping|Risque et périmètre par compte|مخاطر الحسابات ونطاقها
+Average risk score and share of value by risk level for each account. Significant accounts feed the sampling population and the working paper.|Score de risque moyen et part de la valeur par niveau de risque pour chaque compte. Les comptes significatifs alimentent la population d'échantillonnage et la feuille de travail.|متوسط درجة المخاطر وحصة القيمة حسب مستوى المخاطر لكل حساب. الحسابات الجوهرية تغذي مجتمع المعاينة وورقة العمل.
+Entries|Écritures|القيود
+Gross activity|Activité brute|النشاط الإجمالي
+% value High|% valeur élevé|% القيمة مرتفع
+% value Medium|% valeur moyen|% القيمة متوسط
+% value Low|% valeur faible|% القيمة منخفض
+High entries|Écritures élevées|قيود مرتفعة
+Scoping decision|Décision de périmètre|قرار النطاق
+Auto · Significant|Auto · Significatif|تلقائي · جوهري
+Auto · Not significant|Auto · Non significatif|تلقائي · غير جوهري
+Significant|Significatif|جوهري
+Not significant|Non significatif|غير جوهري
+Scoring decision|Décision de périmètre|قرار النطاق
+Scoping decision|Décision de périmètre|قرار النطاق
+Population to sample|Population à échantillonner|المجتمع المراد معاينته
+All transactions|Toutes les opérations|كل العمليات
+Significant accounts only|Comptes significatifs uniquement|الحسابات الجوهرية فقط
+High and medium risk only|Risque élevé et moyen uniquement|المخاطر المرتفعة والمتوسطة فقط
+No transactions in the selected population.|Aucune opération dans la population sélectionnée.|لا توجد عمليات في المجتمع المحدد.
+Scoping decision|Décision de périmètre|قرار النطاق
+Gross value vs risk score|Valeur brute vs score de risque|القيمة الإجمالية مقابل درجة المخاطر
+`);
+rule(/(\+\d+) pts/g,'$1 pts','$1 نقطة');
+rule(/of the ledger/g,'du grand livre','من الدفتر');
+rule(/^Auto · /,'Auto · ','تلقائي · ');
+rule(/(\d+) of (\d+) items/g,'$1 sur $2 éléments','$1 من $2 عنصر');
+
+/* ---------- sampling view ---------- */
+let meth='random',hPick=new Set();
+const MN={random:'Random',systematic:'Systematic',stratified:'Stratified',mus:'MUS',haphazard:'Haphazard'};
+function calcInputs(){
+  return {approach:$('#cApproach').value,conf:+$('#cConf').value,N:+$('#cN').value,tol:+$('#cTol').value/100,exp:+$('#cExp').value/100,prec:$('#cPrec').value?+$('#cPrec').value/100:0,BV:+$('#cBV').value,TM:+$('#cTM').value,EM:+$('#cEM').value||0,fpc:$('#cFpc').value==='1'};
+}
+let calcN=null;
+function runCalc(){
+  const o=calcInputs(),mus=o.approach==='mus';
+  $$('.mus-only').forEach(e=>e.hidden=!mus);$$('.attr-only').forEach(e=>e.hidden=mus);
+  const r=calcSize(o);calcN=r.err?null:r.n;
+  $('#cOut').textContent=r.err?'–':r.n;
+  $('#cFormula').textContent=r.err||r.f+(r.n!==r.n0?' · before FPC: '+r.n0:'');
+}
+function hapTable(){
+  const q=($('#hSearch').value||'').toLowerCase();
+  const rows=samplePop().filter(t=>!q||(t.id+t.desc+t.account+t.vendor).toLowerCase().includes(q)).slice(0,150);
+  $('#hTbl').innerHTML='<table><thead><tr><th></th><th>ID</th><th>Date</th><th>Description</th><th class="n">Amount</th><th>Level</th></tr></thead><tbody>'+rows.map(t=>'<tr><td><input type="checkbox" data-id="'+esc(t.id)+'" aria-label="Pick '+esc(t.id)+'"'+(hPick.has(t.id)?' checked':'')+'></td><td class="mono">'+esc(t.id)+'</td><td class="mono">'+esc(t.date)+'</td><td>'+esc(t.desc)+'</td><td class="n">'+fmt(t.amount)+'</td><td><span class="pill '+t.level+'">'+t.level+'</span></td></tr>').join('')+'</tbody></table>';
+  $$('#hTbl input').forEach(c=>c.onchange=()=>{c.checked?hPick.add(c.dataset.id):hPick.delete(c.dataset.id);$('#hCount').textContent=hPick.size+' picked'});
+  $('#hCount').textContent=hPick.size+' picked';
+}
+function sumCard(){
+  const ss=sampleStats(),it=sampleItems(),by={};it.forEach(x=>by[x.s.method]=(by[x.s.method]||0)+1);
+  const last=S.lastNote?'<div class="note" style="margin-bottom:12px">'+esc(S.lastNote)+'</div>':'';
+  $('#sumCard').innerHTML='<h2>Current sample</h2>'+last+(it.length?
+    '<div class="grid g4" style="margin:6px 0 14px"><div class="kpi"><span class="l">Items</span><span class="v">'+ss.n+'</span><span class="s">'+ss.covN.toFixed(1)+'% of population</span></div><div class="kpi"><span class="l">Value covered</span><span class="v">'+fmt0(ss.val)+'</span><span class="s">'+ss.covV.toFixed(1)+'% of gross value</span></div><div class="kpi"><span class="l">High-risk covered</span><span class="v">'+ss.hi+' / '+ss.hiTot+'</span><span class="s">'+pc(ss.hi,ss.hiTot).toFixed(0)+'% of high-risk items</span></div><div class="kpi"><span class="l">Methods</span><span class="v" style="font-size:15px">'+Object.keys(by).map(m=>esc(m)+' '+by[m]).join(' · ')+'</span></div></div>'+
+    '<div class="tbl" style="max-height:320px"><table><thead><tr><th>ID</th><th>Date</th><th>Description</th><th class="n">Amount</th><th>Level</th><th>Method</th><th>Basis</th></tr></thead><tbody>'+it.map(x=>'<tr><td class="mono">'+esc(x.t.id)+'</td><td class="mono">'+esc(x.t.date)+'</td><td>'+esc(x.t.desc)+'</td><td class="n">'+fmt(x.t.amount)+'</td><td><span class="pill '+x.t.level+'">'+x.t.level+'</span></td><td>'+esc(x.s.method)+(x.s.isolated?' <span class="flag">isolated</span>':'')+'</td><td class="tr" style="color:var(--muted)">'+esc(x.s.why)+'</td></tr>').join('')+'</tbody></table></div><div class="row" style="margin-top:12px"><button class="btn pri" id="toRes">Go to testing</button></div>'
+    :'<div class="empty">No sample selected yet. Choose a method above and select the sample.</div>');
+  const b=$('#toRes');if(b)b.onclick=()=>go('results');
+}
+function strataNote(r){
+  if(!r.strata)return r.note;
+  return r.note+' · '+r.strata.map(s=>s.k+': '+s.n+'/'+s.size).join('; ');
+}
+function runMethod(){
+  const pop=samplePop();if(!S.tx.length){toast('Load a dataset first.');return}
+  if(!pop.length){toast('No transactions in the selected population.');return}
+  const n=Math.max(1,Math.min(Math.round(+$('#sN').value)||0,pop.length)),seed=Math.round(+$('#sSeed').value)||1,append=$('#sAppend').value==='1';
+  let r;
+  if(meth==='haphazard'){
+    const why=$('#hWhy').value.trim();
+    if(!hPick.size){toast('Pick at least one item.');return}
+    if(why.length<10){toast('Enter an audit rationale (at least 10 characters).');$('#hWhy').focus();return}
+    r={sel:[...hPick].map(id=>({id:id,why:why})),note:'Haphazard selection · '+hPick.size+' item(s) · rationale: '+why};
+  }
+  else if(meth==='random')r=selRandom(pop,n,seed);
+  else if(meth==='systematic')r=selSystematic(pop,n,seed,Math.round(+$('#sStart').value)||0);
+  else if(meth==='stratified')r=selStratified(pop,n,seed,$('#stBy').value,$('#stAlloc').value);
+  else r=selMUS(pop,n,seed);
+  if(r.err){toast(r.err);return}
+  const added=applySample(r.sel,MN[meth],append||meth==='haphazard'&&S.sample.length>0&&append);
+  S.lastNote=strataNote(r);if(meth==='haphazard')hPick.clear();
+  logEv('Sample selected · '+MN[meth],added+' item(s) · '+S.lastNote);
+  save();sumCard();hapTable();chips();toast(added+' item(s) added to the sample');
+}
+function updateHints(){
+  const n=Math.max(1,+$('#sN').value||1);
+  const pp=samplePop();
+  $('#kOut').textContent=pp.length?(pp.length/n).toFixed(2):'–';
+  const pos=sum(pp.filter(t=>t.amount>0),t=>t.amount);$('#musOut').textContent=pp.length?fmt0(pos/n):'–';
+}
+R_.sampling=function(){
+  const pp=samplePop(),bv=Math.round(sum(pp.filter(t=>t.amount>0),t=>t.amount)),key=pp.length+'|'+bv;
+  if(!$('#cN').value||$('#cN').dataset.auto!==key){$('#cN').value=pp.length;$('#cN').dataset.auto=key;$('#cBV').value=bv;$('#cTM').value=S.mat}
+  runCalc();updateHints();hapTable();sumCard();
+};
+function setMethod(m){
+  meth=m;$$('#mTabs .tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.m===m));
+  $$('.mp').forEach(p=>p.hidden=p.id!=='mp-'+m);
+  $('#seedF').hidden=m==='haphazard';$('#sN').closest('.field').hidden=m==='haphazard';
+  $('#runLbl').textContent=m==='haphazard'?'Add picked items to sample':'Select sample';
+}
+function bindSampling(){
+  ['cApproach','cConf','cN','cBV','cTol','cExp','cPrec','cTM','cEM','cFpc'].forEach(id=>$('#'+id).addEventListener('input',runCalc));
+  $('#useN').onclick=()=>{if(calcN){$('#sN').value=calcN;updateHints();toast('Sample size set to '+calcN)}else toast('Fix the calculator inputs first.')};
+  $('#sN').addEventListener('input',updateHints);
+  $$('#mTabs .tab').forEach(t=>t.onclick=()=>setMethod(t.dataset.m));
+  $('#hSearch').addEventListener('input',hapTable);
+  $('#sPop').onchange=()=>{S.popSel=$('#sPop').value;save();R_.sampling()};
+  $('#runBtn').onclick=runMethod;
+  $('#clearBtn').onclick=()=>{S.tx.forEach(t=>{t.status='Pending';t.mis=0;t.obs='';t.act=''});S.sample=[];S.lastNote='';logEv('Sample cleared');save();sumCard();chips();toast('Sample cleared')};
+}
+
+/* ---------- results & exception tracking ---------- */
+let curTx=null;
+R_.results=function(){
+  const q=($('#rSearch').value||'').toLowerCase(),sf=$('#rStatus').value,lf=$('#rLevel').value;
+  const all=sampleItems(),it=all.filter(x=>(!sf||x.t.status===sf)&&(!lf||x.t.level===lf)&&(!q||(x.t.id+x.t.desc+x.t.account+x.t.vendor).toLowerCase().includes(q)));
+  $('#rCount').textContent=it.length+' of '+all.length+' sample items';
+  $('#rTbl').innerHTML=all.length?'<table><thead><tr><th>ID</th><th>Date</th><th>Description</th><th class="n">Amount</th><th>Level</th><th>Status</th><th class="n">Misstatement</th><th></th></tr></thead><tbody>'+it.map(x=>'<tr data-id="'+esc(x.t.id)+'"'+(curTx===x.t.id?' class="sel"':'')+'><td class="mono">'+esc(x.t.id)+'</td><td class="mono">'+esc(x.t.date)+'</td><td>'+esc(x.t.desc)+'</td><td class="n">'+fmt(x.t.amount)+'</td><td><span class="pill '+x.t.level+'">'+x.t.level+'</span></td><td><span class="pill '+x.t.status+'">'+x.t.status+'</span></td><td class="n">'+(+x.t.mis?fmt(x.t.mis):'–')+'</td><td><button class="btn sm" data-edit="'+esc(x.t.id)+'">Test</button></td></tr>').join('')+'</tbody></table>':'<div class="empty">The sample is empty. Select a sample in Sampling first.</div>';
+  $$('#rTbl [data-edit]').forEach(b=>b.onclick=()=>openDrawer(b.dataset.edit));
+};
+function openDrawer(id){
+  const t=txMap()[id];if(!t)return;curTx=id;const d=$('#drawer'),s=S.sample.find(x=>x.id===id)||{};
+  d.hidden=false;
+  d.innerHTML='<div class="row" style="justify-content:space-between"><h2 style="margin:0;font-size:16px">'+esc(t.id)+'</h2><button class="btn sm" id="dClose">Close</button></div>'+
+  '<div><span class="pill '+t.level+'">'+t.level+' · '+t.risk+'%</span></div>'+
+  '<dl style="display:grid;grid-template-columns:90px 1fr;gap:4px 10px;margin:0;font-size:13px"><dt style="color:var(--muted)">Date</dt><dd style="margin:0">'+esc(t.date)+'</dd><dt style="color:var(--muted)">Description</dt><dd style="margin:0">'+esc(t.desc)+'</dd><dt style="color:var(--muted)">Account</dt><dd style="margin:0">'+esc(t.account)+'</dd><dt style="color:var(--muted)">Vendor</dt><dd style="margin:0">'+esc(t.vendor)+'</dd><dt style="color:var(--muted)">User</dt><dd style="margin:0">'+esc(t.user||'–')+'</dd><dt style="color:var(--muted)">Amount</dt><dd style="margin:0" class="num">'+fmt(t.amount)+'</dd><dt style="color:var(--muted)">Selected by</dt><dd style="margin:0" class="tr">'+esc(s.method||'')+' · '+esc(s.why||'')+'</dd></dl>'+
+  '<div>'+flags(t)+'</div>'+
+  '<div class="field"><label for="dSt">Testing status</label><select id="dSt"><option>Pending</option><option>Tested</option><option>Exception</option></select></div>'+
+  '<div class="field"><label for="dMis">Misstatement identified ($)</label><input id="dMis" type="number" step="0.01" min="0"></div>'+
+  '<div class="field"><label for="dObs">Audit observation</label><textarea id="dObs" placeholder="What was inspected and what was found"></textarea></div>'+
+  '<div class="field"><label for="dAct">Corrective action recommended</label><textarea id="dAct"></textarea></div>'+
+  '<div class="row"><button class="btn em" id="dSave">Save result</button></div>';
+  $('#dSt').value=t.status;$('#dMis').value=t.mis||'';$('#dObs').value=t.obs||'';$('#dAct').value=t.act||'';
+  $('#dClose').onclick=closeDrawer;
+  $('#dSave').onclick=()=>{
+    const st=$('#dSt').value,mis=Math.abs(+$('#dMis').value)||0;
+    if(st==='Exception'&&!$('#dObs').value.trim()){toast('Add an observation for the exception.');$('#dObs').focus();return}
+    t.status=st;t.mis=st==='Exception'?mis:0;t.obs=$('#dObs').value.trim();t.act=$('#dAct').value.trim();
+    logEv('Test updated · '+t.id,st+(t.mis?' · misstatement '+fmt(t.mis):''));
+    save();closeDrawer();R_.results();chips();toast('Saved '+t.id);
+  };
+}
+function closeDrawer(){$('#drawer').hidden=true;curTx=null}
+function bindResults(){['rSearch','rStatus','rLevel'].forEach(id=>$('#'+id).addEventListener('input',()=>R_.results()))}
+
+/* ---------- working paper & exports ---------- */
+function wpData(){
+  const ss=sampleStats(),st=stats(),it=sampleItems(),ex=it.filter(x=>x.t.status==='Exception');
+  const projected=ss.val>0?ss.mis*(st.gross/ss.val):0;
+  return {ss:ss,st:st,it:it,ex:ex,projected:projected};
+}
+function paperHTML(){
+  const d=wpData(),ss=d.ss,st=d.st,w=S.wp;
+  const sc=w.scope||'';const sr=acctTable(S.tx).slice(0,40);const conc=w.conc||suggestConc();
+  return '<div class="wp"><div><b>'+esc(S.eng)+'</b><br>Audit sampling working paper</div><div style="text-align:end">Ref: '+esc(w.ref)+'<br>Period: '+esc(S.period)+'</div></div>'+
+  '<h2>Audit Sampling &amp; Risk Analytics</h2>'+
+  '<dl><dt>Engagement</dt><dd>'+esc(S.eng)+'</dd><dt>Prepared by</dt><dd>'+esc(w.aud||'—')+'</dd><dt>Reviewed by</dt><dd>'+esc(w.rev||'—')+'</dd><dt>Dataset</dt><dd>'+esc(S.ds.name)+'</dd><dt>Overall materiality</dt><dd>'+fmt0(S.mat)+'</dd><dt>Population</dt><dd>'+st.n+' items · '+fmt0(st.gross)+' gross activity</dd></dl>'+
+  '<h3>Risk assessment</h3><div class="tbl" style="border-color:var(--paper-line)"><table><thead><tr><th>Level</th><th class="n">Items</th><th class="n">% of ledger</th><th class="n">Gross value</th></tr></thead><tbody>'+['High','Medium','Low'].map(l=>'<tr><td>'+l+'</td><td class="n">'+st.L[l].length+'</td><td class="n">'+pc(st.L[l].length,st.n).toFixed(1)+'%</td><td class="n">'+fmt0(st.g[l])+'</td></tr>').join('')+'</tbody></table></div>'+
+  '<h3>Scoping decisions</h3><p style="white-space:pre-wrap;font-size:13px;margin:0">'+esc(sc||'Not documented.')+'</p>'+
+  '<div class="tbl" style="margin-top:10px;border-color:var(--paper-line)"><table><thead><tr><th>Account</th><th class="n">Gross activity</th><th class="n">Risk score</th><th>Scoping decision</th></tr></thead><tbody>'+sr.map(a=>'<tr><td>'+esc(a.acct)+'</td><td class="n">'+fmt0(a.gross)+'</td><td class="n">'+a.avg+'%</td><td>'+scopeOf(a.acct)+'</td></tr>').join('')+'</tbody></table></div>'+
+  '<h3>Sample &amp; coverage</h3><dl><dt>Sample size</dt><dd>'+ss.n+' items ('+ss.covN.toFixed(1)+'% of population)</dd><dt>Value covered</dt><dd>'+fmt0(ss.val)+' ('+ss.covV.toFixed(1)+'% of gross value)</dd><dt>High-risk coverage</dt><dd>'+ss.hi+' of '+ss.hiTot+' items</dd><dt>Methods</dt><dd>'+esc([...new Set(S.sample.map(s=>s.method))].join(', ')||'—')+'</dd><dt>Tested</dt><dd>'+ss.tested+' of '+ss.n+'</dd></dl>'+
+  '<h3>Results</h3><dl><dt>Exceptions</dt><dd>'+ss.ex+'</dd><dt>Known misstatements</dt><dd>'+fmt(ss.mis)+' ('+pc(ss.mis,S.mat).toFixed(0)+'% of materiality)</dd><dt>Projected misstatement</dt><dd>'+fmt0(d.projected)+' (ratio of known misstatement to value tested, indicative)</dd></dl>'+
+  (d.ex.length?'<div class="tbl" style="margin-top:10px;border-color:var(--paper-line)"><table><thead><tr><th>ID</th><th>Description</th><th class="n">Misstatement</th><th>Observation</th><th>Action</th></tr></thead><tbody>'+d.ex.map(x=>'<tr><td>'+esc(x.t.id)+'</td><td>'+esc(x.t.desc)+'</td><td class="n">'+fmt(x.t.mis)+'</td><td>'+esc(x.t.obs)+'</td><td>'+esc(x.t.act)+'</td></tr>').join('')+'</tbody></table></div>':'')+
+  '<h3>Conclusion</h3><p style="white-space:pre-wrap;font-size:13px;margin:0">'+esc(conc)+'</p>'+
+  '<div class="sig"><div>Prepared by: '+esc(w.aud||'')+'</div><div>Reviewed by: '+esc(w.rev||'')+'</div></div>';
+}
+R_.workpaper=function(){
+  const w=S.wp;
+  if(w.scope&&!w.scopeAuto&&/^Full population of /.test(w.scope))w.scopeAuto=w.scope;
+  if(!w.scope||w.scope===w.scopeAuto){w.scope=genScope();w.scopeAuto=w.scope}
+  if(w.conc&&w.conc===w.concAuto){w.conc=suggestConc();w.concAuto=w.conc}
+  $('#wAud').value=w.aud;$('#wRev').value=w.rev;$('#wRef').value=w.ref;$('#wScope').value=w.scope;$('#wConc').value=w.conc;
+  $('#paper').innerHTML=paperHTML();
+  $('#trail').innerHTML=S.log.length?S.log.map(l=>'<div><span class="mono" style="color:var(--muted)">'+esc(l.ts)+'</span><span><b>'+esc(l.a)+'</b>'+(l.d?' · '+esc(l.d):'')+'</span></div>').join(''):'<div class="empty">No events yet.</div>';
+};
+function exportPaper(){
+  const css='body{font:13px/1.5 "Segoe UI",Arial,sans-serif;color:#101820;max-width:820px;margin:30px auto;padding:0 20px}table{border-collapse:collapse;width:100%;font-size:12px}th,td{border:1px solid #C9D2DD;padding:5px 8px;text-align:left}th{background:#EEF2F6}td.n,th.n{text-align:right}.wp{display:flex;justify-content:space-between;border-bottom:2px solid #101820;padding-bottom:8px;margin-bottom:14px}h2{font-size:20px;margin:0 0 6px}h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #C9D2DD;margin:18px 0 6px}dl{display:grid;grid-template-columns:190px 1fr;gap:4px 12px;margin:0}dt{color:#4A5866}dd{margin:0}.sig{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:40px}.sig div{border-top:1px solid #101820;padding-top:4px}.tbl{overflow:visible}@media print{body{margin:0}}';
+  saveFile('audit-working-paper.html','<!doctype html><html lang="'+LANG+'" dir="'+(LANG==='ar'?'rtl':'ltr')+'"><head><meta charset="utf-8"><title>Audit working paper</title><style>'+css+'</style></head><body>'+trHTML(paperHTML())+'<script>window.addEventListener("load",function(){setTimeout(function(){window.print()},400)})<\/script></body></html>');
+  logEv('Working paper exported');
+}
+function bindWP(){
+  const m={wAud:'aud',wRev:'rev',wRef:'ref',wScope:'scope',wConc:'conc'};
+  Object.keys(m).forEach(id=>$('#'+id).addEventListener('input',e=>{S.wp[m[id]]=e.target.value;$('#paper').innerHTML=paperHTML();save()}));
+  $('#wSuggest').onclick=()=>{S.wp.conc=suggestConc();S.wp.concAuto=S.wp.conc;$('#wConc').value=S.wp.conc;$('#paper').innerHTML=paperHTML();save()};
+  $('#exPaper').onclick=exportPaper;
+  const pr=x=>[x.t.id,x.t.date,x.t.desc,x.t.account,x.t.vendor,x.t.user,x.t.amount,x.t.risk,x.t.level,x.s.method,x.s.why,x.t.status,x.t.mis||0,x.t.obs,x.t.act];
+  const H=['Transaction ID','Date','Description','Account','Vendor/Customer','User','Amount','Risk score','Risk level','Method','Selection basis','Status','Misstatement','Observation','Corrective action'];
+  $('#exSample').onclick=()=>{saveFile('sample.csv',toCSV(H.map(h=>trStr(h)),sampleItems().map(pr)));logEv('Sample CSV exported')};
+  $('#exExc').onclick=()=>{saveFile('exceptions.csv',toCSV(H.map(h=>trStr(h)),sampleItems().filter(x=>x.t.status==='Exception').map(pr)));logEv('Exceptions CSV exported')};
+  $('#exPop').onclick=()=>{const ids=new Set(S.sample.map(s=>s.id));saveFile('population.csv',toCSV(['Transaction ID','Date','Description','Account','Vendor/Customer','User','Amount','Risk score','Risk level','Control points','In sample','Status'].map(h=>trStr(h)),S.tx.map(t=>[t.id,t.date,t.desc,t.account,t.vendor,t.user,t.amount,t.risk,trStr(t.level),t.flags.map(f=>trStr(f)).join('; '),trStr(ids.has(t.id)?'Yes':'No'),trStr(t.status)])));logEv('Population CSV exported')};
+}
+
+/* ---------- init ---------- */
+
+/* ---------- tasks, engagement, checks, data table, annotations ---------- */
+const today=()=>new Date().toISOString().slice(0,10);
+S.es=S.es||{};S.tk=S.tk||{};S.an=S.an||[];
+const TK=id=>S.tk[id]||(S.tk[id]={as:'',due:'',ap:'',apr:'Pending',cm:[],h:[]});
+function tkStatus(t){const k=TK(t.id);if(k.apr==='Approved'&&t.status!=='Pending')return 'Approved';if(t.status!=='Pending')return 'Completed';if(k.due&&k.due<today())return 'Overdue';return 'Open'}
+function tkRows(){return sampleItems().map(x=>({t:x.t,s:x.s,k:TK(x.t.id),st:tkStatus(x.t)}))}
+function tkFiltered(){const q=($('#tkQ').value||'').toLowerCase(),f=$('#tkSt').value,a=$('#tkAs').value;
+  return tkRows().filter(r=>(!f||r.st===f)&&(!a||(a==='—'?!r.k.as:r.k.as===a))&&(!q||(r.t.id+r.t.desc+r.t.account).toLowerCase().includes(q)))}
+R_.tasks=function(){
+  const all=tkRows(),c=n=>all.filter(r=>r.st===n).length,as=n=>new Set(all.filter(r=>n?r.st===n:1).map(r=>r.k.as||'—')).size;
+  $('#tkKpi').innerHTML=[['All tasks',all.length,'',''],['Approved',c('Approved'),'em','Approved'],['Completed',c('Completed'),'lo','Completed'],['Open',c('Open'),'me','Open'],['Overdue',c('Overdue'),'hi','Overdue']].map(k=>'<button class="card kpi lvl '+k[2]+'" data-f="'+k[3]+'"><span class="l">'+k[0]+'</span><span class="v">'+k[1]+'</span><span class="s">'+as(k[3])+' assignee(s)</span></button>').join('');
+  $$('#tkKpi [data-f]').forEach(b=>b.onclick=()=>{$('#tkSt').value=b.dataset.f;R_.tasks()});
+  const names=[...new Set(all.map(r=>r.k.as||'—'))],cv=$('#tkAs').value;
+  $('#tkAs').innerHTML='<option value="">Assigned to: all</option>'+names.map(n=>'<option>'+esc(n)+'</option>').join('');$('#tkAs').value=names.includes(cv)?cv:'';
+  const it=tkFiltered();$('#tkCnt').textContent=it.length+' of '+all.length+' tasks';
+  $('#tkTbl').innerHTML=it.length?'<table><thead><tr><th>Task ID</th><th>Updated</th><th>Activity</th><th>Task status</th><th>Approval</th><th>Due date</th><th>Tags</th><th>Assigned to</th><th>Approval by</th><th></th></tr></thead><tbody>'+it.map(r=>'<tr><td class="mono">'+esc(r.t.id)+'</td><td class="mono">'+esc(r.s.ts||'')+'</td><td>'+esc(r.s.method||'Sample')+'</td><td><span class="pill '+(r.st==='Overdue'?'Exception':r.st==='Open'?'Pending':'Tested')+'">'+r.st+'</span></td><td>'+esc(r.k.apr)+'</td><td class="mono">'+esc(r.k.due||'—')+'</td><td><span class="pill '+r.t.level+'">'+(r.t.risk>=50?'HIGH RISK, >50%':r.t.level)+'</span></td><td>'+esc(r.k.as||'—')+'</td><td>'+esc(r.k.ap||'—')+'</td><td><button class="btn sm" data-t="'+esc(r.t.id)+'">Details</button></td></tr>').join('')+'</tbody></table>':'<div class="empty">No tasks. Select a sample first.</div>';
+  $$('#tkTbl [data-t]').forEach(b=>b.onclick=()=>openTask(b.dataset.t));
+};
+function openTask(id){
+  const t=txMap()[id];if(!t)return;const k=TK(id),d=$('#drawer');d.hidden=false;
+  d.innerHTML='<div class="row" style="justify-content:space-between"><h2 style="margin:0;font-size:16px">Details for transaction # '+esc(id)+'</h2><button class="btn sm" id="dClose">Close</button></div><div><span class="pill '+t.level+'">'+t.level+' · '+t.risk+'%</span> <span class="pill Pending">'+tkStatus(t)+'</span></div>'+
+  '<div class="field"><label for="kAs">Assignee</label><input id="kAs"></div><div class="field"><label for="kDue">Due date</label><input id="kDue" type="date"></div><div class="field"><label for="kAp">Approval by</label><input id="kAp"></div>'+
+  '<div class="field"><label for="kApr">Approval status</label><select id="kApr"><option>Pending</option><option>Approved</option><option>Rejected</option></select></div><div class="row"><button class="btn em" id="kSave">Save</button><button class="btn" id="kTest">Open test result</button></div>'+
+  '<h3 style="font-size:13px;margin:8px 0 0">Comments</h3><div id="kCm" class="trail"></div><div class="field"><textarea id="kNew" placeholder="Add a comment"></textarea></div><button class="btn sm" id="kAdd">Post comment</button>'+
+  '<h3 style="font-size:13px;margin:8px 0 0">History</h3><div id="kH" class="trail"></div>';
+  $('#kAs').value=k.as;$('#kDue').value=k.due;$('#kAp').value=k.ap;$('#kApr').value=k.apr;
+  const paint=()=>{$('#kCm').innerHTML=k.cm.length?k.cm.map(c=>'<div><span class="mono">'+esc(c.ts)+'</span><span>'+esc(c.t)+'</span></div>').join(''):'<span class="hint">No comments yet.</span>';$('#kH').innerHTML=k.h.length?k.h.map(c=>'<div><span class="mono">'+esc(c.ts)+'</span><span>'+esc(c.t)+'</span></div>').join(''):'<span class="hint">No changes yet.</span>'};paint();
+  const stamp=()=>new Date().toISOString().replace('T',' ').slice(0,19);
+  $('#dClose').onclick=()=>{closeDrawer();R_.tasks()};
+  $('#kTest').onclick=()=>openDrawer(id);
+  $('#kSave').onclick=()=>{const n={as:$('#kAs').value.trim(),due:$('#kDue').value,ap:$('#kAp').value.trim(),apr:$('#kApr').value};
+    Object.keys(n).forEach(f=>{if(n[f]!==k[f]){k.h.unshift({ts:stamp(),t:'Changed '+({as:'assignee',due:'due date',ap:'approver',apr:'approval status'})[f]+' from "'+(k[f]||'—')+'" to "'+(n[f]||'—')+'"'});k[f]=n[f]}});
+    logEv('Task updated · '+id,k.apr+(k.as?' · '+k.as:''));save();paint();R_.tasks();toast('Task saved')};
+  $('#kAdd').onclick=()=>{const v=$('#kNew').value.trim();if(!v)return;k.cm.unshift({ts:stamp(),t:v});$('#kNew').value='';save();paint()};
+}
+function tkBind(){
+  ['tkQ','tkSt','tkAs'].forEach(i=>$('#'+i).addEventListener('input',()=>R_.tasks()));
+  $('#tkReset').onclick=()=>{$('#tkQ').value='';$('#tkSt').value='';$('#tkAs').value='';R_.tasks()};
+  $('#tkBulk').onclick=()=>{const n=prompt('Assign the '+tkFiltered().length+' filtered task(s) to:');if(!n)return;tkFiltered().forEach(r=>{r.k.h.unshift({ts:today(),t:'Assigned to '+n});r.k.as=n.trim()});logEv('Bulk assignment',n);save();R_.tasks()};
+  $('#tkExp').onclick=()=>saveFile('task-manager.csv',toCSV(['Task ID','Method','Status','Approval','Due date','Risk','Assigned to','Approval by','Comments'],tkFiltered().map(r=>[r.t.id,r.s.method,r.st,r.k.apr,r.k.due,r.t.risk,r.k.as,r.k.ap,r.k.cm.length])));
+}
+const ES=[['name','Engagement name','text'],['end','Audit period end date','date'],['bill','Billing code','text'],['fm','Fiscal start month','text'],['fd','Fiscal start day','number'],['freq','Reporting frequency','select:Annually,Quarterly,Monthly'],['ind','Industry','text'],['erp','ERP','text'],['lead','Engagement lead','text'],['close','Closing balance (for completeness check)','number']];
+function periodEnd(){const m=(S.period||'').match(/\d{4}-\d\d-\d\d/g);return m&&m[m.length-1]||''}
+function checks(){
+  const ids={},dup=[];S.tx.forEach(t=>{if(ids[t.id])dup.push(t.id);ids[t.id]=1});
+  const miss=S.tx.filter(t=>!t.date||!t.account||t.account==='Unmapped').length,zero=S.tx.filter(t=>!t.amount).length;
+  const m=(S.period||'').match(/\d{4}-\d\d-\d\d/g)||[],a=m[0],b=m[m.length-1];
+  const oop=a&&b?S.tx.filter(t=>t.date&&(t.date<a||t.date>b)).length:0,tot=sum(S.tx,t=>t.amount),cl=S.es.close;
+  const r=[[!dup.length,'Unique transaction IDs',dup.length?dup.length+' duplicate ID(s): '+dup.slice(0,5).join(', '):'All '+S.tx.length+' transaction IDs are unique.'],
+  [!miss,'Required fields',miss?miss+' item(s) with missing date or unmapped account.':'Every item has a date and an account.'],
+  [!zero,'Zero-value items',zero?zero+' item(s) with a zero amount.':'No zero-amount items.'],
+  [!oop,'Period roll-forward',oop?oop+' item(s) dated outside '+a+' – '+b+'.':'0 items outside the audit period.']];
+  if(cl===undefined||cl===''||cl===null)r.push([null,'Completeness check','Closing balance was not provided.']);
+  else{const df=tot-(+cl);r.push([Math.abs(df)<0.005,'Completeness check',Math.abs(df)<0.005?'Ledger activity agrees to the closing balance.':'Difference of '+fmt(df)+' against the provided closing balance.'])}
+  return r;
+}
+function dtState(){return {q:($('#dtQ')||{}).value||'',acc:($('#dtA')||{}).value||'',min:+($('#dtMin')||{}).value||0,max:+($('#dtMax')||{}).value||0,sc:+($('#dtSc')||{}).value||0,d1:($('#dtD1')||{}).value||'',d2:($('#dtD2')||{}).value||'',pop:($('#dtP')||{}).value||''}}
+function dtDraw(){
+  const f=dtState(),inS=new Set(S.sample.map(s=>s.id));
+  const it=S.tx.filter(t=>(!f.q||(t.id+t.desc+t.vendor).toLowerCase().includes(f.q.toLowerCase()))&&(!f.acc||t.account===f.acc)&&(!f.min||Math.abs(t.amount)>=f.min)&&(!f.max||Math.abs(t.amount)<=f.max)&&(!f.sc||t.risk>=f.sc)&&(!f.d1||t.date>=f.d1)&&(!f.d2||t.date<=f.d2)&&(!f.pop||(f.pop==='in'?inS.has(t.id):!inS.has(t.id))));
+  $('#dtCnt').textContent=it.length+' of '+S.tx.length+' items';
+  $('#dtTbl').innerHTML='<table><thead><tr><th>ID</th><th>Date</th><th>Account</th><th>Description</th><th class="n">Amount</th><th>Score</th></tr></thead><tbody>'+it.slice(0,100).map(t=>'<tr><td class="mono">'+esc(t.id)+'</td><td class="mono">'+esc(t.date)+'</td><td>'+esc(t.account)+'</td><td>'+esc(t.desc)+'</td><td class="n">'+fmt(t.amount)+'</td><td><span class="pill '+t.level+'">'+t.risk+'%</span></td></tr>').join('')+'</tbody></table>'+(it.length>100?'<div class="empty">Showing first 100 of '+it.length+'. Narrow the filters or export.</div>':'');
+  return it;
+}
+R_.engage=function(){
+  const es=S.es;es.name=es.name||S.eng;es.end=es.end||periodEnd();
+  $('#esForm').innerHTML=ES.map(x=>{const v=es[x[0]]==null?'':es[x[0]];return '<div class="field"><label for="es_'+x[0]+'">'+x[1]+'</label>'+(x[2].indexOf('select')===0?'<select id="es_'+x[0]+'">'+x[2].slice(7).split(',').map(o=>'<option'+(o===v?' selected':'')+'>'+o+'</option>').join('')+'</select>':'<input id="es_'+x[0]+'" type="'+x[2]+'" value="'+esc(v)+'">')+'</div>'}).join('');
+  $('#chk').innerHTML=checks().map(c=>'<div class="row" style="padding:8px 0;border-bottom:1px solid var(--border)"><b style="width:20px;color:'+(c[0]===true?'var(--low)':'var(--med)')+'">'+(c[0]===true?'✓':'!')+'</b><span style="min-width:190px;font-weight:600">'+c[1]+'</span><span style="color:var(--muted)">'+esc(c[2])+'</span></div>').join('');
+  const accs=[...new Set(S.tx.map(t=>t.account))].sort(),f=dtState();
+  $('#dtF').innerHTML='<div class="field"><label for="dtQ">Search</label><input id="dtQ"></div><div class="field"><label for="dtA">Account</label><select id="dtA"><option value="">All accounts</option>'+accs.map(a=>'<option>'+esc(a)+'</option>').join('')+'</select></div><div class="field"><label for="dtMin">Min value ($)</label><input id="dtMin" type="number"></div><div class="field"><label for="dtMax">Max value ($)</label><input id="dtMax" type="number"></div><div class="field"><label for="dtSc">Min risk score (%)</label><input id="dtSc" type="number"></div><div class="field"><label for="dtD1">Effective date from</label><input id="dtD1" type="date"></div><div class="field"><label for="dtD2">to</label><input id="dtD2" type="date"></div><div class="field"><label for="dtP">Population</label><select id="dtP"><option value="">All</option><option value="in">Include sample only</option><option value="out">Exclude sample</option></select></div>';
+  $('#dtQ').value=f.q;$('#dtA').value=f.acc;$('#dtMin').value=f.min||'';$('#dtMax').value=f.max||'';$('#dtSc').value=f.sc||'';$('#dtD1').value=f.d1;$('#dtD2').value=f.d2;$('#dtP').value=f.pop;
+  $$('#dtF input,#dtF select').forEach(e=>e.oninput=dtDraw);dtDraw();anDraw();
+};
+function anDraw(){
+  $('#anTbl').innerHTML=S.an.length?'<table><thead><tr><th>Name</th><th>Page</th><th>Annotation description</th><th>Added by</th><th>Last updated</th><th>Status</th><th></th></tr></thead><tbody>'+S.an.map((a,i)=>'<tr><td>'+esc(a.n)+'</td><td>'+esc(a.p)+'</td><td>'+esc(a.d)+'</td><td>'+esc(a.by)+'</td><td class="mono">'+esc(a.ts)+'</td><td><span class="pill '+(a.on?'Tested':'Pending')+'">'+(a.on?'Active':'Archived')+'</span></td><td><button class="btn sm" data-tg="'+i+'">'+(a.on?'Archive':'Activate')+'</button> <button class="btn sm" data-rm="'+i+'">Delete</button></td></tr>').join('')+'</tbody></table>':'<div class="empty">No annotations yet.</div>';
+  $$('#anTbl [data-tg]').forEach(b=>b.onclick=()=>{const a=S.an[+b.dataset.tg];a.on=!a.on;a.ts=today();save();anDraw()});
+  $$('#anTbl [data-rm]').forEach(b=>b.onclick=()=>{S.an.splice(+b.dataset.rm,1);save();anDraw()});
+}
+function staleSet(v){S.stale=!!v;$('#stale').hidden=!v}
+function engBind(){
+  $('#esSave').onclick=()=>{const es=S.es,old=JSON.stringify(es);ES.forEach(x=>{const e=$('#es_'+x[0]);if(e)es[x[0]]=e.value});
+    if(es.name)S.eng=es.name;if(es.end){const m=(S.period||'').match(/\d{4}-\d\d-\d\d/g)||[];S.period=(m[0]||es.end)+' – '+es.end}
+    if(JSON.stringify(es)!==old){staleSet(true);logEv('Engagement settings saved',es.name+' · period end '+es.end)}save();R_.engage();toast('Engagement saved')};
+  $('#rerun').onclick=()=>{scoreAll();staleSet(false);logEv('Analysis re-run','Risk scores recalculated');refresh();toast('Analysis re-run')};
+  $('#dtReset').onclick=()=>{$$('#dtF input,#dtF select').forEach(e=>e.value='');dtDraw()};
+  $('#anAdd').onclick=()=>{const n=$('#anN').value.trim(),d=$('#anD').value.trim();if(!n||!d){toast('Name and description are required.');return}
+    S.an.unshift({n:n,p:$('#anP').value,d:d,by:S.es.lead||'Auditor',ts:today(),on:true});$('#anN').value='';$('#anD').value='';logEv('Annotation added',n);save();anDraw()};
+  staleSet(S.stale);
+}
+function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t)}
+function init(){
+  try{applyTheme(localStorage.getItem('ast-theme'))}catch(e){}
+  $('#themeBtn').onclick=()=>{const dark=document.documentElement.getAttribute('data-theme')==='dark'||(!document.documentElement.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme:dark)').matches);const t=dark?'light':'dark';applyTheme(t);try{localStorage.setItem('ast-theme',t)}catch(e){}};
+  $$('.nav').forEach(b=>b.onclick=()=>go(b.dataset.v));
+  window.addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(V[v]&&v!==cur)go(v)});
+  if(S.popSel)$('#sPop').value=S.popSel;
+  $('#chipMat').onclick=()=>{go('import');setTimeout(()=>{$('#matIn').focus();$('#matIn').select()},50)};
+  bindImport();bindSampling();bindResults();bindWP();tkBind();engBind();setMethod('random');
+  if(!loadSaved()){S.tx=demoData().map(r=>Object.assign({status:'Pending',mis:0,obs:'',act:'',cat:''},r));scoreAll();logEv('Demo dataset loaded','BUILDER INC · '+S.tx.length+' transactions · materiality '+fmt0(S.mat));
+    /* pre-select a starter sample so every screen has content */
+    const r=selStratified(S.tx,20,2023,'level','risk');applySample(r.sel,'Stratified',false);S.lastNote=strataNote(r);logEv('Sample selected · Stratified',r.sel.length+' item(s) · '+S.lastNote);
+  }else scoreAll();
+  getDl();
+  let lg='en';try{lg=localStorage.getItem('ast-lang')||'en'}catch(e){}
+  if(lg!=='fr'&&lg!=='ar')lg='en';
+  startObs();setLang(lg,true);
+  $$('#langSeg button').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+  go(V[location.hash.slice(1)]?location.hash.slice(1):'dashboard');
+}
+init();
+})();
+</script>
+
+</body></html>

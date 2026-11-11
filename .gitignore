@@ -1,6 +1,5 @@
 <<<<<<< HEAD
 node_modules/
-dist/
 .angular/
 out-tsc/
 .env
@@ -16,7 +15,6 @@ Thumbs.db
 *.swo
 =======
 node_modules/
-dist/
 .angular/
 out-tsc/
 .env

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ESG & Sustainability Intelligence</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--navy:#0A2540;--green:#00A86B;--bg:#F5F7FA;--dark:#0C1928;--card:#fff;--text:#0A2540;--muted:#64748b;--line:#e2e8f0;--red:#dc2626;--amber:#d97706;--shadow:0 1px 3px rgba(10,37,64,.08),0 4px 14px rgba(10,37,64,.05)}
+[data-theme=dark]{--bg:var(--dark);--card:color-mix(in srgb,var(--dark) 90%,#fff);--text:#e8eef5;--muted:#9fb0c3;--line:rgba(255,255,255,.13);--shadow:0 1px 3px rgba(0,0,0,.4)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.45}
+[dir=rtl] body{font-family:"Segoe UI",Tahoma,Arial,sans-serif}
+h2,h3,h4{margin:0}h3{font-size:15px}
+.muted{color:var(--muted)}.sm{font-size:12px}.r{text-align:end}.sp{flex:1}
+.side{position:fixed;inset-block:0;inset-inline-start:0;width:238px;background:var(--navy);color:#fff;display:flex;flex-direction:column;z-index:40;transition:transform .2s}
+[data-theme=dark] .side{background:color-mix(in srgb,var(--dark) 82%,#000)}
+.brand{padding:16px 18px;display:flex;gap:10px;align-items:center;font-weight:700;border-bottom:1px solid rgba(255,255,255,.1);line-height:1.2}
+.logo{min-width:34px;height:34px;border-radius:9px;background:var(--green);display:grid;place-items:center;font-weight:800}
+.nav{padding:10px;display:flex;flex-direction:column;gap:3px;overflow:auto}
+.nav button{background:none;border:0;color:#cbd5e1;padding:10px 12px;border-radius:8px;text-align:start;cursor:pointer;font:inherit;display:flex;gap:10px;align-items:center}
+.nav button:hover{background:rgba(255,255,255,.08)}.nav button.on{background:var(--green);color:#fff;font-weight:600}
+.sidefoot{padding:12px 16px;font-size:11px;color:#94a3b8}
+.top{margin-inline-start:238px;background:var(--card);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:30}
+.top h1{font-size:16px;margin:0 8px 0 0}
+.main{margin-inline-start:238px;padding:20px;max-width:1500px}
+.burger{display:none}
+select,input,textarea,button{font:inherit}
+select,input[type=text],input[type=number],input[type=search],textarea,input[type=color]{padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);max-width:100%}
+input[type=color]{padding:2px;height:34px;width:54px}
+textarea{width:100%;min-height:80px}
+.btn{padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer;font-weight:600;white-space:nowrap}
+.btn:hover{border-color:var(--green)}.btn.primary{background:var(--green);border-color:var(--green);color:#fff}.btn.danger{color:var(--red);border-color:var(--red)}.btn.ghost{background:none}.btn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+[data-theme=dark] .btn.on{background:var(--green);border-color:var(--green)}
+.ib{background:none;border:0;cursor:pointer;color:var(--muted);font-size:15px;padding:2px 5px;border-radius:6px}.ib:hover{background:var(--line);color:var(--text)}
+.ph{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;margin-bottom:16px}
+.ph h2{font-size:22px}.acts{display:flex;gap:8px;flex-wrap:wrap}
+.card{background:var(--card);border-radius:12px;box-shadow:var(--shadow);padding:16px;border:1px solid var(--line)}
+.card>h3,.ch{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.g{display:grid;gap:14px;margin-bottom:14px}.g2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}.g4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.kv{font-size:24px;font-weight:700;margin:2px 0}.kv small{font-size:12px;color:var(--muted);font-weight:500}
+.kh{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.dl{font-size:12px;font-weight:600}.dl.up{color:var(--green)}.dl.dn{color:var(--red)}
+.bar{height:7px;border-radius:9px;background:var(--line);overflow:hidden;margin:7px 0}.bar i{display:block;height:100%;border-radius:9px}
+.cv{position:relative;height:270px}
+.tw{overflow:auto}table{border-collapse:collapse;width:100%}th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:start;vertical-align:top}th{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);white-space:nowrap}
+td input{width:100%;min-width:70px}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap}
+.t-c,.t-l{background:rgba(0,168,107,.16);color:#059669}.t-p,.t-m{background:rgba(217,119,6,.16);color:#d97706}.t-n,.t-h{background:rgba(220,38,38,.14);color:#dc2626}.t-x{background:var(--line);color:var(--muted)}
+.banner{background:rgba(0,168,107,.12);border:1px solid var(--green);border-radius:10px;padding:9px 13px;margin-bottom:14px;font-size:13px}
+.warn{background:rgba(217,119,6,.12);border:1px solid var(--amber);border-radius:10px;padding:9px 13px;margin-bottom:14px;font-size:13px}
+.empty{padding:26px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:10px}
+.ring{--p:0;width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--c,var(--green)) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center}
+.ring b{width:74px;height:74px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:21px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;border-inline-start:4px solid var(--green)}
+.item.h{border-inline-start-color:var(--red)}.item.m{border-inline-start-color:var(--amber)}
+.heat{display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-bottom:6px}.heat b{width:60px;font-size:12px}
+.cell{width:26px;height:26px;border-radius:5px;cursor:pointer;border:0}.cell.c{background:#00A86B}.cell.p{background:#F59E0B}.cell.n{background:#EF4444}
+.modal{position:fixed;inset:0;background:rgba(5,15,30,.6);display:grid;place-items:center;z-index:100;padding:14px}
+.modal[hidden]{display:none}
+.mbox{background:var(--card);color:var(--text);border-radius:14px;padding:20px;width:min(560px,100%);max-height:92vh;overflow:auto}
+.mbox h3{margin-bottom:12px;font-size:17px}.fld{margin-bottom:10px}.fld label{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}.fld input,.fld select,.fld textarea{width:100%}
+.mfoot{display:flex;gap:8px;margin-top:14px}.fsec{font-weight:700;margin:12px 0 6px;color:var(--green)}
+.pop{position:absolute;inset-inline-end:16px;top:54px;width:340px;max-width:92vw;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:12px;z-index:60;max-height:70vh;overflow:auto}
+.pop[hidden]{display:none}
+.badge{background:var(--red);color:#fff;border-radius:99px;font-size:11px;padding:1px 6px;margin-inline-start:2px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:700;font-size:12px}
+.toast{position:fixed;bottom:18px;inset-inline-end:18px;background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;z-index:200;box-shadow:var(--shadow)}
+body.edit [data-k]{outline:1px dashed var(--green);outline-offset:2px;cursor:text;border-radius:3px}
+body.edit [data-k]:hover{background:rgba(0,168,107,.14)}
+[data-k][contenteditable=true]{background:rgba(0,168,107,.2);outline:2px solid var(--green)}
+#reportDoc{background:#fff;color:#0A2540;padding:34px;border-radius:12px;border:1px solid var(--line);font-size:13px}
+#reportDoc h1{font-size:24px;border-bottom:3px solid var(--green);padding-bottom:8px;margin:0 0 6px}
+#reportDoc h3{margin:20px 0 8px;color:#0A2540;border-bottom:1px solid #e2e8f0;padding-bottom:4px}
+#reportDoc th{color:#475569;background:#f1f5f9}#reportDoc td,#reportDoc th{border-bottom:1px solid #e2e8f0}
+#reportDoc .muted{color:#64748b}
+.nb{page-break-inside:avoid}
+@media(max-width:900px){.side{transform:translateX(-100%)}[dir=rtl] .side{transform:translateX(100%)}.side.open{transform:none!important}.top,.main{margin-inline-start:0}.burger{display:inline-block}.main{padding:12px}}
+@media print{body *{visibility:hidden}#reportDoc,#reportDoc *{visibility:visible}#reportDoc{position:absolute;inset-inline-start:0;top:0;width:100%;border:0;padding:0}.side,.top{display:none}}
+</style>
+</head>
+<body>
+<aside class="side" id="side">
+  <div class="brand"><div class="logo">E</div><div data-k="app_title">ESG & Sustainability Intelligence</div></div>
+  <nav class="nav" id="nav"></nav>
+  <div class="sidefoot" style="margin-top:auto" data-k="side_foot">Rule-based tool · no AI · all data stays in your browser</div>
+  <div class="sidefoot" style="margin-top:0;padding-top:0;color:#e2e8f0;font-weight:600" data-k="credit">Mohamed - Accountant & Auditor | Ex-PwC</div>
+</aside>
+<header class="top" id="top"></header>
+<div class="pop" id="notif" hidden></div>
+<main class="main" id="page"></main>
+<div class="modal" id="modal" hidden><div class="mbox"></div></div>
+
+<script>
+'use strict';
+/* ============ helpers ============ */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const num=v=>{if(v==null||v==='')return null;const n=parseFloat(String(v).replace(',','.'));return isNaN(n)?null:n};
+const fmt=(n,d=1)=>n==null||isNaN(n)?'—':Number(n).toLocaleString('en-US',{maximumFractionDigits:d});
+const cl=v=>Math.max(0,Math.min(100,v));
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+const clone=o=>JSON.parse(JSON.stringify(o));
+const py=y=>String(+y-1);
+const scoreColor=p=>p>=75?'#00A86B':p>=50?'#F59E0B':'#EF4444';
+const bar=(p,c)=>`<div class="bar"><i style="width:${cl(p)}%;background:${c||scoreColor(p)}"></i></div>`;
+
+/* ============ i18n (every label is editable in-place via Edit mode or in Settings) ============ */
+const I18N={en:{
+app_title:'ESG & Sustainability Intelligence',side_foot:'Rule-based tool · no AI · all data stays in your browser',credit:'Mohamed - Accountant & Auditor | Ex-PwC',
+nav_overview:'Overview',nav_esg:'ESG Performance',nav_esrs:'ESRS Compliance',nav_carbon:'Carbon Footprint',nav_mat:'Materiality & Benchmark',nav_reports:'Reports & Export',nav_settings:'Settings',
+save:'Save',cancel:'Cancel',delete:'Delete',edit:'Edit',add:'Add',export:'Export',import:'Import',template:'CSV template',reset:'Reset',search:'Search…',all:'All',actions:'Actions',year:'Year',company:'Company',edit_mode:'Edit texts',yes:'Yes',no:'No',none:'— none —',linked:'Linked to Carbon module',target:'Target',vs_prev:'vs previous year',score:'Score',status:'Status',name:'Name',unit:'Unit',value:'Value',notes:'Notes',description:'Description',owner:'Owner',level:'Level',high:'High',medium:'Medium',low:'Low',title:'Title',text:'Text',color:'Color',pillar:'Pillar',confirm_delete:'Delete this item? This cannot be undone.',confirm_reset:'This will replace data. Continue?',saved:'Saved',deleted:'Deleted',invalid:'Please fill the required fields.',empty:'Nothing here yet. Use the Add button.',due:'Due date',previous:'Previous',current:'Current',
+demo_note:'FICTIONAL DEMONSTRATION DATA – Tunisian Manufacturing Group is an invented company. Edit or replace everything.',
+p_E:'Environmental',p_S:'Social',p_G:'Governance',
+ov_title:'Overview',ov_sub:'Consolidated ESG, ESRS and carbon status for the selected company and year',overall:'Overall ESG score',pillars_perf:'Pillars Performance Summary',hotspots:'Key Risk Hotspots & Actions',add_hotspot:'Add hotspot',custom_cards:'Custom Cards',add_card:'Add card',alerts:'Risk Alerts',no_alerts:'No active alerts.',recent_log:'Recent activity',ours:'Ours',peer:'Peer',total_emis:'Total emissions',esrs_ready:'ESRS readiness',active_alerts:'Active alerts',material_topics:'Material topics',action:'Action',edit_peers:'Edit peer scores',pts:'pts',
+esg_title:'ESG Performance',esg_sub:'Indicators, charts and analysis – all values editable',add_kpi:'Add indicator',import_csv:'Import CSV',export_csv:'Export CSV',load_demo:'Load demo data',reset_data:'Reset data',monthly_data:'Monthly data (editable)',monthly_em:'Monthly emissions (tCO₂e)',monthly_en:'Monthly energy (kWh)',fill_month:'Fill emissions from Carbon module',ch_scope:'Carbon emissions by scope',ch_month:'Monthly carbon emissions',ch_energy:'Energy consumption trend',ch_gender:'Workforce gender distribution',ch_radar:'ESG performance by category',ch_waste:'Waste management distribution',edit_data:'Edit chart data',set_gender:'Workforce gender',set_waste:'Waste distribution',set_hint:'One line per item: label,value',positives:'Positive indicators',negatives:'Negative indicators',improve:'Areas requiring improvement',nothing:'Nothing to show.',score_method:'Scoring: with a target, score = achievement of target (capped at 100). Without a target, score = 50 adjusted by the year-over-year change. Pillar score = average of scored indicators; overall = weighted average of pillars (weights in Settings).',kpi_help:'Fields: higher-is-better decides colours; scored = include in scores; alert min/max feed Risk Alerts; link = take value from Carbon module.',higher_better:'Higher is better',scored:'Include in score',alert_min:'Alert if below',alert_max:'Alert if above',link:'Value source',link_manual:'Manual entry',values_by_year:'Values by year',import_done:'Import finished: {n} row(s).',import_bad:'Could not read this file.',csv_cols_kpi:'Columns: pillar(E/S/G), name, unit, value, target, higher_is_better(y/n). Values apply to the selected year.',
+esrs_title:'ESRS Compliance',esrs_sub:'Manual preliminary assessment – you decide the status of each requirement',esrs_disc:'Disclaimer: this is a manual working tool for preliminary screening. Requirements, references and statuses are entered and judged by the user; verify them against the official EFRAG/EU texts. It is not a compliance certificate and does not replace professional assurance.',esrs_score:'Indicative readiness',compliant:'Compliant',partial:'Partially compliant',noncompliant:'Non-compliant',total_req:'Requirements',by_std:'Compliance by standard',heatmap:'Compliance heatmap',missing:'Missing disclosure requirements',matrix:'ESRS disclosure matrix',add_req:'Add requirement',ref:'Ref',standard:'Standard',requirement:'Disclosure requirement',gap:'Identified gap',recommendation:'Recommendation',evidence:'Evidence reference',all_status:'All statuses',all_std:'All standards',score_note:'Readiness % = (compliant + 0.5 × partial) ÷ total requirements.',
+carbon_title:'Carbon Footprint',carbon_sub:'GHG Protocol – Scopes 1, 2 and 3 with editable factors',sc1:'Scope 1 – Direct',sc2:'Scope 2 – Energy',sc3:'Scope 3 – Value chain',total_emissions:'Total footprint',activity:'Activity',qty:'Quantity',factor:'Emission factor',factor_unit:'Factor per unit',fsrc:'Factor reference',tco2e:'tCO₂e',add_act:'Add activity',copy_prev:'Copy activities from previous year',factors_lib:'Emission factor library (editable)',add_factor:'Add factor',history:'Historical emissions',targets:'Reduction target',base_year:'Base year',reduction_pct:'Reduction %',target_year:'Target year',target_emis:'Target emissions',progress:'Progress',crecs:'Carbon reduction recommendations',add_rec:'Add recommendation',hotspot_auto:'Automatic hotspots (largest sources)',share:'Share',country:'Country / region',energy_src:'Energy source',source:'Source',factor_year:'Factor year',formula:'Emissions (kgCO₂e) = Activity data × Emission factor · tCO₂e = kgCO₂e ÷ 1000. Units are converted when the activity unit differs from the factor unit (kWh/MWh/GJ, kg/t, L/m³).',illus_warn:'Factors are illustrative placeholders – replace them with verified values (national grid operator, IPCC, DEFRA, ADEME…) and record the source.',scope_cmp:'Scope comparison',by_activity:'Emissions by activity',distribution:'Emissions distribution',set_target:'Set target',pick_factor:'Pick from factor library',no_conv:'No conversion known for this unit pair',csv_cols_act:'Columns: scope(1/2/3), activity, quantity, unit, factor, factor_unit, source.',calc:'Calculation',
+mat_title:'Materiality & Benchmark',mat_sub:'Double materiality matrix and peer comparison – all manual',topic:'Topic',impact:'Impact materiality',financial:'Financial materiality',material:'Material',not_material:'Not material',threshold:'Materiality threshold',add_topic:'Add topic',matrix_title:'Double materiality matrix',bench_title:'Peer benchmark comparison',add_bench:'Add benchmark',better:'Better',lags:'Lags',equal:'Equal',illus_note:'Benchmarks are illustrative values typed by you – not official sector averages.',bench_name:'Benchmark name',peer_scores:'Peer pillar scores',kpi_link:'Take "ours" from indicator',peer_value:'Peer value',ours_value:'Our value',axis_x:'Financial materiality →',axis_y:'Impact materiality →',
+rep_title:'Reports & Export',rep_sub:'Build, edit and print the preliminary report',report_h:'Sustainability & ESG Preliminary Report',print:'Print / PDF',export_json:'Export JSON',export_all:'Export indicators CSV',findings:'Audit findings',add_finding:'Add finding',audit_note:'Auditor notes (click to edit, saved automatically)',sections:'Report sections',audit_trail:'Audit trail',clear_log:'Clear log',severity:'Severity',s_company:'Company information',s_summary:'ESG performance summary',s_esrs:'ESRS compliance assessment',s_carbon:'Carbon footprint results',s_gaps:'Identified gaps',s_recs:'Recommendations',s_finds:'Audit findings',s_note:'Auditor notes',s_log:'Audit trail',s_mat:'Material topics',prepared_by:'Prepared by',firm:'Audit firm',generated:'Generated on',industry:'Industry',report_disc:'Preliminary document based on user-entered data. Not an assurance report.',
+set_title:'Settings',set_sub:'Change anything: names, lists, colours, thresholds and every text',s_general:'General',s_user:'Auditor / user',s_companies:'Companies',s_years:'Reporting years (comma separated)',s_colors:'Colour palette',s_pillars:'Pillars',s_weights:'Pillar weights',s_thresholds:'Thresholds',s_improve:'Score below this = area to improve',s_emis_up:'Alert when emissions rise by more than (%)',s_mat_thr:'Materiality threshold (0–10)',s_standards:'ESRS standards list',add_standard:'Add standard',code:'Code',s_labels:'Edit all texts (current language)',s_labels_hint:'Leave empty to use the default text. You can also click "Edit texts" in the top bar and edit titles directly on the page.',reset_labels:'Reset texts',s_data:'Data management',backup:'Download backup (JSON)',restore:'Restore backup',reset_all:'Reset everything',add_company:'Add company',colors_reset:'Default colours',auditor_name:'Name',auditor_role:'Role',key:'Key',
+al_above:'{n}: {v} is above the limit {x}',al_below:'{n}: {v} is below the minimum {x}',al_up:'{n} increased by {p}% vs previous year',al_noesrs:'No ESRS requirement assessed yet',al_esrs:'{n} ESRS requirement(s) non-compliant',
+bench_cat:'Benchmark position',esrs_r:'ESRS readiness'
+},fr:{
+app_title:'Intelligence ESG & Durabilité',side_foot:'Outil à règles · sans IA · données conservées dans votre navigateur',
+nav_overview:'Vue d’ensemble',nav_esg:'Performance ESG',nav_esrs:'Conformité ESRS',nav_carbon:'Empreinte carbone',nav_mat:'Matérialité & Benchmark',nav_reports:'Rapports & Export',nav_settings:'Paramètres',
+save:'Enregistrer',cancel:'Annuler',delete:'Supprimer',edit:'Modifier',add:'Ajouter',export:'Exporter',import:'Importer',template:'Modèle CSV',reset:'Réinitialiser',search:'Rechercher…',all:'Tous',actions:'Actions',year:'Année',company:'Société',edit_mode:'Modifier les textes',yes:'Oui',no:'Non',none:'— aucun —',linked:'Lié au module Carbone',target:'Objectif',vs_prev:'vs année préc.',score:'Score',status:'Statut',name:'Nom',unit:'Unité',value:'Valeur',notes:'Notes',description:'Description',owner:'Responsable',level:'Niveau',high:'Élevé',medium:'Moyen',low:'Faible',title:'Titre',text:'Texte',color:'Couleur',pillar:'Pilier',confirm_delete:'Supprimer cet élément ? Action irréversible.',confirm_reset:'Les données seront remplacées. Continuer ?',saved:'Enregistré',deleted:'Supprimé',invalid:'Veuillez remplir les champs obligatoires.',empty:'Rien pour le moment. Utilisez le bouton Ajouter.',due:'Échéance',previous:'Précédent',current:'Actuel',
+demo_note:'DONNÉES DE DÉMONSTRATION FICTIVES – Tunisian Manufacturing Group est une société inventée. Modifiez ou remplacez tout.',
+p_E:'Environnement',p_S:'Social',p_G:'Gouvernance',
+ov_title:'Vue d’ensemble',ov_sub:'État consolidé ESG, ESRS et carbone',overall:'Score ESG global',pillars_perf:'Synthèse de performance par pilier',hotspots:'Points de risque & actions',add_hotspot:'Ajouter un point',custom_cards:'Cartes personnalisées',add_card:'Ajouter une carte',alerts:'Alertes de risque',no_alerts:'Aucune alerte active.',recent_log:'Activité récente',ours:'Nous',peer:'Pairs',total_emis:'Émissions totales',esrs_ready:'Préparation ESRS',active_alerts:'Alertes actives',material_topics:'Sujets matériels',action:'Action',edit_peers:'Modifier scores pairs',
+esg_title:'Performance ESG',esg_sub:'Indicateurs, graphiques et analyse – tout est modifiable',add_kpi:'Ajouter un indicateur',import_csv:'Importer CSV',export_csv:'Exporter CSV',load_demo:'Charger la démo',reset_data:'Réinitialiser',monthly_data:'Données mensuelles (modifiables)',monthly_em:'Émissions mensuelles (tCO₂e)',monthly_en:'Énergie mensuelle (kWh)',fill_month:'Remplir depuis le module Carbone',ch_scope:'Émissions par scope',ch_month:'Émissions mensuelles',ch_energy:'Tendance énergétique',ch_gender:'Répartition hommes/femmes',ch_radar:'Performance ESG par catégorie',ch_waste:'Répartition des déchets',edit_data:'Modifier les données',positives:'Indicateurs positifs',negatives:'Indicateurs négatifs',improve:'Axes d’amélioration',nothing:'Rien à afficher.',higher_better:'Plus haut = mieux',scored:'Inclure dans le score',alert_min:'Alerte si inférieur à',alert_max:'Alerte si supérieur à',link:'Source de la valeur',link_manual:'Saisie manuelle',values_by_year:'Valeurs par année',
+esrs_title:'Conformité ESRS',esrs_sub:'Évaluation préliminaire manuelle – vous décidez du statut',esrs_disc:'Avertissement : outil de travail manuel pour un pré-diagnostic. Exigences, références et statuts sont saisis et jugés par l’utilisateur ; à vérifier avec les textes officiels EFRAG/UE. Ce n’est pas un certificat de conformité.',esrs_score:'Préparation indicative',compliant:'Conforme',partial:'Partiellement conforme',noncompliant:'Non conforme',total_req:'Exigences',by_std:'Conformité par norme',heatmap:'Carte de chaleur',missing:'Exigences manquantes',matrix:'Matrice des informations ESRS',add_req:'Ajouter une exigence',ref:'Réf.',standard:'Norme',requirement:'Exigence de publication',gap:'Écart identifié',recommendation:'Recommandation',evidence:'Preuve / référence',all_status:'Tous statuts',all_std:'Toutes normes',
+carbon_title:'Empreinte carbone',carbon_sub:'GHG Protocol – Scopes 1, 2 et 3, facteurs modifiables',sc1:'Scope 1 – Direct',sc2:'Scope 2 – Énergie',sc3:'Scope 3 – Chaîne de valeur',total_emissions:'Empreinte totale',activity:'Activité',qty:'Quantité',factor:'Facteur d’émission',fsrc:'Référence du facteur',add_act:'Ajouter une activité',copy_prev:'Copier l’année précédente',factors_lib:'Bibliothèque de facteurs (modifiable)',add_factor:'Ajouter un facteur',history:'Historique des émissions',targets:'Objectif de réduction',base_year:'Année de base',reduction_pct:'Réduction %',target_year:'Année cible',target_emis:'Émissions cibles',progress:'Progression',crecs:'Recommandations de réduction',add_rec:'Ajouter une recommandation',hotspot_auto:'Points chauds automatiques',share:'Part',country:'Pays / région',energy_src:'Source d’énergie',source:'Source',scope_cmp:'Comparaison des scopes',by_activity:'Émissions par activité',distribution:'Répartition',set_target:'Définir l’objectif',
+mat_title:'Matérialité & Benchmark',mat_sub:'Matrice de double matérialité et comparaison – tout manuel',topic:'Sujet',impact:'Matérialité d’impact',financial:'Matérialité financière',material:'Matériel',not_material:'Non matériel',threshold:'Seuil de matérialité',add_topic:'Ajouter un sujet',matrix_title:'Matrice de double matérialité',bench_title:'Comparaison avec les pairs',add_bench:'Ajouter un benchmark',better:'Meilleur',lags:'En retard',equal:'Égal',illus_note:'Benchmarks illustratifs saisis par vous – pas des moyennes sectorielles officielles.',bench_name:'Nom du benchmark',peer_scores:'Scores des pairs',
+rep_title:'Rapports & Export',rep_sub:'Construire, modifier et imprimer le rapport préliminaire',report_h:'Rapport préliminaire ESG & Durabilité',print:'Imprimer / PDF',export_json:'Exporter JSON',export_all:'Exporter indicateurs CSV',findings:'Constats d’audit',add_finding:'Ajouter un constat',audit_note:'Notes de l’auditeur (cliquer pour modifier)',sections:'Sections du rapport',audit_trail:'Piste d’audit',clear_log:'Effacer le journal',severity:'Gravité',s_company:'Informations société',s_summary:'Synthèse de performance ESG',s_esrs:'Évaluation de conformité ESRS',s_carbon:'Résultats carbone',s_gaps:'Écarts identifiés',s_recs:'Recommandations',s_finds:'Constats d’audit',s_note:'Notes de l’auditeur',s_log:'Piste d’audit',s_mat:'Sujets matériels',prepared_by:'Préparé par',firm:'Cabinet d’audit',generated:'Généré le',industry:'Secteur',report_disc:'Document préliminaire basé sur des données saisies. Ce n’est pas un rapport d’assurance.',
+set_title:'Paramètres',set_sub:'Tout modifier : noms, listes, couleurs, seuils et chaque texte',s_general:'Général',s_user:'Auditeur / utilisateur',s_companies:'Sociétés',s_years:'Années (séparées par des virgules)',s_colors:'Palette de couleurs',s_pillars:'Piliers',s_weights:'Poids des piliers',s_thresholds:'Seuils',s_standards:'Liste des normes ESRS',add_standard:'Ajouter une norme',code:'Code',s_labels:'Modifier tous les textes (langue actuelle)',reset_labels:'Réinitialiser les textes',s_data:'Gestion des données',backup:'Télécharger la sauvegarde',restore:'Restaurer',reset_all:'Tout réinitialiser',add_company:'Ajouter une société',colors_reset:'Couleurs par défaut',auditor_name:'Nom',auditor_role:'Fonction',key:'Clé'
+},ar:{
+app_title:'ذكاء ESG والاستدامة',side_foot:'أداة قائمة على القواعد · بدون ذكاء اصطناعي · البيانات تبقى في متصفحك',
+nav_overview:'نظرة عامة',nav_esg:'أداء ESG',nav_esrs:'الامتثال لـ ESRS',nav_carbon:'البصمة الكربونية',nav_mat:'الأهمية النسبية والمقارنة',nav_reports:'التقارير والتصدير',nav_settings:'الإعدادات',
+save:'حفظ',cancel:'إلغاء',delete:'حذف',edit:'تعديل',add:'إضافة',export:'تصدير',import:'استيراد',template:'نموذج CSV',reset:'إعادة ضبط',search:'بحث…',all:'الكل',actions:'إجراءات',year:'السنة',company:'الشركة',edit_mode:'تعديل النصوص',yes:'نعم',no:'لا',none:'— بدون —',linked:'مرتبط بوحدة الكربون',target:'الهدف',vs_prev:'مقارنة بالسنة السابقة',score:'الدرجة',status:'الحالة',name:'الاسم',unit:'الوحدة',value:'القيمة',notes:'ملاحظات',description:'الوصف',owner:'المسؤول',level:'المستوى',high:'مرتفع',medium:'متوسط',low:'منخفض',title:'العنوان',text:'النص',color:'اللون',pillar:'المحور',confirm_delete:'حذف هذا العنصر؟ لا يمكن التراجع.',confirm_reset:'سيتم استبدال البيانات. متابعة؟',saved:'تم الحفظ',deleted:'تم الحذف',invalid:'يرجى ملء الحقول المطلوبة.',empty:'لا يوجد شيء بعد. استخدم زر الإضافة.',due:'تاريخ الاستحقاق',previous:'السابق',current:'الحالي',
+demo_note:'بيانات تجريبية وهمية – Tunisian Manufacturing Group شركة مختلقة. عدّل أو استبدل كل شيء.',
+p_E:'البيئة',p_S:'الاجتماعي',p_G:'الحوكمة',
+ov_title:'نظرة عامة',ov_sub:'حالة ESG وESRS والكربون مجمّعة',overall:'درجة ESG الإجمالية',pillars_perf:'ملخص أداء المحاور',hotspots:'أبرز المخاطر والإجراءات',add_hotspot:'إضافة خطر',custom_cards:'بطاقات مخصصة',add_card:'إضافة بطاقة',alerts:'تنبيهات المخاطر',no_alerts:'لا توجد تنبيهات.',recent_log:'النشاط الأخير',ours:'نحن',peer:'النظراء',total_emis:'إجمالي الانبعاثات',esrs_ready:'جاهزية ESRS',active_alerts:'التنبيهات',material_topics:'المواضيع الجوهرية',action:'الإجراء',edit_peers:'تعديل درجات النظراء',
+esg_title:'أداء ESG',esg_sub:'المؤشرات والرسوم والتحليل – كل القيم قابلة للتعديل',add_kpi:'إضافة مؤشر',import_csv:'استيراد CSV',export_csv:'تصدير CSV',load_demo:'تحميل بيانات تجريبية',reset_data:'إعادة ضبط البيانات',monthly_data:'البيانات الشهرية (قابلة للتعديل)',monthly_em:'الانبعاثات الشهرية (tCO₂e)',monthly_en:'الطاقة الشهرية (kWh)',fill_month:'تعبئة من وحدة الكربون',ch_scope:'الانبعاثات حسب النطاق',ch_month:'الانبعاثات الشهرية',ch_energy:'اتجاه استهلاك الطاقة',ch_gender:'توزيع الجنسين',ch_radar:'أداء ESG حسب الفئة',ch_waste:'توزيع النفايات',edit_data:'تعديل بيانات الرسم',positives:'مؤشرات إيجابية',negatives:'مؤشرات سلبية',improve:'مجالات تحتاج تحسين',nothing:'لا شيء للعرض.',higher_better:'الأعلى أفضل',scored:'ضمن الدرجة',alert_min:'تنبيه إن قلّ عن',alert_max:'تنبيه إن زاد عن',link:'مصدر القيمة',link_manual:'إدخال يدوي',values_by_year:'القيم حسب السنة',
+esrs_title:'الامتثال لـ ESRS',esrs_sub:'تقييم أولي يدوي – أنت تحدد حالة كل متطلب',esrs_disc:'تنبيه: أداة عمل يدوية للفحص الأولي. المتطلبات والمراجع والحالات يدخلها المستخدم ويقيّمها؛ تحقق منها مع النصوص الرسمية. ليست شهادة امتثال.',esrs_score:'الجاهزية التقديرية',compliant:'ممتثل',partial:'ممتثل جزئيًا',noncompliant:'غير ممتثل',total_req:'المتطلبات',by_std:'الامتثال حسب المعيار',heatmap:'خريطة حرارية',missing:'متطلبات الإفصاح الناقصة',matrix:'مصفوفة إفصاحات ESRS',add_req:'إضافة متطلب',ref:'المرجع',standard:'المعيار',requirement:'متطلب الإفصاح',gap:'الفجوة',recommendation:'التوصية',evidence:'مرجع الدليل',all_status:'كل الحالات',all_std:'كل المعايير',
+carbon_title:'البصمة الكربونية',carbon_sub:'بروتوكول GHG – النطاقات 1 و2 و3 مع معاملات قابلة للتعديل',sc1:'النطاق 1 – مباشر',sc2:'النطاق 2 – الطاقة',sc3:'النطاق 3 – سلسلة القيمة',total_emissions:'إجمالي البصمة',activity:'النشاط',qty:'الكمية',factor:'معامل الانبعاث',fsrc:'مرجع المعامل',add_act:'إضافة نشاط',copy_prev:'نسخ أنشطة السنة السابقة',factors_lib:'مكتبة المعاملات (قابلة للتعديل)',add_factor:'إضافة معامل',history:'الانبعاثات التاريخية',targets:'هدف الخفض',base_year:'سنة الأساس',reduction_pct:'نسبة الخفض %',target_year:'سنة الهدف',target_emis:'الانبعاثات المستهدفة',progress:'التقدم',crecs:'توصيات خفض الكربون',add_rec:'إضافة توصية',hotspot_auto:'أكبر المصادر (تلقائي)',share:'الحصة',country:'البلد / المنطقة',energy_src:'مصدر الطاقة',source:'المصدر',scope_cmp:'مقارنة النطاقات',by_activity:'الانبعاثات حسب النشاط',distribution:'التوزيع',set_target:'تحديد الهدف',
+mat_title:'الأهمية النسبية والمقارنة',mat_sub:'مصفوفة الأهمية المزدوجة ومقارنة النظراء – يدوي بالكامل',topic:'الموضوع',impact:'أهمية الأثر',financial:'الأهمية المالية',material:'جوهري',not_material:'غير جوهري',threshold:'عتبة الأهمية',add_topic:'إضافة موضوع',matrix_title:'مصفوفة الأهمية المزدوجة',bench_title:'مقارنة مع النظراء',add_bench:'إضافة مقارنة',better:'أفضل',lags:'متأخر',equal:'متساوٍ',illus_note:'قيم توضيحية أدخلتها أنت – وليست متوسطات قطاعية رسمية.',bench_name:'اسم المقارنة',peer_scores:'درجات النظراء',
+rep_title:'التقارير والتصدير',rep_sub:'إنشاء التقرير الأولي وتعديله وطباعته',report_h:'التقرير الأولي للاستدامة وESG',print:'طباعة / PDF',export_json:'تصدير JSON',export_all:'تصدير المؤشرات CSV',findings:'ملاحظات التدقيق',add_finding:'إضافة ملاحظة',audit_note:'ملاحظات المدقق (انقر للتعديل)',sections:'أقسام التقرير',audit_trail:'سجل التدقيق',clear_log:'مسح السجل',severity:'الخطورة',s_company:'بيانات الشركة',s_summary:'ملخص أداء ESG',s_esrs:'تقييم الامتثال لـ ESRS',s_carbon:'نتائج البصمة الكربونية',s_gaps:'الفجوات',s_recs:'التوصيات',s_finds:'ملاحظات التدقيق',s_note:'ملاحظات المدقق',s_log:'سجل التدقيق',s_mat:'المواضيع الجوهرية',prepared_by:'أعدّه',firm:'مكتب التدقيق',generated:'تاريخ الإنشاء',industry:'القطاع',report_disc:'وثيقة أولية مبنية على بيانات أدخلها المستخدم. ليست تقرير تأكيد.',
+set_title:'الإعدادات',set_sub:'غيّر أي شيء: الأسماء والقوائم والألوان والعتبات وكل نص',s_general:'عام',s_user:'المدقق / المستخدم',s_companies:'الشركات',s_years:'السنوات (مفصولة بفواصل)',s_colors:'لوحة الألوان',s_pillars:'المحاور',s_weights:'أوزان المحاور',s_thresholds:'العتبات',s_standards:'قائمة معايير ESRS',add_standard:'إضافة معيار',code:'الرمز',s_labels:'تعديل كل النصوص (اللغة الحالية)',reset_labels:'إعادة ضبط النصوص',s_data:'إدارة البيانات',backup:'تنزيل نسخة احتياطية',restore:'استعادة',reset_all:'إعادة ضبط كل شيء',add_company:'إضافة شركة',colors_reset:'الألوان الافتراضية',auditor_name:'الاسم',auditor_role:'الوظيفة',key:'المفتاح'
+}};
+let S; // state
+const T=k=>((S.labels[S.lang]||{})[k])??(I18N[S.lang]||{})[k]??I18N.en[k]??k;
+const L=k=>`<span data-k="${k}">${esc(T(k))}</span>`;
+const f=(k,v)=>T(k).replace(/\{(\w+)\}/g,(_,x)=>v[x]??'');
+
+/* ============ state & demo data ============ */
+const KEY='esgPlatformV2';
+const KDEFS=[ // id,pillar,name,unit,higherBetter,scored,target,link,alertMin,alertMax
+['k_tot','E','Total carbon emissions','tCO₂e','n','y',9000,'c_total','',''],
+['k_s1','E','Scope 1 emissions','tCO₂e','n','y',650,'c_s1','',''],
+['k_s2','E','Scope 2 emissions','tCO₂e','n','y',4300,'c_s2','',''],
+['k_s3','E','Scope 3 emissions','tCO₂e','n','y',4000,'c_s3','',''],
+['k_en','E','Energy consumption','kWh','n','y',13000000,'','',''],
+['k_wat','E','Water consumption','m³','n','y',170000,'','',''],
+['k_was','E','Waste generated','tonnes','n','y',1600,'','',''],
+['k_ren','E','Renewable energy share','%','y','y',50,'',40,''],
+['k_emp','S','Total employees','headcount','y','n','','','',''],
+['k_gen','S','Workforce gender diversity (women)','%','y','y',40,'','',''],
+['k_turn','S','Employee turnover rate','%','n','y',8,'','',9],
+['k_acc','S','Workplace accident rate (LTIFR)','per 1M h','n','y',1.5,'','',''],
+['k_trn','S','Employee training hours','hours','y','y',30000,'','',''],
+['k_gap','S','Gender pay gap','%','n','y',3,'','',10],
+['k_bi','G','Board independence','%','y','y',70,'','',''],
+['k_bg','G','Board gender diversity','%','y','y',40,'','',''],
+['k_ac','G','Anti-corruption training','%','y','y',100,'','',''],
+['k_eth','G','Ethics violations','cases','n','y',0,'','',''],
+['k_inc','G','Compliance incidents','cases','n','y',0,'','','']];
+const DEMOV={k_en:[14500000,14100000,13600000],k_wat:[205000,194000,182000],k_was:[2050,1920,1800],k_ren:[22,30,38.5],k_emp:[790,820,850],k_gen:[30,32,34],k_turn:[12.4,10.8,9.5],k_acc:[3,2.6,2.1],k_trn:[19000,22000,25500],k_gap:[8.5,7.3,6.2],k_bi:[55,60,62.5],k_bg:[25,31.3,37.5],k_ac:[78,86,92],k_eth:[5,3,2],k_inc:[6,4,3]};
+const SRC='Illustrative – verify against official source';
+const FACT=[ // name,value,fUnit,country,source
+['Electricity – national grid',0.47,'kWh','Tunisia'],['Natural gas',0.184,'kWh','Generic'],['Diesel',2.68,'L','Generic'],['Gasoline',2.31,'L','Generic'],['Refrigerant R-410A leakage',2088,'kg','Generic'],['Purchased heating',0.2,'kWh','Generic'],['Purchased cooling',0.15,'kWh','Generic'],['Purchased goods & services (spend)',0.35,'USD','Generic'],['Business travel – air',0.15,'km','Generic'],['Employee commuting',0.17,'km','Generic'],['Freight transport & distribution',0.1,'tkm','Generic'],['Waste generated (mixed)',450,'t','Generic'],['Capital goods (spend)',0.4,'USD','Generic']];
+const ACTS=[ // scope,name,country,energySource,qty,unit,factorIdx
+[1,'Company vehicles – diesel','Tunisia','Diesel',42000,'L',2],[1,'Company vehicles – gasoline','Tunisia','Gasoline',18000,'L',3],[1,'Natural gas (boilers & furnaces)','Tunisia','Natural gas',1150000,'kWh',1],[1,'On-site diesel generators','Tunisia','Diesel',60000,'L',2],[1,'Refrigerant leakage (R-410A)','Tunisia','Refrigerant',85,'kg',4],
+[2,'Electricity consumption','Tunisia','Grid electricity',9800000,'kWh',0],[2,'Purchased heating','Tunisia','District heat',400000,'kWh',5],[2,'Purchased cooling','Tunisia','Chilled water',250000,'kWh',6],
+[3,'Purchased goods and services','','',6500000,'USD',7],[3,'Business travel (flights)','','',450000,'km',8],[3,'Employee commuting','','',2800000,'km',9],[3,'Transportation & distribution','','',3200000,'tkm',10],[3,'Waste generated in operations','','',1800,'t',11],[3,'Capital goods','','',1200000,'USD',12]];
+const STD=[['ESRS 1','General Requirements'],['ESRS 2','General Disclosures'],['E1','Climate Change'],['E2','Pollution'],['E3','Water and Marine Resources'],['E4','Biodiversity and Ecosystems'],['E5','Resource Use and Circular Economy'],['S1','Own Workforce'],['S2','Workers in the Value Chain'],['S3','Affected Communities'],['S4','Consumers and End-users'],['G1','Business Conduct']];
+const ESRSROWS=[ // ref,std,req,st,gap,action,evidence
+['ESRS 1','ESRS 1','Application of double materiality and value-chain scope','p','Value-chain boundaries not fully described','Document value-chain boundaries and assumptions','Materiality workshop minutes'],
+['BP-1','ESRS 2','General basis for preparation of the sustainability statement','c','','','Reporting basis memo'],
+['GOV-1','ESRS 2','Role of administrative, management and supervisory bodies','c','','','Board charter'],
+['SBM-1','ESRS 2','Strategy, business model and value chain','p','Value-chain description is high level','Add upstream/downstream description','Annual report p.12'],
+['IRO-1','ESRS 2','Process to identify and assess material impacts, risks and opportunities','p','Process not formally documented','Write and approve a materiality procedure','Draft procedure'],
+['E1-1','E1','Transition plan for climate change mitigation','n','No approved transition plan','Draft a transition plan and obtain board approval',''],
+['E1-4','E1','Targets related to climate change mitigation','p','No Scope 3 target','Set and publish a Scope 3 target','Sustainability policy'],
+['E1-5','E1','Energy consumption and mix','c','','','Energy bills, metering'],
+['E1-6','E1','Gross Scopes 1, 2, 3 and total GHG emissions','p','Scope 3 categories only partly covered','Screen all 15 Scope 3 categories','Carbon module'],
+['E2-4','E2','Pollution of air, water and soil','p','Air emission data incomplete','Collect stack measurement data','Environmental permit'],
+['E3-4','E3','Water consumption','c','','','Water invoices'],
+['E4-1','E4','Transition plan and consideration of biodiversity in strategy','n','Biodiversity not assessed','Run a site biodiversity screening',''],
+['E5-5','E5','Resource outflows (waste)','p','Recovery rates by waste type missing','Obtain waste manifests by stream','Waste register'],
+['S1-6','S1','Characteristics of the undertaking’s employees','c','','','HR system extract'],
+['S1-9','S1','Diversity metrics','c','','','HR dashboard'],
+['S1-14','S1','Health and safety metrics','c','','','Safety log'],
+['S1-16','S1','Remuneration metrics (pay gap and total remuneration)','p','CEO pay ratio not calculated','Compute the pay ratio','Payroll analysis'],
+['S2-1','S2','Policies related to value chain workers','n','No supplier labour policy','Adopt a supplier code of conduct',''],
+['S3-1','S3','Policies related to affected communities','n','No community engagement policy','Draft a community engagement policy',''],
+['S4-1','S4','Policies related to consumers and end-users','p','Product safety policy not published','Publish product safety policy','Quality manual'],
+['G1-1','G1','Business conduct policies and corporate culture','c','','','Code of ethics'],
+['G1-3','G1','Prevention and detection of corruption and bribery','c','','','Anti-corruption policy'],
+['G1-4','G1','Incidents of corruption or bribery','c','','','Compliance register']];
+const MATROWS=[['Climate change & GHG emissions','E',8,8],['Energy & renewable energy','E',7,7],['Water use','E',6,5],['Waste & circular economy','E',6,4],['Pollution','E',4,3],['Biodiversity','E',3,2],['Own workforce – health & safety','S',8,6],['Diversity & equal pay','S',6,5],['Training & skills','S',5,6],['Workers in the value chain','S',6,5],['Business conduct & anti-corruption','G',7,7],['Data security & governance','G',5,7]];
+
+function emptyD(){return{kpis:KDEFS.map(d=>({id:d[0],p:d[1],name:d[2],unit:d[3],hib:d[4],scored:d[5],target:'',link:d[7],amin:'',amax:'',v:{}})),monthly:{},sets:{gender:{},waste:{}},hot:[],cards:[],benchName:'Industry benchmark (illustrative)',bench:[],peer:{E:'',S:'',G:''},esrs:[],mat:[],acts:[],factors:FACT.map(x=>({id:uid(),name:x[0],value:x[1],fUnit:x[2],country:x[3],source:SRC,year:'2025'})),target:{base:'',pct:'',tyear:''},crecs:[],finds:[],note:''}}
+function demoD(){
+ const d=emptyD(); const yrs=['2023','2024','2025'];
+ d.kpis=KDEFS.map(k=>{const v={};if(DEMOV[k[0]])DEMOV[k[0]].forEach((x,i)=>v[yrs[i]]=x);return{id:k[0],p:k[1],name:k[2],unit:k[3],hib:k[4],scored:k[5],target:k[6],link:k[7],amin:k[8],amax:k[9],v}});
+ const scale={'2025':1,'2024':1.06,'2023':1.12};
+ yrs.forEach(y=>ACTS.forEach(a=>{const fc=FACT[a[6]];d.acts.push({id:uid(),year:y,scope:a[0],name:a[1],country:a[2]||fc[3],esrc:a[3],qty:Math.round(a[4]*scale[y]),unit:a[5],factor:fc[1],fUnit:fc[2],source:SRC,fYear:'2025'})}));
+ const w=[.075,.072,.078,.082,.088,.095,.1,.098,.09,.085,.072,.065];
+ yrs.forEach(y=>{const tot=d.acts.filter(a=>a.year===y).reduce((s,a)=>s+actKg(a)/1000,0);const en=DEMOV.k_en[yrs.indexOf(y)];d.monthly[y]={em:w.map(x=>Math.round(tot*x*10)/10),en:w.map(x=>Math.round(en*x))}});
+ d.sets.gender={'2025':[{l:'Women',v:289},{l:'Men',v:561}],'2024':[{l:'Women',v:262},{l:'Men',v:558}],'2023':[{l:'Women',v:237},{l:'Men',v:553}]};
+ d.sets.waste={'2025':[{l:'Recycled',v:820},{l:'Reused',v:140},{l:'Incinerated',v:210},{l:'Landfill',v:520},{l:'Hazardous (treated)',v:110}],'2024':[{l:'Recycled',v:760},{l:'Reused',v:120},{l:'Incinerated',v:260},{l:'Landfill',v:640},{l:'Hazardous (treated)',v:140}],'2023':[{l:'Recycled',v:700},{l:'Reused',v:110},{l:'Incinerated',v:300},{l:'Landfill',v:780},{l:'Hazardous (treated)',v:160}]};
+ d.hot=[{id:uid(),title:'Grid electricity dependence',text:'Grid electricity is the largest single source of emissions.',action:'Install rooftop PV and negotiate a renewable PPA',owner:'Energy manager',lvl:'h',due:'Q3 2026'},{id:uid(),title:'No approved climate transition plan',text:'ESRS E1-1 is not covered.',action:'Draft the plan and obtain board approval',owner:'CSO',lvl:'h',due:'Q2 2026'},{id:uid(),title:'Scope 3 data quality',text:'Several categories rely on spend-based estimates.',action:'Collect supplier-specific data for top suppliers',owner:'Procurement',lvl:'m',due:'Q4 2026'},{id:uid(),title:'Gender pay gap above target',text:'6.2% vs target 3%.',action:'Run a pay-equity review',owner:'HR director',lvl:'m',due:'Q1 2026'}];
+ d.cards=[{id:uid(),title:'Fictional data',value:'Demo',text:'All figures for this company are invented for demonstration.',color:'#00A86B'}];
+ d.bench=[{id:uid(),n:'Carbon intensity',u:'tCO₂e / $M revenue',ours:142,peer:185,hib:'n',kpi:'',note:''},{id:uid(),n:'Renewable energy share',u:'%',ours:'',peer:45,hib:'y',kpi:'k_ren',note:''},{id:uid(),n:'Board independence',u:'%',ours:'',peer:50,hib:'y',kpi:'k_bi',note:''},{id:uid(),n:'Employee turnover',u:'%',ours:'',peer:11,hib:'n',kpi:'k_turn',note:''},{id:uid(),n:'Accident rate',u:'per 1M h',ours:'',peer:2.8,hib:'n',kpi:'k_acc',note:''}];
+ d.benchName='Industrial Manufacturing MENA (illustrative)'; d.peer={E:60,S:62,G:65};
+ d.esrs=ESRSROWS.map(r=>({id:uid(),ref:r[0],std:r[1],req:r[2],st:r[3],gap:r[4],action:r[5],ev:r[6]}));
+ d.mat=MATROWS.map(r=>({id:uid(),n:r[0],p:r[1],impact:r[2],fin:r[3],note:''}));
+ d.target={base:'2023',pct:30,tyear:'2030'};
+ d.crecs=[{id:uid(),title:'Switch to renewable electricity',text:'Rooftop PV + renewable PPA to cut Scope 2.'},{id:uid(),title:'Electrify company vehicles',text:'Replace diesel/gasoline fleet progressively.'},{id:uid(),title:'Supplier engagement',text:'Request product-level emission data from top suppliers.'}];
+ d.finds=[{id:uid(),title:'Scope 3 completeness',sev:'m',text:'Only 6 of 15 categories included so far (fictional example).'}];
+ d.note='Preliminary working notes – fictional demonstration.';
+ return d;}
+function defaults(){return{v:2,lang:'en',theme:'light',edit:false,page:'overview',year:'2025',years:['2023','2024','2025'],cur:'c1',
+ user:{name:'Amine K.',role:'Lead ESG Auditor',firm:'Audit Firm Name'},colors:{navy:'#0A2540',green:'#00A86B',bg:'#F5F7FA',dark:'#0C1928'},pillarColors:{E:'#00A86B',S:'#3B82F6',G:'#F59E0B'},weights:{E:1,S:1,G:1},th:{improve:60,emis:5,mat:5},
+ standards:STD.map(s=>({c:s[0],n:s[1]})),labels:{en:{},fr:{},ar:{}},log:[],sections:{company:1,summary:1,esrs:1,carbon:1,mat:1,gaps:1,recs:1,finds:1,note:1,log:0},
+ cos:[{id:'c1',name:'Tunisian Manufacturing Group',industry:'Manufacturing',country:'Tunisia',demo:true,d:demoD()},{id:'c2',name:'SNA Agri-Food Corp',industry:'Agri-food',country:'Tunisia',demo:false,d:emptyD()},{id:'c3',name:'MENA Energy Solutions',industry:'Energy',country:'UAE',demo:false,d:emptyD()}]}}
+const merge=(a,b)=>{for(const k in b){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k]))merge(a[k],b[k]);else a[k]=b[k]}return a};
+function load(){const d=defaults();try{const r=localStorage.getItem(KEY);if(r){const s=JSON.parse(r);if(s&&s.v===2)return merge(d,s)}}catch(e){console.warn(e)}return d}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Storage full or blocked')}}
+const CO=()=>S.cos.find(c=>c.id===S.cur)||S.cos[0];
+const D=()=>CO().d;
+function log(a,det){S.log.unshift({t:new Date().toISOString(),u:S.user.name,a,d:det||'',c:CO().name});S.log=S.log.slice(0,500)}
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+
+/* ============ calculation engine ============ */
+const CONV={'MWh>kWh':1000,'GJ>kWh':277.778,'kWh>MWh':.001,'kWh>GJ':.0036,'GJ>MWh':.277778,'MWh>GJ':3.6,'t>kg':1000,'kg>t':.001,'m3>L':1000,'L>m3':.001,'m³>L':1000,'L>m³':.001};
+function conv(a){if(!a.fUnit||a.unit===a.fUnit)return[1,true];const c=CONV[a.unit+'>'+a.fUnit];return c?[c,true]:[1,false]}
+function actKg(a){return(num(a.qty)||0)*conv(a)[0]*(num(a.factor)||0)} // kgCO2e = activity × factor
+function carbon(y){const r={s1:0,s2:0,s3:0,n:0,total:0,list:[]};D().acts.filter(a=>a.year==y).forEach(a=>{const t=actKg(a)/1000;r['s'+a.scope]+=t;r.n++;r.list.push({a,t})});r.total=r.s1+r.s2+r.s3;return r}
+function val(k,y){if(k.link){const c=carbon(y);if(!c.n)return null;return{c_total:c.total,c_s1:c.s1,c_s2:c.s2,c_s3:c.s3}[k.link]??null}return num((k.v||{})[y])}
+function score(k,y){if(k.scored==='n')return null;const v=val(k,y);if(v==null)return null;const t=num(k.target);
+ if(t!=null){if(k.hib==='y')return t===0?100:cl(v/t*100);if(t===0)return v===0?100:cl(100-v*20);return v===0?100:cl(t/v*100)}
+ const b=val(k,py(y));if(b==null||b===0)return 50;const ch=(v-b)/Math.abs(b)*100;return cl(50+(k.hib==='y'?ch:-ch)*5)}
+function pillarScore(p,y){return avg(D().kpis.filter(k=>k.p===p).map(k=>score(k,y)).filter(x=>x!=null))}
+function overall(y){let sw=0,sv=0;['E','S','G'].forEach(p=>{const s=pillarScore(p,y);const w=num(S.weights[p])||0;if(s!=null&&w>0){sv+=s*w;sw+=w}});return sw?sv/sw:null}
+function delta(k){const a=val(k,S.year),b=val(k,py(S.year));if(a==null||b==null||b===0)return null;const ch=(a-b)/Math.abs(b)*100;return{ch,good:k.hib==='y'?ch>=0:ch<=0}}
+function esrsStats(){const e=D().esrs,c=e.filter(r=>r.st==='c').length,p=e.filter(r=>r.st==='p').length,n=e.filter(r=>r.st==='n').length;return{c,p,n,t:e.length,pct:e.length?(c+.5*p)/e.length*100:null}}
+function benchRows(){return D().bench.map(b=>{const k=b.kpi?D().kpis.find(x=>x.id===b.kpi):null;const ours=k?val(k,S.year):num(b.ours);const peer=num(b.peer);let st='equal';if(ours!=null&&peer!=null&&ours!==peer)st=(b.hib==='y'?ours>peer:ours<peer)?'better':'lags';return{b,ours,peer,st}})}
+function benchPos(){const r=benchRows().filter(x=>x.ours!=null&&x.peer!=null);return r.length?r.filter(x=>x.st!=='lags').length/r.length*100:null}
+function alerts(){const out=[],y=S.year;D().kpis.forEach(k=>{const v=val(k,y);if(v==null)return;const mx=num(k.amax),mn=num(k.amin);if(mx!=null&&v>mx)out.push({l:'h',m:f('al_above',{n:k.name,v:fmt(v,2),x:fmt(mx,2)})});if(mn!=null&&v<mn)out.push({l:'h',m:f('al_below',{n:k.name,v:fmt(v,2),x:fmt(mn,2)})});if(k.link==='c_total'||k.link==='c_s1'||k.link==='c_s2'||k.link==='c_s3'){const d=delta(k);if(d&&d.ch>num(S.th.emis))out.push({l:'m',m:f('al_up',{n:k.name,p:fmt(d.ch)})})}});
+ const e=esrsStats();if(!e.t)out.push({l:'m',m:T('al_noesrs')});else if(e.n)out.push({l:'m',m:f('al_esrs',{n:e.n})});return out}
+
+/* ============ CSV / files ============ */
+function parseCSV(t){t=t.replace(/^\uFEFF/,'');const first=t.split(/\r?\n/)[0]||'';const dl=(first.match(/;/g)||[]).length>(first.match(/,/g)||[]).length?';':',';const rows=[];let r=[],c='',q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch==='"'){if(t[i+1]==='"'){c+='"';i++}else q=false}else c+=ch}else if(ch==='"')q=true;else if(ch===dl){r.push(c);c=''}else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;r.push(c);c='';if(r.some(x=>x!==''))rows.push(r);r=[]}else c+=ch}r.push(c);if(r.some(x=>x!==''))rows.push(r);return rows}
+const toCSV=rows=>rows.map(r=>r.map(c=>{c=String(c??'');return/[",;\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(',')).join('\r\n');
+function download(name,text,mime){const b=new Blob(['\uFEFF'+text],{type:mime||'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function pickFile(cb,accept){const i=document.createElement('input');i.type='file';i.accept=accept||'.csv,.txt';i.onchange=()=>{const fl=i.files[0];if(!fl)return;const r=new FileReader();r.onload=()=>cb(String(r.result));r.onerror=()=>toast(T('import_bad'));r.readAsText(fl)};i.click()}
+
+/* ============ modal forms ============ */
+function closeModal(){$('#modal').hidden=true}
+function fieldHtml(fd,v){const id='f_'+fd.k,lb=fd.l?`<label for="${id}">${esc(T(fd.l))}${fd.req?' *':''}</label>`:'';
+ if(fd.t==='sec')return`<div class="fsec">${esc(T(fd.l))}</div>`;
+ let inp;v=v??'';
+ if(fd.t==='select')inp=`<select id="${id}" name="${fd.k}">${fd.o.map(o=>`<option value="${esc(o[0])}"${String(o[0])===String(v)?' selected':''}>${esc(o[1])}</option>`).join('')}</select>`;
+ else if(fd.t==='textarea')inp=`<textarea id="${id}" name="${fd.k}">${esc(v)}</textarea>`;
+ else inp=`<input id="${id}" name="${fd.k}" type="${fd.t==='number'?'number':fd.t==='color'?'color':'text'}"${fd.t==='number'?' step="any"':''} value="${esc(v)}"${fd.dis?' disabled':''}>`;
+ return`<div class="fld">${lb}${inp}${fd.h?`<div class="sm muted">${esc(T(fd.h))}</div>`:''}</div>`}
+function openForm({title,fields,values={},onSave,onDelete,note}){
+ const m=$('#modal'),box=$('.mbox',m);
+ box.innerHTML=`<h3>${esc(title)}</h3>${note?`<p class="sm muted">${esc(note)}</p>`:''}<form id="mf" novalidate>${fields.map(x=>fieldHtml(x,values[x.k])).join('')}<div class="mfoot">${onDelete?`<button type="button" class="btn danger" id="mdel">${esc(T('delete'))}</button>`:''}<span class="sp"></span><button type="button" class="btn ghost" id="mcancel">${esc(T('cancel'))}</button><button class="btn primary">${esc(T('save'))}</button></div></form>`;
+ m.hidden=false;$('#mcancel').onclick=closeModal;
+ if(onDelete)$('#mdel').onclick=()=>{closeModal();onDelete()};
+ $('#mf').onsubmit=e=>{e.preventDefault();const out={};for(const x of fields){if(x.t==='sec')continue;let v=e.target.elements[x.k].value;if(x.t==='number')v=num(v);else v=v.trim();if(x.req&&(v===''||v==null)){toast(T('invalid'));e.target.elements[x.k].focus();return}out[x.k]=v}if(onSave(out)!==false)closeModal()};
+ const fi=$('#mf input:not([disabled]),#mf textarea');if(fi)fi.focus()}
+function ask(msg,cb){const m=$('#modal'),box=$('.mbox',m);box.innerHTML=`<h3>${esc(msg)}</h3><div class="mfoot"><span class="sp"></span><button class="btn ghost" id="mcancel">${esc(T('no'))}</button><button class="btn danger" id="mok">${esc(T('yes'))}</button></div>`;m.hidden=false;$('#mcancel').onclick=closeModal;$('#mok').onclick=()=>{closeModal();cb()}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if(e.key==='Enter'&&e.target.isContentEditable&&e.target.dataset.k){e.preventDefault();e.target.blur()}});
+$('#modal').addEventListener('mousedown',e=>{if(e.target.id==='modal')closeModal()});
+
+/* generic list editor */
+function editList(name,id,title,fields,defv,onSaved){
+ const arr=D()[name],it=id?arr.find(x=>x.id===id):null;
+ openForm({title,fields,values:it||defv||{},onSave:v=>{if(it)Object.assign(it,v);else arr.push({id:uid(),...v});log(it?'edit':'add',title+(v.name||v.n||v.title||v.ref||'' ?': '+(v.name||v.n||v.title||v.ref):''));save();render();toast(T('saved'));if(onSaved)onSaved()},
+  onDelete:it?()=>ask(T('confirm_delete'),()=>{D()[name]=D()[name].filter(x=>x.id!==id);log('delete',title);save();render();toast(T('deleted'))}):null})}
+const PO=()=>['E','S','G'].map(p=>[p,T('p_'+p)]),YN=()=>[['y',T('yes')],['n',T('no')]],LV=()=>[['h',T('high')],['m',T('medium')],['l',T('low')]];
+const STO=()=>[['c',T('compliant')],['p',T('partial')],['n',T('noncompliant')]];
+const stTag=s=>`<span class="tag t-${s}">${esc(T({c:'compliant',p:'partial',n:'noncompliant'}[s]||'none'))}</span>`;
+const lvTag=s=>`<span class="tag t-${s}">${esc(T({h:'high',m:'medium',l:'low'}[s]||'none'))}</span>`;
+const pn=p=>T('p_'+p);
+
+/* ============ charts ============ */
+const CH={};let PAL=['#00A86B','#3B82F6','#F59E0B','#EF4444','#8B5CF6','#14B8A6','#64748B','#EC4899'];
+function mk(id,type,data,opt){if(typeof Chart==='undefined')return;const c=document.getElementById(id);if(!c)return;if(CH[id])CH[id].destroy();
+ const cs=getComputedStyle(document.documentElement);Chart.defaults.color=cs.getPropertyValue('--muted').trim();Chart.defaults.borderColor=cs.getPropertyValue('--line').trim();
+ CH[id]=new Chart(c,{type,data,options:Object.assign({responsive:true,maintainAspectRatio:false},opt||{})})}
+const chartBox=(id,t,extra)=>`<div class="card"><h3>${t}${extra||''}</h3><div class="cv">${typeof Chart==='undefined'?'<div class="empty">Chart.js not loaded (internet needed for the CDN script).</div>':`<canvas id="${id}"></canvas>`}</div></div>`;
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function dScope(id){const c=carbon(S.year);if(!c.n)return;mk(id,'doughnut',{labels:[T('sc1'),T('sc2'),T('sc3')],datasets:[{data:[c.s1,c.s2,c.s3].map(x=>+x.toFixed(1)),backgroundColor:PAL,borderWidth:0}]},{cutout:'62%'})}
+function dRadar(id){const y=S.year,cats=['E','S','G'],e=esrsStats(),bp=benchPos();
+ const mkset=(yy,lab,col)=>({label:lab,data:[...cats.map(p=>pillarScore(p,yy)??0),yy===y?(e.pct??0):0,yy===y?(bp??0):0].map(x=>+x.toFixed(1)),borderColor:col,backgroundColor:col+'33'});
+ mk(id,'radar',{labels:[...cats.map(pn),T('esrs_r'),T('bench_cat')],datasets:[mkset(y,y,PAL[0]),{...mkset(py(y),py(y),PAL[1]),data:cats.map(p=>+(pillarScore(p,py(y))??0).toFixed(1)).concat([0,0])}]},{scales:{r:{min:0,max:100,ticks:{backdropColor:'transparent'}}}})}
+function dSet(id,name,type){const a=(D().sets[name]||{})[S.year]||[];if(!a.length)return;mk(id,type,{labels:a.map(x=>x.l),datasets:[{data:a.map(x=>x.v),backgroundColor:PAL,borderWidth:0}]})}
+function dMonthly(){const m=D().monthly,y=S.year;if(!m[y])return;mk('ch_month','line',{labels:MONTHS,datasets:[{label:y,data:m[y].em,borderColor:PAL[0],backgroundColor:PAL[0]+'33',fill:true,tension:.3},...(m[py(y)]?[{label:py(y),data:m[py(y)].em,borderColor:PAL[1],tension:.3,borderDash:[5,4]}]:[])]});
+ mk('ch_energy','bar',{labels:MONTHS,datasets:[{label:y,data:m[y].en,backgroundColor:PAL[1]},...(m[py(y)]?[{label:py(y),data:m[py(y)].en,backgroundColor:PAL[2]}]:[])]})}
+
+/* ============ pages ============ */
+const P={},AFTER={};let F={esg:'all',esgq:'',esrsSt:'all',esrsStd:'all',esrsQ:'',cscope:'all'};
+const head=(t,s,a)=>`<div class="ph"><div><h2>${L(t)}</h2><p class="muted">${L(s)}</p></div><div class="acts">${a||''}</div></div>`;
+const bt=(a,k,cls,extra)=>`<button class="btn ${cls||''}" data-a="${a}" ${extra||''}>${L(k)}</button>`;
+const demoBanner=()=>CO().demo?`<div class="banner">${L('demo_note')}</div>`:'';
+const empty=(m)=>`<div class="empty">${esc(m||T('empty'))}</div>`;
+
+/* ---- Overview ---- */
+P.overview=()=>{const y=S.year,o=overall(y),op=overall(py(y)),c=carbon(y),e=esrsStats(),al=alerts(),d=D();
+ const ringCard=(p,t,sc,sp,peer,col)=>`<div class="card"><div class="row"><div class="ring" style="--p:${sc==null?0:sc};--c:${col}"><b>${sc==null?'—':fmt(sc,0)}</b></div><div><div class="muted">${t}</div>${sp!=null&&sc!=null?`<div class="dl ${sc>=sp?'up':'dn'}">${sc>=sp?'▲':'▼'} ${fmt(Math.abs(sc-sp))} ${L('pts')} ${L('vs_prev')}</div>`:''}${peer!=null?`<div class="sm muted">${L('peer')}: ${fmt(peer,0)}</div>`:''}</div></div></div>`;
+ const pillarRows=['E','S','G'].map(p=>{const s=pillarScore(p,y),pe=num(d.peer[p]);return`<div class="nb"><div class="kh"><b>${L('p_'+p)}</b><span>${L('ours')}: ${fmt(s,0)} ${pe!=null?`· ${L('peer')}: ${fmt(pe,0)}`:''}</span></div>${bar(s||0,S.pillarColors[p])}${pe!=null?bar(pe,'#94a3b8'):''}</div>`}).join('');
+ return head('ov_title','ov_sub')+demoBanner()+
+ `<div class="g g4">${ringCard('o',L('overall'),o,op,null,'var(--green)')}${['E','S','G'].map(p=>ringCard(p,L('p_'+p),pillarScore(p,y),pillarScore(p,py(y)),num(d.peer[p]),S.pillarColors[p])).join('')}</div>
+ <div class="g g4"><div class="card"><div class="muted">${L('total_emis')}</div><div class="kv">${c.n?fmt(c.total,0):'—'}<small> tCO₂e</small></div><div class="sm muted">S1 ${fmt(c.s1,0)} · S2 ${fmt(c.s2,0)} · S3 ${fmt(c.s3,0)}</div></div>
+ <div class="card"><div class="muted">${L('esrs_ready')}</div><div class="kv">${e.pct==null?'—':fmt(e.pct,1)+'%'}</div><div class="sm muted">${e.c} ✓ · ${e.p} ◐ · ${e.n} ✗</div></div>
+ <div class="card"><div class="muted">${L('active_alerts')}</div><div class="kv">${al.length}</div></div>
+ <div class="card"><div class="muted">${L('material_topics')}</div><div class="kv">${d.mat.filter(isMat).length}<small> / ${d.mat.length}</small></div></div></div>
+ <div class="g g2">${chartBox('ov_scope',L('ch_scope'))}${chartBox('ov_radar',L('ch_radar'))}</div>
+ <div class="g g2"><div class="card"><h3>${L('pillars_perf')}<span class="sm muted">${L('bench_name')}: ${esc(d.benchName)}</span></h3>${pillarRows}<div class="row">${bt('peerEdit','edit_peers','sm')}</div></div>
+ <div class="card"><h3>${L('alerts')}</h3>${al.length?al.map(a=>`<div class="item ${a.l}">${esc(a.m)}</div>`).join(''):`<div class="empty">${L('no_alerts')}</div>`}</div></div>
+ <div class="card" style="margin-bottom:14px"><h3>${L('hotspots')}${bt('hotAdd','add_hotspot','primary')}</h3>${d.hot.length?d.hot.map(h=>`<div class="item ${h.lvl}"><div class="kh"><b>${esc(h.title)}</b><span>${lvTag(h.lvl)} <button class="ib" data-a="hotEdit" data-id="${h.id}" title="${esc(T('edit'))}">✎</button></span></div><div>${esc(h.text)}</div>${h.action?`<div class="sm"><b>${L('action')}:</b> ${esc(h.action)}</div>`:''}<div class="sm muted">${esc(h.owner||'')} ${h.due?'· '+esc(h.due):''}</div></div>`).join(''):empty()}</div>
+ <div class="card" style="margin-bottom:14px"><h3>${L('custom_cards')}${bt('cardAdd','add_card','primary')}</h3>${d.cards.length?`<div class="g g3">${d.cards.map(k=>`<div class="card" style="border-top:3px solid ${esc(k.color||'#00A86B')}"><div class="kh"><b>${esc(k.title)}</b><button class="ib" data-a="cardEdit" data-id="${k.id}">✎</button></div><div class="kv">${esc(k.value)}</div><div class="sm muted">${esc(k.text)}</div></div>`).join('')}</div>`:empty()}</div>
+ <div class="card"><h3>${L('recent_log')}</h3>${S.log.length?S.log.slice(0,6).map(l=>`<div class="sm"><span class="muted">${new Date(l.t).toLocaleString()}</span> · ${esc(l.u)} · <b>${esc(l.a)}</b> ${esc(l.d)}</div>`).join(''):empty(T('nothing'))}</div>`};
+AFTER.overview=()=>{dScope('ov_scope');dRadar('ov_radar')};
+const isMat=m=>(num(m.impact)||0)>=num(S.th.mat)||(num(m.fin)||0)>=num(S.th.mat);
+
+/* ---- ESG ---- */
+function kpiCard(k){const v=val(k,S.year),d=delta(k),s=score(k,S.year),t=num(k.target);
+ return`<div class="card kpi" style="border-top:3px solid ${S.pillarColors[k.p]}"><div class="kh"><span class="muted">${esc(k.name)}</span><button class="ib" data-a="kpiEdit" data-id="${k.id}" title="${esc(T('edit'))}">✎</button></div><div class="kv">${v==null?'—':fmt(v,2)}<small> ${esc(k.unit)}</small></div>${d?`<div class="dl ${d.good?'up':'dn'}">${d.ch>=0?'▲':'▼'} ${fmt(Math.abs(d.ch))}% ${L('vs_prev')}</div>`:''}${t!=null?`<div class="sm muted">${L('target')}: ${fmt(t,2)}</div>`:''}${s!=null?bar(s):''}${k.link?`<div class="sm muted">🔗 ${L('linked')}</div>`:''}</div>`}
+function kpiGrid(){const q=F.esgq.toLowerCase();const ks=D().kpis.filter(k=>(F.esg==='all'||k.p===F.esg)&&(!q||k.name.toLowerCase().includes(q)));
+ if(!ks.length)return empty();return['E','S','G'].filter(p=>ks.some(k=>k.p===p)).map(p=>`<h3 style="margin:14px 0 8px;color:${S.pillarColors[p]}">${L('p_'+p)}</h3><div class="g g4">${ks.filter(k=>k.p===p).map(kpiCard).join('')}</div>`).join('')}
+P.esg=()=>{const y=S.year,d=D(),m=d.monthly[y]||{em:Array(12).fill(''),en:Array(12).fill('')};
+ const withD=d.kpis.map(k=>({k,dl:delta(k),s:score(k,y)}));
+ const pos=withD.filter(x=>x.dl&&x.dl.good&&Math.abs(x.dl.ch)>=.05),neg=withD.filter(x=>x.dl&&!x.dl.good),imp=withD.filter(x=>x.s!=null&&x.s<num(S.th.improve)).sort((a,b)=>a.s-b.s);
+ const li=(a,fn)=>a.length?a.map(fn).join(''):empty(T('nothing'));
+ const mrow=(w,lab)=>`<tr><td><b>${lab}</b></td>${m[w].map((v,i)=>`<td><input type="number" step="any" data-m="${w}" data-i="${i}" value="${esc(v)}" aria-label="${lab} ${MONTHS[i]}"></td>`).join('')}</tr>`;
+ return head('esg_title','esg_sub',bt('kpiAdd','add_kpi','primary')+bt('kpiImport','import_csv')+bt('kpiExport','export_csv')+bt('kpiTemplate','template')+bt('loadDemo','load_demo')+bt('resetData','reset_data','danger'))+demoBanner()+
+ `<div class="tabs">${['all','E','S','G'].map(p=>`<button class="btn ${F.esg===p?'on':''}" data-a="setF" data-f="esg" data-v="${p}">${p==='all'?L('all'):L('p_'+p)}</button>`).join('')}<input type="search" data-f="esgq" placeholder="${esc(T('search'))}" value="${esc(F.esgq)}" aria-label="${esc(T('search'))}"></div>
+ <div id="kpiGrid">${kpiGrid()}</div><p class="sm muted">${L('kpi_help')}</p>
+ <div class="g g3" style="margin-top:14px">${chartBox('ch_scope',L('ch_scope'))}${chartBox('ch_gender',L('ch_gender'),`<button class="ib" data-a="setEdit" data-set="gender" title="${esc(T('edit_data'))}">✎</button>`)}${chartBox('ch_waste',L('ch_waste'),`<button class="ib" data-a="setEdit" data-set="waste" title="${esc(T('edit_data'))}">✎</button>`)}</div>
+ <div class="g g2">${chartBox('ch_month',L('ch_month'))}${chartBox('ch_energy',L('ch_energy'))}</div>
+ <div class="g g2">${chartBox('ch_radar',L('ch_radar'))}<div class="card"><h3>${L('overall')}</h3><div class="row"><div class="ring" style="--p:${overall(y)||0}"><b>${fmt(overall(y),0)}</b></div><div>${['E','S','G'].map(p=>`<div><span style="color:${S.pillarColors[p]}">●</span> ${L('p_'+p)}: <b>${fmt(pillarScore(p,y),0)}</b></div>`).join('')}</div></div><p class="sm muted">${L('score_method')}</p></div></div>
+ <div class="g g3"><div class="card"><h3>${L('positives')}</h3>${li(pos,x=>`<div class="item"><b>${esc(x.k.name)}</b> <span class="dl up">${x.dl.ch>=0?'▲':'▼'} ${fmt(Math.abs(x.dl.ch))}%</span></div>`)}</div><div class="card"><h3>${L('negatives')}</h3>${li(neg,x=>`<div class="item h"><b>${esc(x.k.name)}</b> <span class="dl dn">${x.dl.ch>=0?'▲':'▼'} ${fmt(Math.abs(x.dl.ch))}%</span></div>`)}</div><div class="card"><h3>${L('improve')}</h3>${li(imp,x=>`<div class="item m"><b>${esc(x.k.name)}</b> · ${L('score')} ${fmt(x.s,0)}${bar(x.s)}</div>`)}</div></div>
+ <div class="card"><h3>${L('monthly_data')} – ${y}${bt('fillMonth','fill_month','sm')}</h3><div class="tw"><table><thead><tr><th></th>${MONTHS.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${mrow('em',L('monthly_em'))}${mrow('en',L('monthly_en'))}</tbody></table></div></div>`};
+AFTER.esg=()=>{dScope('ch_scope');dSet('ch_gender','gender','doughnut');dSet('ch_waste','waste','pie');dMonthly();dRadar('ch_radar')};
+
+/* ---- ESRS ---- */
+const stdName=c=>{const s=S.standards.find(x=>x.c===c);return s?c+' – '+s.n:c};
+function esrsRows(){const q=F.esrsQ.toLowerCase();return D().esrs.filter(r=>(F.esrsSt==='all'||r.st===F.esrsSt)&&(F.esrsStd==='all'||r.std===F.esrsStd)&&(!q||[r.ref,r.req,r.gap,r.action,r.ev].join(' ').toLowerCase().includes(q)))}
+function esrsTable(){const rs=esrsRows();if(!rs.length)return`<tr><td colspan="7">${empty()}</td></tr>`;return rs.map(r=>`<tr><td><b>${esc(r.ref)}</b></td><td>${esc(r.std)}</td><td>${esc(r.req)}${r.ev?`<div class="sm muted">${L('evidence')}: ${esc(r.ev)}</div>`:''}</td><td>${stTag(r.st)}</td><td>${esc(r.gap)}</td><td>${esc(r.action)}</td><td><button class="ib" data-a="esrsEdit" data-id="${r.id}" title="${esc(T('edit'))}">✎</button></td></tr>`).join('')}
+P.esrs=()=>{const e=esrsStats(),d=D();
+ const stdBars=S.standards.map(s=>{const rs=d.esrs.filter(r=>r.std===s.c);if(!rs.length)return'';const p=(rs.filter(r=>r.st==='c').length+.5*rs.filter(r=>r.st==='p').length)/rs.length*100;return`<div class="nb"><div class="kh"><span>${esc(stdName(s.c))}</span><b>${fmt(p,0)}%</b></div>${bar(p)}</div>`}).join('')||empty(T('nothing'));
+ const heat=S.standards.map(s=>{const rs=d.esrs.filter(r=>r.std===s.c);return rs.length?`<div class="heat"><b>${esc(s.c)}</b>${rs.map(r=>`<button class="cell ${r.st}" data-a="esrsEdit" data-id="${r.id}" title="${esc(r.ref+' – '+r.req)}" aria-label="${esc(r.ref)}"></button>`).join('')}</div>`:''}).join('')||empty(T('nothing'));
+ const miss=d.esrs.filter(r=>r.st==='n');
+ return head('esrs_title','esrs_sub',bt('esrsAdd','add_req','primary')+bt('esrsImport','import_csv')+bt('esrsExport','export_csv')+bt('esrsTemplate','template'))+demoBanner()+`<div class="warn">${L('esrs_disc')}</div>
+ <div class="g g4"><div class="card"><div class="muted">${L('esrs_score')}</div><div class="kv">${e.pct==null?'—':fmt(e.pct,1)+'%'}</div><div class="sm muted">${L('score_note')}</div></div><div class="card"><div class="muted">${L('compliant')}</div><div class="kv" style="color:#00A86B">${e.c}</div></div><div class="card"><div class="muted">${L('partial')}</div><div class="kv" style="color:#F59E0B">${e.p}</div></div><div class="card"><div class="muted">${L('noncompliant')}</div><div class="kv" style="color:#EF4444">${e.n}</div></div></div>
+ <div class="g g2"><div class="card"><h3>${L('by_std')}</h3>${stdBars}</div><div class="card"><h3>${L('heatmap')}</h3>${heat}</div></div>
+ <div class="card" style="margin-bottom:14px"><h3>${L('missing')} (${miss.length})</h3>${miss.length?miss.map(r=>`<div class="item h"><b>${esc(r.ref)}</b> ${esc(r.req)}<div class="sm">${esc(r.gap)}</div></div>`).join(''):empty(T('nothing'))}</div>
+ <div class="card"><h3>${L('matrix')}</h3><div class="tabs"><input type="search" data-f="esrsQ" placeholder="${esc(T('search'))}" value="${esc(F.esrsQ)}" aria-label="${esc(T('search'))}"><select data-f="esrsSt" aria-label="${esc(T('status'))}"><option value="all">${esc(T('all_status'))}</option>${STO().map(o=>`<option value="${o[0]}"${F.esrsSt===o[0]?' selected':''}>${esc(o[1])}</option>`).join('')}</select><select data-f="esrsStd" aria-label="${esc(T('standard'))}"><option value="all">${esc(T('all_std'))}</option>${S.standards.map(s=>`<option value="${esc(s.c)}"${F.esrsStd===s.c?' selected':''}>${esc(stdName(s.c))}</option>`).join('')}</select></div>
+ <div class="tw"><table><thead><tr><th>${L('ref')}</th><th>${L('standard')}</th><th>${L('requirement')}</th><th>${L('status')}</th><th>${L('gap')}</th><th>${L('recommendation')}</th><th></th></tr></thead><tbody id="esrsBody">${esrsTable()}</tbody></table></div></div>`};
+
+/* ---- Carbon ---- */
+function actRows(){const sc=F.cscope;return carbon(S.year).list.filter(x=>sc==='all'||String(x.a.scope)===sc)}
+function actTable(){const rs=actRows();if(!rs.length)return`<tr><td colspan="8">${empty()}</td></tr>`;return rs.map(({a,t})=>{const[c,ok]=conv(a);return`<tr><td><span class="tag t-x">S${a.scope}</span></td><td>${esc(a.name)}<div class="sm muted">${esc([a.country,a.esrc].filter(Boolean).join(' · '))}</div></td><td><input type="number" step="any" data-act="${a.id}" data-fld="qty" value="${esc(a.qty)}" aria-label="${esc(T('qty'))}"></td><td>${esc(a.unit)}</td><td><input type="number" step="any" data-act="${a.id}" data-fld="factor" value="${esc(a.factor)}" aria-label="${esc(T('factor'))}"><div class="sm muted">kgCO₂e/${esc(a.fUnit||a.unit)}</div></td><td class="sm">${esc(a.source)} ${a.fYear?'('+esc(a.fYear)+')':''}${ok?'':`<div style="color:var(--red)">${esc(T('no_conv'))}</div>`}</td><td class="r"><b>${fmt(t,2)}</b><div class="sm muted">${fmt(num(a.qty)||0,0)}${c!==1?' ×'+c:''} × ${fmt(num(a.factor)||0,4)} = ${fmt(actKg(a),0)} kg</div></td><td><button class="ib" data-a="actEdit" data-id="${a.id}" title="${esc(T('edit'))}">✎</button></td></tr>`}).join('')}
+P.carbon=()=>{const y=S.year,c=carbon(y),d=D(),tg=d.target;const base=tg.base?carbon(tg.base).total:null,tgt=base!=null&&num(tg.pct)!=null?base*(1-num(tg.pct)/100):null;
+ const prog=base&&tgt!=null&&base!==tgt&&c.n?cl((base-c.total)/(base-tgt)*100):null;
+ const sc=(k,t,v)=>`<div class="card" style="border-top:3px solid ${PAL[k-1]}"><div class="muted">${t}</div><div class="kv">${c.n?fmt(v,1):'—'}<small> tCO₂e</small></div><div class="sm muted">${c.total?fmt(v/c.total*100,1):0}% ${L('share')}</div></div>`;
+ const top=[...c.list].sort((a,b)=>b.t-a.t).slice(0,3);
+ return head('carbon_title','carbon_sub',bt('actAdd','add_act','primary')+bt('actCopy','copy_prev')+bt('actImport','import_csv')+bt('actExport','export_csv')+bt('actTemplate','template'))+demoBanner()+`<div class="warn">${L('illus_warn')}</div>
+ <div class="g g4"><div class="card" style="border-top:3px solid var(--navy)"><div class="muted">${L('total_emissions')} ${y}</div><div class="kv">${c.n?fmt(c.total,1):'—'}<small> tCO₂e</small></div></div>${sc(1,L('sc1'),c.s1)}${sc(2,L('sc2'),c.s2)}${sc(3,L('sc3'),c.s3)}</div>
+ <div class="card" style="margin-bottom:14px"><h3>${L('calc')} – ${y}</h3><p class="sm muted">${L('formula')}</p><div class="tabs">${['all','1','2','3'].map(s=>`<button class="btn ${F.cscope===s?'on':''}" data-a="setF" data-f="cscope" data-v="${s}">${s==='all'?L('all'):L('sc'+s)}</button>`).join('')}</div>
+ <div class="tw"><table><thead><tr><th>Scope</th><th>${L('activity')}</th><th>${L('qty')}</th><th>${L('unit')}</th><th>${L('factor')}</th><th>${L('fsrc')}</th><th class="r">${L('tco2e')}</th><th></th></tr></thead><tbody id="actBody">${actTable()}</tbody></table></div></div>
+ <div class="g g2">${chartBox('cc_scope',L('scope_cmp'))}${chartBox('cc_dist',L('distribution'))}${chartBox('cc_act',L('by_activity'))}${chartBox('cc_hist',L('history'))}</div>
+ <div class="g g2"><div class="card"><h3>${L('targets')}${bt('targetEdit','set_target','sm')}</h3>${base!=null&&tgt!=null?`<div>${L('base_year')} ${esc(tg.base)}: <b>${fmt(base,0)}</b> tCO₂e → ${L('target_year')} ${esc(tg.tyear)}: <b>${fmt(tgt,0)}</b> tCO₂e (−${fmt(num(tg.pct),0)}%)</div><div class="sm muted">${L('current')} ${y}: ${fmt(c.total,0)} tCO₂e</div>${prog!=null?`${bar(prog)}<div>${L('progress')}: <b>${fmt(prog,0)}%</b></div>`:''}`:empty()}</div>
+ <div class="card"><h3>${L('hotspot_auto')}</h3>${top.length?top.map(x=>`<div class="item m"><b>${esc(x.a.name)}</b> · ${fmt(x.t,1)} tCO₂e (${fmt(c.total?x.t/c.total*100:0,1)}%)</div>`).join(''):empty(T('nothing'))}</div></div>
+ <div class="card" style="margin-bottom:14px"><h3>${L('crecs')}${bt('recAdd','add_rec','primary')}</h3>${d.crecs.length?d.crecs.map(r=>`<div class="item"><div class="kh"><b>${esc(r.title)}</b><button class="ib" data-a="recEdit" data-id="${r.id}">✎</button></div><div class="sm">${esc(r.text)}</div></div>`).join(''):empty()}</div>
+ <div class="card"><h3>${L('factors_lib')}${bt('facAdd','add_factor','primary')}</h3><div class="tw"><table><thead><tr><th>${L('name')}</th><th>${L('factor')}</th><th>${L('country')}</th><th>${L('source')}</th><th></th></tr></thead><tbody>${d.factors.length?d.factors.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.value)} kgCO₂e/${esc(x.fUnit)}</td><td>${esc(x.country)}</td><td class="sm">${esc(x.source)} (${esc(x.year)})</td><td><button class="ib" data-a="facEdit" data-id="${x.id}">✎</button></td></tr>`).join(''):`<tr><td colspan="5">${empty()}</td></tr>`}</tbody></table></div></div>`};
+AFTER.carbon=()=>{const c=carbon(S.year);if(c.n){mk('cc_scope','bar',{labels:['S1','S2','S3'],datasets:[{label:'tCO₂e',data:[c.s1,c.s2,c.s3].map(x=>+x.toFixed(1)),backgroundColor:PAL}]},{plugins:{legend:{display:false}}});
+ mk('cc_dist','doughnut',{labels:[T('sc1'),T('sc2'),T('sc3')],datasets:[{data:[c.s1,c.s2,c.s3].map(x=>+x.toFixed(1)),backgroundColor:PAL,borderWidth:0}]},{cutout:'60%'});
+ const l=[...c.list].sort((a,b)=>b.t-a.t).slice(0,10);mk('cc_act','bar',{labels:l.map(x=>x.a.name),datasets:[{label:'tCO₂e',data:l.map(x=>+x.t.toFixed(1)),backgroundColor:l.map(x=>PAL[x.a.scope-1])}]},{indexAxis:'y',plugins:{legend:{display:false}}})}
+ const ys=S.years.filter(y=>carbon(y).n);if(ys.length)mk('cc_hist','bar',{labels:ys,datasets:[1,2,3].map(s=>({label:'S'+s,data:ys.map(y=>+carbon(y)['s'+s].toFixed(1)),backgroundColor:PAL[s-1]}))},{scales:{x:{stacked:true},y:{stacked:true}}})};
+
+/* ---- Materiality & benchmark ---- */
+function matrixSVG(){const W=480,H=440,m=46,thr=num(S.th.mat)||5,X=v=>m+(v/10)*(W-m-14),Y=v=>H-m-(v/10)*(H-m-14);const cs=getComputedStyle(document.documentElement);
+ const tx=cs.getPropertyValue('--muted').trim()||'#64748b';let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${esc(T('matrix_title'))}"><rect x="${X(thr)}" y="${Y(10)}" width="${X(10)-X(thr)}" height="${Y(0)-Y(10)}" fill="rgba(0,168,107,.10)"/><rect x="${X(0)}" y="${Y(10)}" width="${X(10)-X(0)}" height="${Y(thr)-Y(10)}" fill="rgba(0,168,107,.10)"/>`;
+ for(let i=0;i<=10;i+=2)s+=`<line x1="${X(i)}" y1="${Y(0)}" x2="${X(i)}" y2="${Y(10)}" stroke="${tx}" stroke-opacity=".2"/><line x1="${X(0)}" y1="${Y(i)}" x2="${X(10)}" y2="${Y(i)}" stroke="${tx}" stroke-opacity=".2"/><text x="${X(i)}" y="${Y(0)+16}" font-size="11" fill="${tx}" text-anchor="middle">${i}</text><text x="${X(0)-8}" y="${Y(i)+4}" font-size="11" fill="${tx}" text-anchor="end">${i}</text>`;
+ s+=`<line x1="${X(thr)}" y1="${Y(0)}" x2="${X(thr)}" y2="${Y(10)}" stroke="#EF4444" stroke-dasharray="5 4"/><line x1="${X(0)}" y1="${Y(thr)}" x2="${X(10)}" y2="${Y(thr)}" stroke="#EF4444" stroke-dasharray="5 4"/><text x="${W/2}" y="${H-8}" font-size="12" fill="${tx}" text-anchor="middle">${esc(T('axis_x'))}</text><text transform="rotate(-90)" x="${-H/2}" y="14" font-size="12" fill="${tx}" text-anchor="middle">${esc(T('axis_y'))}</text>`;
+ D().mat.forEach((t,i)=>{const x=X(Math.max(0,Math.min(10,num(t.fin)||0))),y=Y(Math.max(0,Math.min(10,num(t.impact)||0)));s+=`<g data-a="matEdit" data-id="${t.id}" style="cursor:pointer"><title>${esc(t.n)} (${t.impact}/${t.fin})</title><circle cx="${x}" cy="${y}" r="12" fill="${S.pillarColors[t.p]||'#64748b'}" stroke="#fff" stroke-width="2"/><text x="${x}" y="${y+4}" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">${i+1}</text></g>`});
+ return s+'</svg>'}
+P.mat=()=>{const d=D(),br=benchRows();
+ return head('mat_title','mat_sub',bt('matAdd','add_topic','primary')+bt('benchAdd','add_bench'))+demoBanner()+
+ `<div class="g g2"><div class="card"><h3>${L('matrix_title')}</h3>${d.mat.length?matrixSVG():empty()}<div class="row"><label for="thr">${L('threshold')}</label><input id="thr" type="number" min="0" max="10" step="0.5" value="${esc(S.th.mat)}" data-th="mat" style="width:80px"></div></div>
+ <div class="card"><h3>${L('topic')}</h3>${d.mat.length?`<div class="tw"><table><thead><tr><th>#</th><th>${L('topic')}</th><th>${L('impact')}</th><th>${L('financial')}</th><th></th><th></th></tr></thead><tbody>${d.mat.map((t,i)=>`<tr><td>${i+1}</td><td><span style="color:${S.pillarColors[t.p]}">●</span> ${esc(t.n)}</td><td>${esc(t.impact)}</td><td>${esc(t.fin)}</td><td><span class="tag ${isMat(t)?'t-c':'t-x'}">${esc(T(isMat(t)?'material':'not_material'))}</span></td><td><button class="ib" data-a="matEdit" data-id="${t.id}">✎</button></td></tr>`).join('')}</tbody></table></div>`:empty()}</div></div>
+ <div class="card"><h3>${L('bench_title')}<span class="row">${bt('benchNameEdit','bench_name','sm')}</span></h3><p class="sm muted">${L('bench_name')}: <b>${esc(d.benchName)}</b> · ${L('illus_note')}</p>${br.length?br.map(({b,ours,peer,st})=>{const mx=Math.max(ours||0,peer||0)||1;return`<div class="nb" style="margin-bottom:12px"><div class="kh"><b>${esc(b.n)} <span class="muted sm">(${esc(b.u)})</span></b><span><span class="tag ${st==='better'?'t-c':st==='lags'?'t-n':'t-x'}">${esc(T(st))}</span> <button class="ib" data-a="benchEdit" data-id="${b.id}">✎</button></span></div><div class="sm">${L('ours')}: <b>${fmt(ours,2)}</b> · ${L('peer')}: <b>${fmt(peer,2)}</b></div>${bar((ours||0)/mx*100,'#00A86B')}${bar((peer||0)/mx*100,'#94a3b8')}${b.note?`<div class="sm muted">${esc(b.note)}</div>`:''}</div>`}).join(''):empty()}<div class="row">${bt('peerEdit','peer_scores','sm')}</div></div>`};
+
+/* ---- Reports ---- */
+const SEC=['company','summary','esrs','carbon','mat','gaps','recs','finds','note','log'];
+function reportHTML(){const d=D(),co=CO(),y=S.year,sc=S.sections,c=carbon(y),e=esrsStats(),o=overall(y);let n=0;const H=k=>`<h3>${++n}. ${esc(T(k))}</h3>`;
+ const kt=p=>`<table><thead><tr><th>${esc(T('name'))}</th><th>${esc(T('unit'))}</th><th class="r">${y}</th><th class="r">${py(y)}</th><th class="r">Δ%</th><th class="r">${esc(T('target'))}</th><th class="r">${esc(T('score'))}</th></tr></thead><tbody>${d.kpis.filter(k=>k.p===p).map(k=>{const dl=delta(k),t=num(k.target),s=score(k,y);return`<tr><td>${esc(k.name)}</td><td>${esc(k.unit)}</td><td class="r">${fmt(val(k,y),2)}</td><td class="r">${fmt(val(k,py(y)),2)}</td><td class="r">${dl?fmt(dl.ch):'—'}</td><td class="r">${t!=null?fmt(t,2):'—'}</td><td class="r">${s!=null?fmt(s,0):'—'}</td></tr>`}).join('')}</tbody></table>`;
+ let h=`<h1>${esc(T('report_h'))}</h1><div class="muted">${esc(co.name)} · ${esc(y)}</div>`;
+ if(sc.company)h+=H('s_company')+`<table><tbody><tr><td>${esc(T('company'))}</td><td><b>${esc(co.name)}</b></td></tr><tr><td>${esc(T('industry'))}</td><td>${esc(co.industry)}</td></tr><tr><td>${esc(T('country'))}</td><td>${esc(co.country)}</td></tr><tr><td>${esc(T('year'))}</td><td>${esc(y)}</td></tr><tr><td>${esc(T('prepared_by'))}</td><td>${esc(S.user.name)} – ${esc(S.user.role)}</td></tr><tr><td>${esc(T('firm'))}</td><td>${esc(S.user.firm)}</td></tr><tr><td>${esc(T('generated'))}</td><td>${new Date().toLocaleString()}</td></tr></tbody></table>${co.demo?`<p><b>${esc(T('demo_note'))}</b></p>`:''}`;
+ if(sc.summary)h+=H('s_summary')+`<p>${esc(T('overall'))}: <b>${fmt(o,0)}/100</b> · ${['E','S','G'].map(p=>esc(pn(p))+': <b>'+fmt(pillarScore(p,y),0)+'</b>').join(' · ')}</p>`+['E','S','G'].map(p=>`<h4 style="margin:10px 0 4px">${esc(pn(p))}</h4>${kt(p)}`).join('');
+ if(sc.esrs)h+=H('s_esrs')+`<p>${esc(T('esrs_score'))}: <b>${e.pct==null?'—':fmt(e.pct,1)+'%'}</b> (${e.c} / ${e.p} / ${e.n} of ${e.t})</p><table><thead><tr><th>${esc(T('ref'))}</th><th>${esc(T('requirement'))}</th><th>${esc(T('status'))}</th><th>${esc(T('evidence'))}</th></tr></thead><tbody>${d.esrs.map(r=>`<tr><td>${esc(r.ref)}</td><td>${esc(r.req)}</td><td>${esc(T({c:'compliant',p:'partial',n:'noncompliant'}[r.st]))}</td><td>${esc(r.ev)}</td></tr>`).join('')}</tbody></table><p class="muted">${esc(T('esrs_disc'))}</p>`;
+ if(sc.carbon)h+=H('s_carbon')+`<p>${esc(T('total_emissions'))}: <b>${fmt(c.total,1)} tCO₂e</b> · S1 ${fmt(c.s1,1)} (${fmt(c.total?c.s1/c.total*100:0,1)}%) · S2 ${fmt(c.s2,1)} (${fmt(c.total?c.s2/c.total*100:0,1)}%) · S3 ${fmt(c.s3,1)} (${fmt(c.total?c.s3/c.total*100:0,1)}%)</p><table><thead><tr><th>Scope</th><th>${esc(T('activity'))}</th><th class="r">${esc(T('qty'))}</th><th>${esc(T('unit'))}</th><th class="r">${esc(T('factor'))}</th><th class="r">${esc(T('tco2e'))}</th></tr></thead><tbody>${c.list.map(x=>`<tr><td>S${x.a.scope}</td><td>${esc(x.a.name)}</td><td class="r">${fmt(num(x.a.qty),0)}</td><td>${esc(x.a.unit)}</td><td class="r">${esc(x.a.factor)} /${esc(x.a.fUnit||x.a.unit)}</td><td class="r">${fmt(x.t,2)}</td></tr>`).join('')}</tbody></table><p class="muted">${esc(T('formula'))}</p>`;
+ if(sc.mat)h+=H('s_mat')+(d.mat.filter(isMat).length?`<table><tbody>${d.mat.filter(isMat).map(t=>`<tr><td>${esc(t.n)}</td><td>${esc(pn(t.p))}</td><td>${t.impact} / ${t.fin}</td></tr>`).join('')}</tbody></table>`:`<p class="muted">${esc(T('nothing'))}</p>`);
+ if(sc.gaps){const g=d.esrs.filter(r=>r.st!=='c'&&r.gap);h+=H('s_gaps')+(g.length?`<table><tbody>${g.map(r=>`<tr><td>${esc(r.ref)}</td><td>${esc(r.gap)}</td><td>${esc(T({p:'partial',n:'noncompliant'}[r.st]))}</td></tr>`).join('')}</tbody></table>`:`<p class="muted">${esc(T('nothing'))}</p>`)}
+ if(sc.recs){const a=d.esrs.filter(r=>r.st!=='c'&&r.action).map(r=>`${r.ref}: ${r.action}`).concat(d.hot.map(x=>`${x.title}: ${x.action}`),d.crecs.map(x=>`${x.title}: ${x.text}`));h+=H('s_recs')+(a.length?`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:`<p class="muted">${esc(T('nothing'))}</p>`)}
+ if(sc.finds)h+=H('s_finds')+(d.finds.length?d.finds.map(x=>`<p><b>${esc(x.title)}</b> (${esc(T({h:'high',m:'medium',l:'low'}[x.sev]))})<br>${esc(x.text)}</p>`).join(''):`<p class="muted">${esc(T('nothing'))}</p>`);
+ if(sc.note)h+=H('s_note')+`<p style="white-space:pre-wrap">${esc(d.note)||'—'}</p>`;
+ if(sc.log)h+=H('s_log')+`<table><tbody>${S.log.slice(0,40).map(l=>`<tr><td>${new Date(l.t).toLocaleString()}</td><td>${esc(l.u)}</td><td>${esc(l.a)} ${esc(l.d)}</td></tr>`).join('')}</tbody></table>`;
+ return h+`<p class="muted" style="margin-top:20px">${esc(T('report_disc'))}</p>`}
+P.reports=()=>{const d=D();
+ return head('rep_title','rep_sub',bt('print','print','primary')+bt('exportJson','export_json')+bt('kpiExport','export_all')+bt('carbonCsv','export_csv'))+demoBanner()+
+ `<div class="g g2"><div class="card"><h3>${L('sections')}</h3><div class="row">${SEC.map(k=>`<label><input type="checkbox" data-sec="${k}"${S.sections[k]?' checked':''}> ${L('s_'+({company:'company',summary:'summary',esrs:'esrs',carbon:'carbon',mat:'mat',gaps:'gaps',recs:'recs',finds:'finds',note:'note',log:'log'}[k]))}</label>`).join('')}</div>
+ <h3 style="margin-top:16px">${L('audit_note')}</h3><textarea id="auditNote" aria-label="${esc(T('audit_note'))}">${esc(d.note)}</textarea></div>
+ <div class="card"><h3>${L('findings')}${bt('findAdd','add_finding','primary')}</h3>${d.finds.length?d.finds.map(x=>`<div class="item ${x.sev}"><div class="kh"><b>${esc(x.title)}</b><span>${lvTag(x.sev)} <button class="ib" data-a="findEdit" data-id="${x.id}">✎</button></span></div><div class="sm">${esc(x.text)}</div></div>`).join(''):empty()}</div></div>
+ <div id="reportDoc">${reportHTML()}</div>
+ <div class="card" style="margin-top:14px"><h3>${L('audit_trail')}${bt('clearLog','clear_log','danger sm')}</h3><div class="tw"><table><tbody>${S.log.length?S.log.slice(0,50).map(l=>`<tr><td class="sm">${new Date(l.t).toLocaleString()}</td><td>${esc(l.u)}</td><td><b>${esc(l.a)}</b> ${esc(l.d)}</td><td class="sm muted">${esc(l.c)}</td></tr>`).join(''):`<tr><td>${empty(T('nothing'))}</td></tr>`}</tbody></table></div></div>`};
+
+/* ---- Settings ---- */
+function labelRows(){const q=($('#lblq')||{}).value||'';const ql=q.toLowerCase();return Object.keys(I18N.en).filter(k=>!ql||k.toLowerCase().includes(ql)||T(k).toLowerCase().includes(ql)).map(k=>`<tr><td class="sm muted">${k}</td><td><input type="text" data-lbl="${k}" value="${esc((S.labels[S.lang]||{})[k]??'')}" placeholder="${esc(((I18N[S.lang]||{})[k])??I18N.en[k])}"></td></tr>`).join('')}
+P.settings=()=>{const co=CO();
+ return head('set_title','set_sub')+
+ `<div class="g g2"><div class="card"><h3>${L('s_user')}${bt('userEdit','edit','sm')}</h3><div>${esc(S.user.name)} – ${esc(S.user.role)}</div><div class="muted">${esc(S.user.firm)}</div></div>
+ <div class="card"><h3>${L('s_years')}</h3><input type="text" id="yearsIn" value="${esc(S.years.join(', '))}" style="width:100%" aria-label="${esc(T('s_years'))}"></div></div>
+ <div class="card" style="margin-bottom:14px"><h3>${L('s_companies')}${bt('coAdd','add_company','primary')}</h3><div class="tw"><table><thead><tr><th>${L('name')}</th><th>${L('industry')}</th><th>${L('country')}</th><th></th></tr></thead><tbody>${S.cos.map(c=>`<tr><td>${esc(c.name)} ${c.demo?'<span class="tag t-x">demo</span>':''}</td><td>${esc(c.industry)}</td><td>${esc(c.country)}</td><td><button class="ib" data-a="coEdit" data-id="${c.id}">✎</button></td></tr>`).join('')}</tbody></table></div></div>
+ <div class="g g2"><div class="card"><h3>${L('s_colors')}${bt('colorsReset','colors_reset','sm')}</h3><div class="row">${[['navy','Navy'],['green','Green'],['bg','Background'],['dark','Dark navy']].map(([k,l])=>`<label>${l}<br><input type="color" data-col="${k}" value="${esc(S.colors[k])}"></label>`).join('')}</div>
+ <h3 style="margin-top:14px">${L('s_pillars')}</h3><div class="row">${['E','S','G'].map(p=>`<label>${L('p_'+p)}<br><input type="color" data-pc="${p}" value="${esc(S.pillarColors[p])}"></label>`).join('')}</div>
+ <h3 style="margin-top:14px">${L('s_weights')}</h3><div class="row">${['E','S','G'].map(p=>`<label>${L('p_'+p)}<br><input type="number" min="0" step="any" data-w="${p}" value="${esc(S.weights[p])}" style="width:80px"></label>`).join('')}</div></div>
+ <div class="card"><h3>${L('s_thresholds')}</h3><div class="fld"><label>${L('s_improve')}</label><input type="number" data-th="improve" value="${esc(S.th.improve)}"></div><div class="fld"><label>${L('s_emis_up')}</label><input type="number" data-th="emis" value="${esc(S.th.emis)}"></div><div class="fld"><label>${L('s_mat_thr')}</label><input type="number" data-th="mat" step="0.5" value="${esc(S.th.mat)}"></div></div></div>
+ <div class="card" style="margin-bottom:14px"><h3>${L('s_standards')}${bt('stdAdd','add_standard','primary')}</h3><div class="row">${S.standards.map((s,i)=>`<span class="tag t-x">${esc(s.c)} – ${esc(s.n)} <button class="ib" data-a="stdEdit" data-i="${i}">✎</button></span>`).join('')}</div></div>
+ <div class="card" style="margin-bottom:14px"><h3>${L('s_labels')}${bt('labelsReset','reset_labels','sm danger')}</h3><p class="sm muted">${L('s_labels_hint')}</p><input type="search" id="lblq" placeholder="${esc(T('search'))}" style="margin-bottom:8px"><div class="tw" style="max-height:420px"><table><tbody id="lblBody">${labelRows()}</tbody></table></div></div>
+ <div class="card"><h3>${L('s_data')}</h3><div class="acts">${bt('backup','backup','primary')}${bt('restore','restore')}${bt('resetAll','reset_all','danger')}</div></div>`};
+
+/* ============ shell ============ */
+const NAV=[['overview','nav_overview','◧'],['esg','nav_esg','◔'],['esrs','nav_esrs','☑'],['carbon','nav_carbon','☁'],['mat','nav_mat','◎'],['reports','nav_reports','▤'],['settings','nav_settings','⚙']];
+function applyTheme(){const r=document.documentElement;r.dataset.theme=S.theme;r.lang=S.lang;r.dir=S.lang==='ar'?'rtl':'ltr';r.style.setProperty('--navy',S.colors.navy);r.style.setProperty('--green',S.colors.green);r.style.setProperty('--bg',S.colors.bg);r.style.setProperty('--dark',S.colors.dark);PAL[0]=S.colors.green;document.body.classList.toggle('edit',!!S.edit)}
+function renderTop(){const ini=S.user.name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase(),al=alerts().length;
+ $('#top').innerHTML=`<button class="btn burger" data-a="burger" aria-label="menu">☰</button><h1><span data-k="app_title">${esc(T('app_title'))}</span></h1><span class="sp"></span>
+ <select data-sel="cur" aria-label="${esc(T('company'))}">${S.cos.map(c=>`<option value="${c.id}"${c.id===S.cur?' selected':''}>${esc(c.name)}</option>`).join('')}</select>
+ <select data-sel="year" aria-label="${esc(T('year'))}">${S.years.map(y=>`<option${y===S.year?' selected':''}>${esc(y)}</option>`).join('')}</select>
+ <button class="btn ${S.edit?'on':''}" data-a="editMode">✎ ${L('edit_mode')}</button>
+ ${['en','fr','ar'].map(l=>`<button class="btn ${S.lang===l?'on':''}" data-a="lang" data-v="${l}">${l.toUpperCase()}</button>`).join('')}
+ <button class="btn" data-a="theme" aria-label="theme">${S.theme==='dark'?'☀':'☾'}</button>
+ <button class="btn" data-a="notif" aria-label="${esc(T('alerts'))}">🔔${al?`<span class="badge">${al}</span>`:''}</button>
+ <button class="btn ghost row" data-a="userEdit"><span class="avatar">${esc(ini)}</span><span style="text-align:start;line-height:1.1"><b>${esc(S.user.name)}</b><br><span class="sm muted">${esc(S.user.role)}</span></span></button>`}
+function renderNav(){$('#nav').innerHTML=NAV.map(n=>`<button class="${S.page===n[0]?'on':''}" data-a="nav" data-v="${n[0]}"><span>${n[2]}</span>${L(n[1])}</button>`).join('')}
+function render(){applyTheme();renderTop();renderNav();$('#page').innerHTML=(P[S.page]||P.overview)();(AFTER[S.page]||(()=>{}))();$('#side').classList.remove('open');renderNotif()}
+function renderNotif(){const al=alerts();$('#notif').innerHTML=`<h3>${L('alerts')}</h3>`+(al.length?al.map(a=>`<div class="item ${a.l}">${esc(a.m)}</div>`).join(''):`<div class="empty">${L('no_alerts')}</div>`)}
+function refreshF(n){if(n==='esg'||n==='esgq'){const g=$('#kpiGrid');if(g)g.innerHTML=kpiGrid()}else if(/^esrs/.test(n)){const b=$('#esrsBody');if(b)b.innerHTML=esrsTable()}else if(n==='cscope'){const b=$('#actBody');if(b)b.innerHTML=actTable()}}
+
+/* ============ actions ============ */
+const A={};
+A.nav=el=>{S.page=el.dataset.v;save();render();window.scrollTo(0,0)};
+A.lang=el=>{S.lang=el.dataset.v;save();render()};
+A.theme=()=>{S.theme=S.theme==='dark'?'light':'dark';save();render()};
+A.editMode=()=>{S.edit=!S.edit;save();render();toast(S.edit?'✎ '+T('edit_mode')+': ON':'OFF')};
+A.burger=()=>$('#side').classList.toggle('open');
+A.notif=()=>{const n=$('#notif');n.hidden=!n.hidden};
+A.setF=el=>{F[el.dataset.f]=el.dataset.v;render()};
+A.userEdit=()=>openForm({title:T('s_user'),fields:[{k:'name',l:'auditor_name',req:1},{k:'role',l:'auditor_role'},{k:'firm',l:'firm'}],values:S.user,onSave:v=>{Object.assign(S.user,v);log('edit','user');save();render()}});
+/* KPIs */
+function kpiFields(){const lnk=[['',T('link_manual')],['c_total',T('sc1')+'+'+T('sc2')+'+'+T('sc3')],['c_s1',T('sc1')],['c_s2',T('sc2')],['c_s3',T('sc3')]];
+ return[{k:'name',l:'name',req:1},{k:'p',l:'pillar',t:'select',o:PO()},{k:'unit',l:'unit'},{k:'target',l:'target',t:'number'},{k:'hib',l:'higher_better',t:'select',o:YN()},{k:'scored',l:'scored',t:'select',o:YN()},{k:'amin',l:'alert_min',t:'number'},{k:'amax',l:'alert_max',t:'number'},{k:'link',l:'link',t:'select',o:lnk},{k:'vs',l:'values_by_year',t:'sec'},...S.years.map(y=>({k:'y_'+y,l:y,t:'number'}))]}
+function kpiSave(it,v){const o={p:v.p,name:v.name,unit:v.unit,target:v.target??'',hib:v.hib,scored:v.scored,amin:v.amin??'',amax:v.amax??'',link:v.link,v:{...(it?it.v:{})}};S.years.forEach(y=>{if(v['y_'+y]!=null)o.v[y]=v['y_'+y];else delete o.v[y]});return o}
+A.kpiAdd=()=>openForm({title:T('add_kpi'),fields:kpiFields(),values:{p:'E',hib:'y',scored:'y',link:''},onSave:v=>{D().kpis.push({id:uid(),...kpiSave(null,v)});log('add','KPI '+v.name);save();render();toast(T('saved'))}});
+A.kpiEdit=el=>{const it=D().kpis.find(k=>k.id===el.dataset.id);if(!it)return;const vals={...it};S.years.forEach(y=>vals['y_'+y]=(it.v||{})[y]??'');
+ openForm({title:it.name,fields:kpiFields(),values:vals,note:it.link?T('linked'):'',onSave:v=>{Object.assign(it,kpiSave(it,v));log('update','KPI '+it.name+' ('+S.year+')');save();render();toast(T('saved'))},onDelete:()=>ask(T('confirm_delete'),()=>{D().kpis=D().kpis.filter(k=>k.id!==it.id);log('delete','KPI '+it.name);save();render()})})};
+A.kpiExport=()=>{const rows=[['pillar','name','unit','value','previous','target','higher_is_better']];D().kpis.forEach(k=>rows.push([k.p,k.name,k.unit,val(k,S.year)??'',val(k,py(S.year))??'',k.target,k.hib]));download(`indicators_${S.year}.csv`,toCSV(rows));log('export','indicators CSV')};
+A.kpiTemplate=()=>download('indicators_template.csv',toCSV([['pillar','name','unit','value','target','higher_is_better'],['E','Water consumption','m³',182000,170000,'n']]));
+A.kpiImport=()=>{toast(T('csv_cols_kpi'));pickFile(t=>{try{const rows=parseCSV(t);if(rows.length<2)throw 0;let n=0;rows.slice(1).forEach(r=>{const p=(r[0]||'').trim().toUpperCase(),name=(r[1]||'').trim();if(!name||!'ESG'.includes(p)||!p)return;const val_=num(r[3]);let k=D().kpis.find(x=>x.name.toLowerCase()===name.toLowerCase());if(!k){k={id:uid(),p,name,unit:r[2]||'',hib:/^(y|yes|1|true)/i.test(r[5]||'')?'y':'n',scored:'y',target:'',link:'',amin:'',amax:'',v:{}};D().kpis.push(k)}if(val_!=null&&!k.link)k.v[S.year]=val_;if(r[4]!==undefined&&num(r[4])!=null)k.target=num(r[4]);n++});log('import','indicators CSV: '+n);save();render();toast(f('import_done',{n}))}catch(e){toast(T('import_bad'))}})};
+A.loadDemo=()=>ask(T('confirm_reset'),()=>{CO().d=demoD();CO().demo=true;log('load','demo data');save();render()});
+A.resetData=()=>ask(T('confirm_reset'),()=>{CO().d=emptyD();log('reset','data');save();render()});
+A.fillMonth=()=>{const c=carbon(S.year);if(!c.n){toast(T('nothing'));return}const w=[.075,.072,.078,.082,.088,.095,.1,.098,.09,.085,.072,.065];const m=D().monthly[S.year]||(D().monthly[S.year]={em:Array(12).fill(''),en:Array(12).fill('')});m.em=w.map(x=>Math.round(c.total*x*10)/10);log('update','monthly emissions');save();render()};
+A.setEdit=el=>{const n=el.dataset.set,cur=(D().sets[n]||{})[S.year]||[];openForm({title:T('edit_data')+' – '+T('set_'+n)+' '+S.year,fields:[{k:'txt',l:'set_hint',t:'textarea'}],values:{txt:cur.map(r=>r.l+','+r.v).join('\n')},onSave:v=>{const out=[];v.txt.split(/\n/).forEach(line=>{const i=line.lastIndexOf(',');if(i<1)return;const x=num(line.slice(i+1));if(x!=null)out.push({l:line.slice(0,i).trim(),v:x})});D().sets[n]=D().sets[n]||{};D().sets[n][S.year]=out;log('update','chart data '+n);save();render()}})};
+/* overview lists */
+A.hotAdd=()=>editList('hot','',T('add_hotspot'),[{k:'title',l:'title',req:1},{k:'text',l:'description',t:'textarea'},{k:'action',l:'action',t:'textarea'},{k:'owner',l:'owner'},{k:'lvl',l:'level',t:'select',o:LV()},{k:'due',l:'due'}],{lvl:'m'});
+A.hotEdit=el=>editList('hot',el.dataset.id,T('hotspots'),[{k:'title',l:'title',req:1},{k:'text',l:'description',t:'textarea'},{k:'action',l:'action',t:'textarea'},{k:'owner',l:'owner'},{k:'lvl',l:'level',t:'select',o:LV()},{k:'due',l:'due'}]);
+const cardF=[{k:'title',l:'title',req:1},{k:'value',l:'value'},{k:'text',l:'text',t:'textarea'},{k:'color',l:'color',t:'color'}];
+A.cardAdd=()=>editList('cards','',T('add_card'),cardF,{color:'#00A86B'});A.cardEdit=el=>editList('cards',el.dataset.id,T('custom_cards'),cardF);
+A.peerEdit=()=>openForm({title:T('peer_scores'),fields:['E','S','G'].map(p=>({k:p,l:'p_'+p,t:'number'})),values:D().peer,onSave:v=>{D().peer={E:v.E??'',S:v.S??'',G:v.G??''};log('update','peer scores');save();render()}});
+/* ESRS */
+const esrsF=()=>[{k:'ref',l:'ref',req:1},{k:'std',l:'standard',t:'select',o:S.standards.map(s=>[s.c,stdName(s.c)])},{k:'req',l:'requirement',t:'textarea',req:1},{k:'st',l:'status',t:'select',o:STO()},{k:'gap',l:'gap',t:'textarea'},{k:'action',l:'recommendation',t:'textarea'},{k:'ev',l:'evidence'}];
+A.esrsAdd=()=>editList('esrs','',T('add_req'),esrsF(),{st:'n',std:S.standards[0]?S.standards[0].c:''});A.esrsEdit=el=>editList('esrs',el.dataset.id,T('esrs_title'),esrsF());
+A.esrsExport=()=>{const rows=[['ref','standard','requirement','status','gap','recommendation','evidence']];D().esrs.forEach(r=>rows.push([r.ref,r.std,r.req,r.st,r.gap,r.action,r.ev]));download('esrs_assessment.csv',toCSV(rows));log('export','ESRS CSV')};
+A.esrsTemplate=()=>download('esrs_template.csv',toCSV([['ref','standard','requirement','status(c/p/n)','gap','recommendation','evidence'],['E1-6','E1','Gross Scopes 1, 2, 3 and total GHG emissions','p','Scope 3 incomplete','Screen all categories','Carbon module']]));
+A.esrsImport=()=>pickFile(t=>{try{const rows=parseCSV(t);let n=0;rows.slice(1).forEach(r=>{if(!r[0]||!r[2])return;const s=(r[3]||'').trim().toLowerCase();D().esrs.push({id:uid(),ref:r[0],std:r[1]||'',req:r[2],st:s[0]==='c'?'c':s[0]==='p'?'p':'n',gap:r[4]||'',action:r[5]||'',ev:r[6]||''});n++});log('import','ESRS CSV: '+n);save();render();toast(f('import_done',{n}))}catch(e){toast(T('import_bad'))}});
+/* Carbon */
+const actF=()=>[{k:'scope',l:'Scope',t:'select',o:[[1,T('sc1')],[2,T('sc2')],[3,T('sc3')]]},{k:'name',l:'activity',req:1},{k:'country',l:'country'},{k:'esrc',l:'energy_src'},{k:'qty',l:'qty',t:'number',req:1},{k:'unit',l:'unit',req:1,h:'formula'},{k:'lib',l:'pick_factor',t:'select',o:[['',T('none')],...D().factors.map(x=>[x.id,`${x.name} – ${x.value} /${x.fUnit}`])]},{k:'factor',l:'factor',t:'number',req:1},{k:'fUnit',l:'factor_unit'},{k:'source',l:'source'},{k:'fYear',l:'factor_year'}];
+function actSaveFix(v){v.scope=+v.scope;if(v.lib){const x=D().factors.find(z=>z.id===v.lib);if(x){v.factor=x.value;v.fUnit=x.fUnit;v.source=x.source;v.fYear=x.year;if(!v.country)v.country=x.country}}delete v.lib;if(!v.fUnit)v.fUnit=v.unit;return v}
+A.actAdd=()=>{const fs=actF();openForm({title:T('add_act'),fields:fs,values:{scope:1,fUnit:'',source:SRC,fYear:S.year},onSave:v=>{v=actSaveFix(v);D().acts.push({id:uid(),year:S.year,...v});log('calc','activity '+v.name);save();render()}})};
+A.actEdit=el=>{const it=D().acts.find(a=>a.id===el.dataset.id);if(!it)return;openForm({title:it.name,fields:actF(),values:{...it,lib:''},onSave:v=>{Object.assign(it,actSaveFix(v));log('calc','activity '+it.name);save();render()},onDelete:()=>ask(T('confirm_delete'),()=>{D().acts=D().acts.filter(a=>a.id!==it.id);log('delete','activity '+it.name);save();render()})})};
+A.actCopy=()=>{const p=D().acts.filter(a=>a.year===py(S.year));if(!p.length){toast(T('nothing'));return}ask(T('confirm_reset'),()=>{D().acts=D().acts.filter(a=>a.year!==S.year);p.forEach(a=>D().acts.push({...a,id:uid(),year:S.year}));log('calc','copied activities from '+py(S.year));save();render()})};
+A.carbonCsv=A.actExport=()=>{const rows=[['year','scope','activity','country','energy_source','quantity','unit','factor_kgCO2e_per_unit','factor_unit','source','kgCO2e','tCO2e']];carbon(S.year).list.forEach(({a,t})=>rows.push([a.year,a.scope,a.name,a.country,a.esrc,a.qty,a.unit,a.factor,a.fUnit,a.source,(t*1000).toFixed(1),t.toFixed(3)]));download(`carbon_${S.year}.csv`,toCSV(rows));log('export','carbon CSV')};
+A.actTemplate=()=>download('carbon_template.csv',toCSV([['scope','activity','quantity','unit','factor','factor_unit','source'],[2,'Electricity consumption',100000,'kWh',0.47,'kWh','Illustrative – verify']]));
+A.actImport=()=>{toast(T('csv_cols_act'));pickFile(t=>{try{const rows=parseCSV(t);let n=0;rows.slice(1).forEach(r=>{const sc=parseInt(r[0]);if(![1,2,3].includes(sc)||!r[1])return;D().acts.push({id:uid(),year:S.year,scope:sc,name:r[1],country:'',esrc:'',qty:num(r[2])||0,unit:r[3]||'',factor:num(r[4])||0,fUnit:r[5]||r[3]||'',source:r[6]||SRC,fYear:S.year});n++});log('import','carbon CSV: '+n);save();render();toast(f('import_done',{n}))}catch(e){toast(T('import_bad'))}})};
+const facF=[{k:'name',l:'name',req:1},{k:'value',l:'factor',t:'number',req:1},{k:'fUnit',l:'factor_unit',req:1},{k:'country',l:'country'},{k:'source',l:'source',req:1},{k:'year',l:'factor_year'}];
+A.facAdd=()=>editList('factors','',T('add_factor'),facF,{source:SRC,year:S.year});A.facEdit=el=>editList('factors',el.dataset.id,T('factors_lib'),facF);
+A.targetEdit=()=>openForm({title:T('targets'),fields:[{k:'base',l:'base_year',t:'select',o:S.years.map(y=>[y,y])},{k:'pct',l:'reduction_pct',t:'number'},{k:'tyear',l:'target_year'}],values:D().target,onSave:v=>{D().target={base:v.base,pct:v.pct??'',tyear:v.tyear};log('update','carbon target');save();render()}});
+const recF=[{k:'title',l:'title',req:1},{k:'text',l:'text',t:'textarea'}];
+A.recAdd=()=>editList('crecs','',T('add_rec'),recF);A.recEdit=el=>editList('crecs',el.dataset.id,T('crecs'),recF);
+/* Materiality & benchmark */
+const matF=()=>[{k:'n',l:'topic',req:1},{k:'p',l:'pillar',t:'select',o:PO()},{k:'impact',l:'impact',t:'number',req:1},{k:'fin',l:'financial',t:'number',req:1},{k:'note',l:'notes',t:'textarea'}];
+const vOK=v=>{if(v.impact<0||v.impact>10||v.fin<0||v.fin>10){toast('0 – 10');return false}};
+A.matAdd=()=>openForm({title:T('add_topic'),fields:matF(),values:{p:'E',impact:5,fin:5},onSave:v=>{if(vOK(v)===false)return false;D().mat.push({id:uid(),...v});log('add','topic '+v.n);save();render()}});
+A.matEdit=el=>{const it=D().mat.find(x=>x.id===el.dataset.id);if(!it)return;openForm({title:it.n,fields:matF(),values:it,onSave:v=>{if(vOK(v)===false)return false;Object.assign(it,v);log('update','topic '+it.n);save();render()},onDelete:()=>ask(T('confirm_delete'),()=>{D().mat=D().mat.filter(x=>x.id!==it.id);log('delete','topic '+it.n);save();render()})})};
+const benchF=()=>[{k:'n',l:'name',req:1},{k:'u',l:'unit'},{k:'kpi',l:'kpi_link',t:'select',o:[['',T('none')],...D().kpis.map(k=>[k.id,k.name])]},{k:'ours',l:'ours_value',t:'number'},{k:'peer',l:'peer_value',t:'number',req:1},{k:'hib',l:'higher_better',t:'select',o:YN()},{k:'note',l:'notes',t:'textarea'}];
+A.benchAdd=()=>editList('bench','',T('add_bench'),benchF(),{hib:'y',kpi:''});A.benchEdit=el=>editList('bench',el.dataset.id,T('bench_title'),benchF());
+A.benchNameEdit=()=>openForm({title:T('bench_name'),fields:[{k:'n',l:'bench_name',req:1}],values:{n:D().benchName},onSave:v=>{D().benchName=v.n;save();render()}});
+/* Reports */
+A.print=()=>{log('report','generated / printed');save();window.print()};
+A.exportJson=()=>{download(`esg_${CO().name.replace(/\W+/g,'_')}_${S.year}.json`,JSON.stringify({exported:new Date().toISOString(),year:S.year,auditor:S.user,company:CO()},null,2),'application/json');log('export','JSON');save()};
+const findF=()=>[{k:'title',l:'title',req:1},{k:'sev',l:'severity',t:'select',o:LV()},{k:'text',l:'text',t:'textarea'}];
+A.findAdd=()=>editList('finds','',T('add_finding'),findF(),{sev:'m'});A.findEdit=el=>editList('finds',el.dataset.id,T('findings'),findF());
+A.clearLog=()=>ask(T('confirm_delete'),()=>{S.log=[];save();render()});
+/* Settings */
+A.coAdd=()=>openForm({title:T('add_company'),fields:[{k:'name',l:'name',req:1},{k:'industry',l:'industry'},{k:'country',l:'country'}],onSave:v=>{const id='c'+uid();S.cos.push({id,...v,demo:false,d:emptyD()});S.cur=id;log('add','company '+v.name);save();render()}});
+A.coEdit=el=>{const c=S.cos.find(x=>x.id===el.dataset.id);openForm({title:c.name,fields:[{k:'name',l:'name',req:1},{k:'industry',l:'industry'},{k:'country',l:'country'},{k:'demo',l:'demo_note',t:'select',o:[['n',T('no')],['y',T('yes')]]}],values:{...c,demo:c.demo?'y':'n'},onSave:v=>{Object.assign(c,{name:v.name,industry:v.industry,country:v.country,demo:v.demo==='y'});log('edit','company '+c.name);save();render()},onDelete:S.cos.length>1?()=>ask(T('confirm_delete'),()=>{S.cos=S.cos.filter(x=>x.id!==c.id);if(S.cur===c.id)S.cur=S.cos[0].id;log('delete','company '+c.name);save();render()}):null})};
+A.colorsReset=()=>{S.colors=defaults().colors;save();render()};
+A.stdAdd=()=>openForm({title:T('add_standard'),fields:[{k:'c',l:'code',req:1},{k:'n',l:'name',req:1}],onSave:v=>{S.standards.push(v);save();render()}});
+A.stdEdit=el=>{const i=+el.dataset.i,s=S.standards[i];openForm({title:s.c,fields:[{k:'c',l:'code',req:1},{k:'n',l:'name',req:1}],values:s,onSave:v=>{S.standards[i]=v;save();render()},onDelete:()=>ask(T('confirm_delete'),()=>{S.standards.splice(i,1);save();render()})})};
+A.labelsReset=()=>ask(T('confirm_delete'),()=>{S.labels[S.lang]={};save();render()});
+A.backup=()=>download('esg-platform-backup.json',JSON.stringify(S),'application/json');
+A.restore=()=>pickFile(t=>{try{const s=JSON.parse(t);if(!s||s.v!==2||!Array.isArray(s.cos))throw 0;S=merge(defaults(),s);save();render();toast(T('saved'))}catch(e){toast(T('import_bad'))}},'.json');
+A.resetAll=()=>ask(T('confirm_reset'),()=>{localStorage.removeItem(KEY);S=defaults();save();render()});
+
+/* ============ events ============ */
+document.addEventListener('click',e=>{
+ if(S.edit){const k=e.target.closest('[data-k]');if(k){e.preventDefault();e.stopPropagation();if(!k.isContentEditable){k.contentEditable='true';k.focus()}return}}
+ const n=$('#notif');if(!n.hidden&&!e.target.closest('#notif')&&!e.target.closest('[data-a=notif]'))n.hidden=true;
+ const el=e.target.closest('[data-a]');if(!el)return;const fn=A[el.dataset.a];if(fn){try{fn(el)}catch(err){console.error(err);toast('Error: '+err.message)}}},true);
+document.addEventListener('focusout',e=>{const el=e.target;if(!(el.dataset&&el.dataset.k&&el.isContentEditable))return;el.contentEditable='false';const k=el.dataset.k,v=el.textContent.trim(),def=(I18N[S.lang]||{})[k]??I18N.en[k];S.labels[S.lang]=S.labels[S.lang]||{};if(v&&v!==def)S.labels[S.lang][k]=v;else{delete S.labels[S.lang][k];el.textContent=def}save();$$(`[data-k="${k}"]`).forEach(x=>{if(x!==el)x.textContent=T(k)})});
+document.addEventListener('change',e=>{const t=e.target;
+ if(t.dataset.sel==='cur'){S.cur=t.value;save();render()}
+ else if(t.dataset.sel==='year'){S.year=t.value;save();render()}
+ else if(t.dataset.f&&t.tagName==='SELECT'){F[t.dataset.f]=t.value;refreshF(t.dataset.f)}
+ else if(t.dataset.act){const a=D().acts.find(x=>x.id===t.dataset.act),v=num(t.value);if(a&&v!=null){a[t.dataset.fld]=v;log('calc','activity '+a.name+' '+t.dataset.fld+'='+v);save();render()}}
+ else if(t.dataset.m){const m=D().monthly[S.year]||(D().monthly[S.year]={em:Array(12).fill(''),en:Array(12).fill('')});m[t.dataset.m][+t.dataset.i]=t.value===''?'':num(t.value);log('update','monthly data');save();dMonthly()}
+ else if(t.dataset.sec){S.sections[t.dataset.sec]=t.checked?1:0;save();$('#reportDoc').innerHTML=reportHTML()}
+ else if(t.id==='yearsIn'){const ys=[...new Set(t.value.split(/[,\s]+/).filter(Boolean))].sort();if(ys.length){S.years=ys;if(!ys.includes(S.year))S.year=ys[ys.length-1];save();render()}}
+ else if(t.dataset.col){S.colors[t.dataset.col]=t.value;save();applyTheme()}
+ else if(t.dataset.pc){S.pillarColors[t.dataset.pc]=t.value;save()}
+ else if(t.dataset.w){S.weights[t.dataset.w]=num(t.value)??0;save()}
+ else if(t.dataset.th){S.th[t.dataset.th]=num(t.value)??0;save();if(S.page==='mat')render()}
+ else if(t.dataset.lbl){const k=t.dataset.lbl;S.labels[S.lang]=S.labels[S.lang]||{};if(t.value.trim())S.labels[S.lang][k]=t.value.trim();else delete S.labels[S.lang][k];save();renderNav();renderTop()}
+ else if(t.id==='auditNote'){D().note=t.value;log('update','auditor notes');save();$('#reportDoc').innerHTML=reportHTML()}});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.f&&t.tagName==='INPUT'){F[t.dataset.f]=t.value;refreshF(t.dataset.f)}else if(t.id==='lblq'){$('#lblBody').innerHTML=labelRows()}});
+
+/* ============ init ============ */
+S=load();if(!S.cos.find(c=>c.id===S.cur))S.cur=S.cos[0].id;if(!S.years.includes(S.year))S.year=S.years[S.years.length-1];
+render();
+</script>
+</body>
+</html>
