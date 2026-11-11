@@ -1,0 +1,61 @@
+name: Deploy Angular site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular application
+        run: npx ng build --configuration production --base-href /
+
+      - name: Add SPA fallback
+        run: |
+          cp dist/mohamedmnejja-portfolio/index.html dist/mohamedmnejja-portfolio/404.html
+          test -s dist/mohamedmnejja-portfolio/404.html
+          grep -q '<base href="/">' dist/mohamedmnejja-portfolio/404.html
+
+      - name: Add deep-link entry points
+        run: |
+          for route in business-plan-profitability linkedin-profile-analytics chart-of-accounts-ai audit-sampling-tool internal-audit-risk-management-system is-audit-cybersecurity-toolkit esg-sustainability-platform; do
+            mkdir -p "dist/mohamedmnejja-portfolio/$route"
+            cp dist/mohamedmnejja-portfolio/index.html "dist/mohamedmnejja-portfolio/$route/index.html"
+          done
+
+      - name: Add .nojekyll
+        run: touch dist/mohamedmnejja-portfolio/.nojekyll
+
+      - name: Preserve custom domain
+        run: cp CNAME dist/mohamedmnejja-portfolio/CNAME
+
+      - name: Publish to Pages repository
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+          external_repository: mmnejja/mmnejja.github.io
+          publish_branch: main
+          publish_dir: ./dist/mohamedmnejja-portfolio
+          force_orphan: true

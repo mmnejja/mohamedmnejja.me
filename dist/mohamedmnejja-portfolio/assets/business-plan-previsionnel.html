@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Business Plan prévisionnel – Étude de rentabilité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#0A2540;--accent:#00A86B;--bg-light:#F5F7FA;--bg-dark:#0C1928;
+--bg:var(--bg-light);--surface:#fff;--text:#1d2c3f;--muted:#5a6a7d;--line:#dde3ea;--head:var(--primary);--ink:#007a4d;--soft:#eaf0f6;--field:#f5f7fa;--bad:#c0392b;
+--c1:#00A86B;--c2:#2f6fb0;--c3:#e0a030;--c4:#c0392b;--c5:#7a5cc7;--c6:#5b6a7d;
+padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:var(--bg-dark);--surface:#112236;--text:#dbe5ef;--muted:#8fa3b8;--line:#223a52;--head:#fff;--ink:var(--accent);--soft:#16304a;--field:#0C1928;--bad:#ff8a80;--c2:#5aa0e6;--c3:#f0b84a;--c4:#ff8a80;--c5:#a48ae6;--c6:#8fa3b8}}
+:root[data-theme="dark"]{--bg:var(--bg-dark);--surface:#112236;--text:#dbe5ef;--muted:#8fa3b8;--line:#223a52;--head:#fff;--ink:var(--accent);--soft:#16304a;--field:#0C1928;--bad:#ff8a80;--c2:#5aa0e6;--c3:#f0b84a;--c4:#ff8a80;--c5:#a48ae6;--c6:#8fa3b8}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font:400 15px/1.55 "IBM Plex Sans Arabic",system-ui,"Segoe UI",sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--primary);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--primary);color:#fff;border-bottom:1px solid var(--line)}
+.bar{max-width:1200px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:12px;margin-inline-end:auto}
+.brand svg{width:38px;height:38px;flex:none}
+.brand b{display:block;line-height:1.2}.brand small{color:#a9bbd0;font-size:.76rem}
+.tbtn{width:40px;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:none;color:#fff;cursor:pointer;display:grid;place-items:center}
+.tbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tbtn .sun{display:none}
+:root[data-theme="dark"] .tbtn .sun{display:block}:root[data-theme="dark"] .tbtn .moon{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tbtn .sun{display:block}:root:not([data-theme="light"]) .tbtn .moon{display:none}}
+nav{max-width:1200px;margin:0 auto;padding:0 18px 10px;display:flex;gap:6px;overflow-x:auto}
+nav button{flex:none;border:0;background:rgba(255,255,255,.1);color:#fff;font:inherit;font-size:.86rem;font-weight:600;padding:7px 14px;border-radius:999px;cursor:pointer}
+nav button[aria-pressed="true"]{background:var(--accent);color:var(--primary)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{max-width:1200px;margin:0 auto;padding:22px 18px 30px}
+h1{margin:0 0 4px;font-size:clamp(1.4rem,3.5vw,2rem);color:var(--head);line-height:1.25}
+h2{font-size:1.02rem;color:var(--head);margin:0 0 12px;display:flex;gap:10px;align-items:center}
+h2::before{content:"";width:5px;height:18px;border-radius:3px;background:var(--accent)}
+.lead{color:var(--muted);margin:0 0 18px;max-width:75ch}
+section[hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+.g2 .card{margin:0}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.k{background:var(--surface);border:1px solid var(--line);border-inline-start:4px solid var(--accent);border-radius:10px;padding:9px 12px}
+.k span{display:block;font-size:.8rem;color:var(--muted)}.k b{font-size:1.2rem;color:var(--head)}
+.k.ok{border-inline-start-color:var(--accent)}.k.ok b{color:var(--ink)}.k.ko{border-inline-start-color:var(--bad)}.k.ko b{color:var(--bad)}
+.sc{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:480px}
+th,td{padding:6px 9px;border-bottom:1px solid var(--line);font-size:.88rem;text-align:end;white-space:nowrap}
+th{font-weight:600;color:var(--head)}thead th,th[scope=row]{text-align:start}
+tr.t td,tr.t th{background:var(--soft);font-weight:700}
+tr.p td,tr.p th{color:var(--ink)}
+table.ed td{text-align:start;padding:4px}
+input,select{font:inherit;color:var(--text);background:var(--field);border:1px solid var(--line);border-radius:7px;padding:6px 8px;width:100%;min-width:84px}
+table.ed input[type=text]{min-width:150px}
+.f{display:block;font-size:.82rem;color:var(--muted)}
+.fl{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.x{border:1px solid var(--line);background:none;color:var(--bad);border-radius:7px;width:34px;height:34px;font-size:1.2rem;cursor:pointer}
+.add,.ap{border:1px dashed var(--ink);background:none;color:var(--ink);border-radius:8px;padding:7px 14px;font:inherit;font-weight:600;cursor:pointer;margin-top:10px}
+.ap{border-style:solid;margin:0}
+.sl{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.sl input[type=range]{width:200px;min-width:0;padding:0}
+.bal{padding:10px 14px;border-radius:10px;font-weight:600;margin-bottom:16px;background:var(--soft);border-inline-start:5px solid var(--bad)}
+.bal.ok{border-inline-start-color:var(--accent);color:var(--ink)}
+svg.c{width:100%;height:auto;display:block;direction:ltr}
+.gl{stroke:var(--line)}.tx{fill:var(--muted);font-size:11px}
+.lg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.82rem;color:var(--muted);margin-top:6px}
+.lg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-inline-end:6px;vertical-align:-1px}
+.pie{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.pie svg{width:190px;flex:none}.pie ul{list-style:none;margin:0;padding:0;font-size:.86rem;flex:1;min-width:190px}
+.pie li{display:flex;gap:8px;align-items:center;padding:3px 0}.pie li b{margin-inline-start:auto;padding-inline-start:8px;white-space:nowrap}
+.note{color:var(--muted);font-size:.85rem;margin:8px 0 0}
+.steps{background:var(--soft);border-radius:10px;padding:10px 14px;font-size:.88rem;margin-top:10px;line-height:1.8}
+.bar{flex-wrap:wrap}
+.seg{display:flex;background:rgba(255,255,255,.1);border-radius:10px;padding:3px}
+.seg button{border:0;background:none;color:#fff;font:inherit;font-size:.84rem;font-weight:600;padding:6px 11px;border-radius:8px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--primary)}
+select.cs{width:auto;min-width:0;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:8px 10px;font-weight:600}
+select.cs option{color:#14231f;background:#fff}
+.rb{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:0;border-radius:10px;background:var(--accent);color:var(--primary);font:inherit;font-weight:700;cursor:pointer}
+.rb svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.rep{display:none}
+@media print{:root{padding:0}body::before{display:none}header,nav,.add,.x,.sl{display:none!important}section[hidden]{display:block!important}section+section{break-before:page}.rep{display:block}.card,.k{break-inside:avoid}.sc{overflow:visible}table{min-width:0}th,td{white-space:normal}main{padding:0 6px}}
+footer{text-align:center;color:var(--muted);font-size:.9rem;padding:16px;border-top:1px solid var(--line);max-width:1200px;margin:0 auto}
+</style>
+</head>
+<body>
+<header>
+<div class="bar">
+ <div class="brand"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#00A86B"/><path d="M8 31L16 21l6 5 10-14" stroke="#0A2540" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="32" cy="12" r="3" fill="#0A2540"/></svg><div><b>Business Plan prévisionnel</b><small>Étude de rentabilité sur 5 ans</small></div></div>
+ <div class="seg" role="group" aria-label="Langue"><button type="button" data-l="fr">FR</button><button type="button" data-l="en">EN</button><button type="button" data-l="ar">عربي</button></div>
+ <select id="cur" class="cs" aria-label="Devise"><option value="TND">TND</option><option value="EUR">EUR</option><option value="USD">USD</option></select>
+ <button class="rb" id="print" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>Rapport</button>
+ <button class="tbtn" id="theme" type="button" aria-label="Basculer thème clair ou sombre" title="Thème clair / sombre"><svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+</div>
+<nav id="nav"></nav>
+</header>
+<main>
+
+<div class="rep"><h1 id="repT"></h1><p class="lead" id="repD"></p></div>
+<section id="s1"><h1>Coût et financement</h1><p class="lead">Saisissez vos investissements et vos sources de financement. Les deux totaux doivent être égaux.</p>
+ <div id="bal" class="bal"></div><div class="kp" id="finK"></div>
+ <div class="g2">
+  <div class="card"><h2>Investissement</h2><div id="t_inv"></div><button class="add" data-add="inv">+ Ajouter une ligne</button></div>
+  <div class="card"><h2>Financement</h2><div id="t_fin"></div><button class="add" data-add="fin">+ Ajouter une ligne</button></div>
+ </div></section>
+
+<section id="s2" hidden><h1>Produits, capacité et recettes</h1><p class="lead">Quantité × prix par produit, puis évolution annuelle du chiffre d’affaires.</p>
+ <div class="card"><h2>Capacité de production par produit</h2>
+  <div class="sl"><label class="f">Augmentation annuelle du CA<br><input type="range" id="gCA" min="-10" max="30" step="0.5" value="5"></label><output id="gCAo">5 %</output><button class="ap" id="aCA" type="button">Appliquer à tous les produits</button></div>
+  <div id="t_prod"></div><button class="add" data-add="prod">+ Ajouter un produit</button></div>
+ <div class="card"><h2>Recettes prévisionnelles (DT)</h2><div id="tRec"></div></div>
+ <div class="g2"><div class="card"><h2>Évolution du chiffre d’affaires</h2><div id="chCA"></div></div>
+ <div class="card"><h2>Répartition du CA par produit</h2><label class="f" style="max-width:160px">Année<select id="yr"></select></label><div id="pieCA"></div></div></div></section>
+
+<section id="s3" hidden><h1>Remboursement des crédits</h1><p class="lead">Les montants viennent des lignes « Crédit MLT » et « Leasing » du financement. Annuités constantes.</p>
+ <div class="g2">
+  <div class="card"><h2>Emprunt bancaire</h2><div class="fl"><label class="f">Taux annuel %<input type="number" step="any" data-p="bR"></label><label class="f">Durée (années)<input type="number" step="1" min="1" data-p="bN"></label></div><div class="kp" id="kB"></div><div id="tB"></div><div id="chB"></div></div>
+  <div class="card"><h2>Crédit leasing</h2><div class="fl"><label class="f">Taux annuel %<input type="number" step="any" data-p="lR"></label><label class="f">Durée (années)<input type="number" step="1" min="1" data-p="lN"></label></div><div class="kp" id="kL"></div><div id="tL"></div><div id="chL"></div></div>
+ </div></section>
+
+<section id="s4" hidden><h1>Charges prévisionnelles</h1><p class="lead">Achats MP + MC, TFSE, frais de production, personnel… Chaque ligne évolue selon son pourcentage annuel. Les charges « Variables » alimentent le seuil de rentabilité.</p>
+ <div class="card"><h2>Charges d’exploitation</h2>
+  <div class="sl"><label class="f">Hausse annuelle des prix et charges<br><input type="range" id="gCH" min="-10" max="30" step="0.5" value="3"></label><output id="gCHo">3 %</output><button class="ap" id="aCH" type="button">Appliquer à toutes les lignes</button></div>
+  <div id="t_ch"></div><button class="add" data-add="ch">+ Ajouter une charge</button>
+  <div class="fl" style="margin-top:14px"><label class="f">Durée d’amortissement (années)<input type="number" step="1" min="1" data-p="amN"></label><label class="f">Investissement non amortissable (DT)<input type="number" step="any" data-p="nonAm"></label></div></div>
+ <div class="card"><h2>Charges prévisionnelles (DT)</h2><div id="tChC"></div></div>
+ <div class="g2"><div class="card"><h2>Charges par nature et par année</h2><div id="chChS"></div></div><div class="card"><h2>Répartition des charges sur 5 ans</h2><div id="pieCh"></div></div></div></section>
+
+<section id="s5" hidden><h1>État de résultat prévisionnel</h1><p class="lead">Instrument de pilotage qui estime le résultat net annuel à partir des recettes et des charges prévues. Résultat net = résultat brut avant impôt − impôt.</p>
+ <div class="card"><h2>Impôt</h2><div class="fl"><label class="f">Taux d’impôt sur les sociétés %<input type="number" step="any" data-p="tax"></label></div><p class="f">Ajustement d’impôt par année (DT, ajouté à l’impôt calculé)</p><div class="fl" id="adj"></div></div>
+ <div class="kp" id="kPL"></div>
+ <div class="card"><h2>État de résultat (DT)</h2><div id="tPL"></div></div>
+ <div class="card"><h2>Recettes, charges et résultat net</h2><div id="chPL"></div></div></section>
+
+<section id="s6" hidden><h1>Étude de rentabilité</h1><p class="lead">Seuil de rentabilité : SR = charges fixes ÷ taux de marge sur coûts variables. CAF = résultat net + amortissements.</p>
+ <div class="card"><h2>Seuil de rentabilité (SR)</h2><div id="tSR"></div><p class="note">Le seuil de rentabilité est le niveau de ventes où l’entreprise ne fait ni profit ni perte.</p></div>
+ <div class="g2"><div class="card"><h2>CA et seuil de rentabilité</h2><div id="chSR"></div></div><div class="card"><h2>Charges variables (détail, DT)</h2><div id="tVar"></div></div></div>
+ <div class="card" style="margin-top:16px"><h2>Capacité d’autofinancement et cash-flow nets</h2>
+  <label class="f"><input type="checkbox" data-p="cafTax" style="width:auto;min-width:0"> Déduire l’impôt du cash-flow net (recommandé : l’impôt est une sortie d’argent)</label><div id="tCF"></div><div id="chCF" style="margin-top:12px"></div></div></section>
+
+<section id="s7" hidden><h1>Critères de choix</h1><p class="lead">VAN = −I₀ + Σ CFN ÷ (1 + i)ⁿ. Le projet est rentable si VAN &gt; 0, si TRI &gt; taux d’actualisation et si le délai de récupération est acceptable.</p>
+ <div class="card"><div class="fl"><label class="f">Taux d’actualisation %<input type="number" step="any" data-p="disc"></label><label class="f">TRI : taux d’essai r1 %<input type="number" step="any" data-p="r1"></label><label class="f">TRI : taux d’essai r2 %<input type="number" step="any" data-p="r2"></label></div></div>
+ <div class="kp" id="kC"></div>
+ <div class="card"><h2>Cash-flow net actualisé (DT)</h2><div id="tVAN"></div></div>
+ <div class="g2"><div class="card"><h2>Part de chaque année dans la VAN</h2><div id="pieV"></div></div><div class="card"><h2>VAN cumulée</h2><div id="chV"></div></div>
+ <div class="card"><h2>Délai de récupération</h2><div id="chDR"></div><div class="steps" id="drS"></div></div><div class="card"><h2>Taux de rentabilité interne</h2><div class="steps" id="triS" style="margin-top:0"></div></div></div></section>
+
+</main>
+<footer>Mohamed - Accountant &amp; Auditor | Ex-PwC</footer>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const sum=a=>a.reduce((x,y)=>x+(+y||0),0);
+let L='fr',CU='TND';const LI={fr:0,en:1,ar:2},dc=s=>L==='fr'?s.replace('.',','):s;
+const f0=n=>isFinite(n)?Math.round(n).toLocaleString(L==='fr'?'fr-FR':'en-US'):'—';
+const f2=n=>isFinite(n)?dc(n.toFixed(3)):'—';
+const pc=n=>isFinite(n)?dc((n*100).toFixed(1))+' %':'—';
+const sh=v=>{const a=Math.abs(v);return a>=1e6?dc((v/1e6).toFixed(1))+' M':a>=1e3?Math.round(v/1e3)+' k':Math.round(v)};
+const YL=['An 1','An 2','An 3','An 4','An 5'],Y5=[0,1,2,3,4];
+const D={
+ inv:[['Terrain',40000],['Construction',80000],['Équipements',130000],['Frais d’établissement',10000],['Fonds de roulement',40000]],
+ fin:[['Apport personnel','Apport personnel',90000],['Crédit bancaire','Crédit MLT',150000],['Crédit leasing','Leasing',60000]],
+ prod:[['Produit A',6000,28,5,5,5,5],['Produit B',3000,42,5,5,5,5],['Produit C',2500,35,5,5,5,5]],
+ ch:[['Achats MP + MC','Variable',140000,3,3,3,3],['TFSE (transports, services extérieurs)','Fixe',30000,3,3,3,3],['Frais divers de production','Variable',20000,3,3,3,3],['Frais de personnel','Fixe',60000,3,3,3,3]],
+ adj:[0,0,0,0,0]};
+const P={bR:9,bN:7,lR:11,lN:3,tax:15,amN:5,nonAm:40000,disc:10,r1:15,r2:70,cafTax:true};
+const dg=['Δ An 2 %','Δ An 3 %','Δ An 4 %','Δ An 5 %'].map(h=>({h,k:'n'}));
+const COLS={inv:[{h:'Rubrique',k:'t'},{h:'Montant (DT)',k:'n'}],
+ fin:[{h:'Source',k:'t'},{h:'Type',k:'s',o:['Apport personnel','Crédit MLT','Leasing']},{h:'Montant (DT)',k:'n'}],
+ prod:[{h:'Produit',k:'t'},{h:'Quantité / an',k:'n'},{h:'Prix unitaire (DT)',k:'n'},...dg],
+ ch:[{h:'Charge',k:'t'},{h:'Nature',k:'s',o:['Variable','Fixe']},{h:'Montant An 1 (DT)',k:'n'},...dg]};
+const NEW={inv:['Nouvelle rubrique',0],fin:['Nouvelle source','Apport personnel',0],prod:['Nouveau produit',0,0,5,5,5,5],ch:['Nouvelle charge','Fixe',0,3,3,3,3]};
+function rt(k){
+ const cs=COLS[k];
+ $('#t_'+k).innerHTML=`<div class="sc"><table class="ed"><thead><tr>${cs.map(c=>`<th>${c.h}</th>`).join('')}<th></th></tr></thead><tbody>${D[k].map((r,i)=>`<tr>${cs.map((c,j)=>`<td>${c.k==='s'?`<select data-k="${k}" data-i="${i}" data-j="${j}" aria-label="${c.h}">${c.o.map(o=>`<option value="${o}"${o===r[j]?' selected':''}>${o}</option>`).join('')}</select>`:`<input ${c.k==='t'?'type="text"':'type="number" step="any"'} value="${esc(r[j])}" data-k="${k}" data-i="${i}" data-j="${j}" aria-label="${c.h}">`}</td>`).join('')}<td><button class="x" type="button" data-del="${k}:${i}" aria-label="Supprimer la ligne">×</button></td></tr>`).join('')}</tbody></table></div>`;
+}
+const TB=(h,rows)=>`<div class="sc"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr class="${r[2]||''}"><th scope="row">${r[0]}</th>${r[1].map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+const R=(l,a,c,fn=f0)=>[l,a.map(fn),c];
+const HY=['',...YL];
+const K=(l,v,c)=>`<div class="k ${c||''}"><span>${l}</span><b>${v}</b></div>`;
+function bars(id,lb,ss,st){
+ const W=640,H=250,L=52,Rr=8,T=16,B=28,n=lb.length;
+ const tot=lb.map((_,i)=>st?sum(ss.map(s=>Math.max(0,s.v[i]))):Math.max(...ss.map(s=>s.v[i])));
+ const mx=Math.max(...tot,1),mn=st?0:Math.min(0,...ss.flatMap(s=>s.v));
+ const Y=v=>T+(mx-v)/(mx-mn)*(H-T-B),bw=(W-L-Rr)/n,w=st?bw*.55:bw*.8/ss.length;
+ let g='';
+ for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4;g+=`<line x1="${L}" x2="${W-Rr}" y1="${Y(v)}" y2="${Y(v)}" class="gl"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end" class="tx">${sh(v)}</text>`}
+ lb.forEach((l,i)=>{const x0=L+i*bw;let acc=0;
+  g+=`<text x="${x0+bw/2}" y="${H-9}" text-anchor="middle" class="tx">${l}</text>`;
+  ss.forEach((s,j)=>{const v=s.v[i],b0=st?acc:0,t=Y(Math.max(b0,b0+v)),b=Y(Math.min(b0,b0+v)),x=st?x0+(bw-w)/2:x0+bw*.1+j*w;
+   g+=`<rect x="${x}" y="${t}" width="${w}" height="${Math.max(1,b-t)}" rx="2" fill="${s.c}"/>`;
+   if(ss.length===1)g+=`<text x="${x+w/2}" y="${t-4}" text-anchor="middle" class="tx">${sh(v)}</text>`;
+   if(st)acc+=Math.max(v,0)})});
+ $('#'+id).innerHTML=`<svg class="c" viewBox="0 0 ${W} ${H}" role="img">${g}</svg><div class="lg">${ss.map(s=>`<span><i style="background:${s.c}"></i>${s.n}</span>`).join('')}</div>`;
+}
+function pie(id,items){
+ const t=sum(items.map(x=>Math.max(0,x[1])))||1,R0=88,r=52,c=100;let a0=-Math.PI/2,g='';
+ items.forEach((x,i)=>{const f=Math.max(0,x[1])/t,a1=a0+f*2*Math.PI,col=`var(--c${i%6+1})`;
+  if(f>=.9999)g+=`<circle cx="${c}" cy="${c}" r="${(R0+r)/2}" fill="none" stroke="${col}" stroke-width="${R0-r}"/>`;
+  else if(f>0){const p=(a,q)=>[c+q*Math.cos(a),c+q*Math.sin(a)],[x1,y1]=p(a0,R0),[x2,y2]=p(a1,R0),[x3,y3]=p(a1,r),[x4,y4]=p(a0,r),lg=f>.5?1:0;
+   g+=`<path d="M${x1} ${y1}A${R0} ${R0} 0 ${lg} 1 ${x2} ${y2}L${x3} ${y3}A${r} ${r} 0 ${lg} 0 ${x4} ${y4}Z" fill="${col}"/>`}
+  a0=a1});
+ $('#'+id).innerHTML=`<div class="pie"><svg viewBox="0 0 200 200" role="img">${g}<text x="100" y="104" text-anchor="middle" style="fill:var(--head);font-weight:700;font-size:14px">${sh(t)}</text></svg><ul>${items.map((x,i)=>`<li><i style="background:var(--c${i%6+1});width:12px;height:12px;border-radius:3px;flex:none"></i>${x[0]}<b>${f0(x[1])} · ${pc(Math.max(0,x[1])/t)}</b></li>`).join('')}</ul></div>`;
+}
+function sched(Pm,r,n){
+ n=Math.max(1,Math.round(n));const a=r>0?Pm*r/(1-Math.pow(1+r,-n)):Pm/n;let b=Pm;const o=[];
+ for(let t=0;t<Math.max(n,5);t++){if(t<n){const i=b*r,c=a-i;b-=c;o.push({a,i,c,b:Math.max(0,b)})}else o.push({a:0,i:0,c:0,b:0})}
+ return o;
+}
+const ser=(b,gs)=>{let v=+b||0;const o=[v];gs.forEach(x=>{v*=1+(+x||0)/100;o.push(v)});return o};
+function calc(){calc0();loc()}
+function calc0(){
+ const pv=D.prod.map(r=>ser(r[1]*r[2],r.slice(3))),ca=Y5.map(t=>sum(pv.map(s=>s[t])));
+ const cs=D.ch.map(r=>({n:r[0],v:r[1]==='Variable',s:ser(r[2],r.slice(3))}));
+ const chV=Y5.map(t=>sum(cs.filter(c=>c.v).map(c=>c.s[t]))),chF=Y5.map(t=>sum(cs.filter(c=>!c.v).map(c=>c.s[t])));
+ const inv=sum(D.inv.map(r=>r[1])),fin=ty=>sum(D.fin.filter(r=>r[1]===ty).map(r=>r[2])),tf=sum(D.fin.map(r=>r[2]));
+ const bk=sched(fin('Crédit MLT'),P.bR/100,P.bN),ls=sched(fin('Leasing'),P.lR/100,P.lN);
+ const aN=Math.max(1,P.amN),am=Y5.map(t=>t<aN?Math.max(0,inv-P.nonAm)/aN:0),it=Y5.map(t=>bk[t].i),lo=Y5.map(t=>ls[t].a);
+ const tot=Y5.map(t=>chV[t]+chF[t]+lo[t]+am[t]+it[t]),br=Y5.map(t=>ca[t]-tot[t]);
+ const tx=Y5.map(t=>Math.max(0,br[t])*P.tax/100+D.adj[t]),rn=Y5.map(t=>br[t]-tx[t]);
+ const caf=Y5.map(t=>rn[t]+am[t]),cfn=Y5.map(t=>ca[t]-(tot[t]-it[t])+am[t]-(P.cafTax?tx[t]:0));
+ const mcv=Y5.map(t=>ca[t]-chV[t]),tm=Y5.map(t=>ca[t]?mcv[t]/ca[t]:0),cf=Y5.map(t=>chF[t]+lo[t]+am[t]+it[t]),sr=Y5.map(t=>tm[t]>0?cf[t]/tm[t]:Infinity);
+ const i=P.disc/100,van=r=>-inv+sum(cfn.map((c,t)=>c/Math.pow(1+r,t+1)));
+ const act=cfn.map((c,t)=>c/Math.pow(1+i,t+1)),V=van(i),ta=sum(act),cum=[],cuA=[];
+ cfn.reduce((a,c,t)=>(cum[t]=a+c),0);act.reduce((a,c,t)=>(cuA[t]=a+c),0);
+ let a=-.9,b=10,tri=null;
+ if(van(a)*van(b)<0){for(let k=0;k<80;k++){const m=(a+b)/2;van(a)*van(m)<=0?b=m:a=m}tri=(a+b)/2}
+ const r1=P.r1/100,r2=P.r2/100,v1=van(r1),v2=van(r2),triI=v2!==v1?P.r1+(0-v1)/(v2-v1)*(P.r2-P.r1):null;
+ const kdr=cum.findIndex(c=>c>=inv);let dr=null,drT=x('Non récupéré en 5 ans','Not recovered within 5 years','لا يُسترجع خلال 5 سنوات');
+ if(kdr>=0){const pr=kdr?cum[kdr-1]:0;dr=kdr+(cfn[kdr]?(inv-pr)/cfn[kdr]:0);const y=Math.floor(dr),m=Math.floor((dr-y)*12),j=Math.floor(((dr-y)*12-m)*30);drT=x(`${y} an${y>1?'s':''}, ${m} mois et ${j} jour${j>1?'s':''}`,`${y} year${y>1?'s':''}, ${m} month${m!==1?'s':''} and ${j} day${j!==1?'s':''}`,`${y} سنة و${m} أشهر و${j} أيام`)}
+ // 1 – financement
+ const ok=Math.abs(inv-tf)<.5;
+ $('#bal').className='bal'+(ok?' ok':'');
+ $('#bal').textContent=L!=='fr'?BAL(ok,inv,tf):ok?'✓ Équilibré : total investissement = total financement':`Écart de ${f0(Math.abs(inv-tf))} DT : le financement est ${tf>inv?'supérieur':'inférieur'} à l’investissement`;
+ $('#finK').innerHTML=K('Total investissement',f0(inv)+' DT')+K('Total financement',f0(tf)+' DT',ok?'ok':'ko')+K('Apport personnel',f0(fin('Apport personnel'))+' DT · '+pc(tf?fin('Apport personnel')/tf:0))+K('Crédit MLT',f0(fin('Crédit MLT'))+' DT')+K('Leasing',f0(fin('Leasing'))+' DT');
+ // 2 – recettes
+ const rows=D.prod.map((r,k)=>R(esc(r[0]),pv[k]));rows.push(R('Chiffre d’affaires total',ca,'t'));rows.push(['Croissance du CA',ca.map((v,t)=>t?pc(ca[t-1]?v/ca[t-1]-1:NaN):'—'),'p']);
+ $('#tRec').innerHTML=TB(HY,rows);
+ bars('chCA',YL,[{n:'Chiffre d’affaires',v:ca,c:'var(--c1)'}]);
+ const yr=+$('#yr').value||0;pie('pieCA',D.prod.map((r,k)=>[esc(r[0]),pv[k][yr]]));
+ // 3 – crédits
+ const cr=(s,P0,id,kid,cid)=>{const N=s.length;
+  $(kid).innerHTML=K('Montant',f0(P0)+' DT')+K('Annuité',f0(s[0].a)+' DT')+K('Total intérêts',f0(sum(s.map(x=>x.i)))+' DT');
+  $(id).innerHTML=TB(['Année','Annuité','Intérêts','Capital','Restant dû'],s.map((x,t)=>[`An ${t+1}`,[x.a,x.i,x.c,x.b].map(f0)]));
+  bars(cid,s.map((_,t)=>`An ${t+1}`),[{n:'Capital',v:s.map(x=>x.c),c:'var(--c1)'},{n:'Intérêts',v:s.map(x=>x.i),c:'var(--c3)'}],1)};
+ cr(bk,fin('Crédit MLT'),'#tB','#kB','chB');cr(ls,fin('Leasing'),'#tL','#kL','chL');
+ // 4 – charges
+ const cr4=[...cs.map(c=>R(esc(c.n)+(c.v?' (variable)':' (fixe)'),c.s)),R('Crédit leasing (loyers)',lo),R('Dotations aux amortissements',am),R('Charges financières (intérêts)',it),R('Total charges',tot,'t')];
+ $('#tChC').innerHTML=TB(HY,cr4);
+ const cat=[['Variables',chV,'var(--c1)'],['Fixes',chF,'var(--c2)'],['Crédit leasing',lo,'var(--c3)'],['Amortissements',am,'var(--c5)'],['Intérêts',it,'var(--c4)']];
+ bars('chChS',YL,cat.map(x=>({n:x[0],v:x[1],c:x[2]})),1);pie('pieCh',cat.map(x=>[x[0],sum(x[1])]));
+ // 5 – résultat
+ $('#tPL').innerHTML=TB(HY,[R('Recettes prévisionnelles',ca,'p'),R('Charges variables',chV),R('Charges fixes',chF),R('Crédit leasing',lo),R('Dotations aux amortissements',am),R('Intérêts',it),R('Total charges',tot,'t'),R('Résultat brut avant impôt',br,'t'),R('Impôt',tx),R('Résultat net après impôt',rn,'t p'),['Marge nette',ca.map((v,t)=>pc(v?rn[t]/v:NaN)),'']]);
+ $('#kPL').innerHTML=K('CA cumulé 5 ans',f0(sum(ca))+' DT')+K('Total charges',f0(sum(tot))+' DT')+K('Total impôt',f0(sum(tx))+' DT')+K('Résultat net cumulé',f0(sum(rn))+' DT',sum(rn)>=0?'ok':'ko');
+ bars('chPL',YL,[{n:'Recettes',v:ca,c:'var(--c1)'},{n:'Total charges',v:tot,c:'var(--c4)'},{n:'Résultat net',v:rn,c:'var(--c2)'}]);
+ // 6 – rentabilité
+ $('#tSR').innerHTML=TB(HY,[R('Chiffre d’affaires (CA)',ca),R('Charges variables (CV)',chV),R('Marge sur coûts variables (CA − CV)',mcv,'t'),['Taux de marge (MCV / CA)',tm.map(pc),''],R('Charges fixes (CF)',cf),R('Seuil de rentabilité (CF / taux MCV)',sr,'t p'),['Marge de sécurité',ca.map((v,t)=>pc(v?(v-sr[t])/v:NaN)),''],['Point mort (mois)',ca.map((v,t)=>isFinite(sr[t])&&v?(sr[t]/v*12).toFixed(1).replace('.',','):'—'),'']]);
+ bars('chSR',YL,[{n:'Chiffre d’affaires',v:ca,c:'var(--c1)'},{n:'Seuil de rentabilité',v:sr.map(x=>isFinite(x)?x:0),c:'var(--c3)'}]);
+ $('#tVar').innerHTML=TB(HY,[...cs.filter(c=>c.v).map(c=>R(esc(c.n),c.s)),R('Total charges variables',chV,'t')]);
+ $('#tCF').innerHTML=TB(HY,[R('Résultat net',rn),R('+ Amortissements',am),R('Capacité d’autofinancement (CAF)',caf,'t p'),R('Recettes prévisionnelles',ca),R('− Charges hors intérêts',Y5.map(t=>tot[t]-it[t])),R('+ Amortissements',am),R(P.cafTax?'− Impôt':'Impôt (non déduit)',P.cafTax?tx:Y5.map(()=>0)),R('Cash-flow net (CFN)',cfn,'t p')]);
+ bars('chCF',YL,[{n:'CAF',v:caf,c:'var(--c1)'},{n:'Cash-flow net',v:cfn,c:'var(--c2)'}]);
+ // 7 – critères
+ $('#kC').innerHTML=K('Investissement initial I₀',f0(inv)+' DT')+K('VAN',f0(V)+' DT',V>0?'ok':'ko')+K('TRI',tri===null?'Non défini':pc(tri),tri!==null&&tri>i?'ok':'ko')+K('Délai de récupération',dr===null?drT:drT,dr!==null?'ok':'ko');
+ $('#tVAN').innerHTML=TB(HY,[R('Cash-flow net (CFN)',cfn),['Facteur 1 / (1 + i)ⁿ',Y5.map(t=>f2(1/Math.pow(1+i,t+1))),''],R('CFN actualisé',act,'t'),['Part dans le total actualisé',act.map(x=>pc(ta?x/ta:NaN)),''],R('CFN cumulés',cum),R('CFN actualisés cumulés',cuA),R('VAN cumulée (− I₀)',cuA.map(x=>x-inv),'t p')]);
+ pie('pieV',act.map((x,t)=>[YL[t],x]));
+ bars('chV',YL,[{n:'VAN cumulée',v:cuA.map(x=>x-inv),c:'var(--c2)'}]);
+ bars('chDR',YL,[{n:'CFN cumulés',v:cum,c:'var(--c1)'},{n:'Investissement I₀',v:Y5.map(()=>inv),c:'var(--c3)'}]);
+ $('#drS').innerHTML=L!=='fr'?DRS(kdr,cum,cfn,inv,dr,drT):kdr<0?'L’investissement n’est pas récupéré sur les 5 années. Allongez l’horizon ou améliorez les cash-flows.':`Au début de l’année ${kdr+1}, les CFN cumulés sont de ${f0(kdr?cum[kdr-1]:0)} DT, pour un capital investi de ${f0(inv)} DT. Le délai de récupération est entre ${kdr} et ${kdr+1} an(s).<br>d = ${kdr} + (${f0(inv)} − ${f0(kdr?cum[kdr-1]:0)}) / ${f0(cfn[kdr])} = <b>${dr.toFixed(4).replace('.',',')}</b> année, soit <b>${drT}</b>.`;
+ $('#triS').innerHTML=L!=='fr'?TRIS(tri,i,P,v1,v2,triI):`<b>Par calcul exact</b> (VAN = 0) : TRI = <b>${tri===null?'non défini':pc(tri)}</b>${tri!==null?(tri>i?' > taux d’actualisation : projet rentable.':' ≤ taux d’actualisation : projet non rentable.'):''}<br><b>Par interpolation linéaire</b> : r1 = ${P.r1} % → VAN1 = ${f0(v1)} ; r2 = ${P.r2} % → VAN2 = ${f0(v2)}<br>(TRI − r1) / (r2 − r1) = (0 − VAN1) / (VAN2 − VAN1) = ${v2!==v1?f2((0-v1)/(v2-v1)):'—'}<br>TRI ≈ r1 + ${v2!==v1?f2((0-v1)/(v2-v1)):'—'} × (r2 − r1) = <b>${triI===null?'—':triI.toFixed(2).replace('.',',')+' %'}</b><br><span style="color:var(--muted)">Pour une valeur précise, choisissez r1 et r2 de part et d’autre du TRI (une VAN positive et une VAN négative).</span>`;
+}
+// init
+$('#nav').innerHTML=['1 · Investissement','2 · Produits et CA','3 · Crédits','4 · Charges','5 · Résultat','6 · Rentabilité','7 · Critères'].map((l,i)=>`<button type="button" data-s="${i+1}" aria-pressed="${i===0}">${l}</button>`).join('');
+$('#yr').innerHTML=YL.map((l,i)=>`<option value="${i}">${l}</option>`).join('');
+$('#adj').innerHTML=YL.map((l,i)=>`<label class="f">${l}<input type="number" step="any" data-a="${i}" value="0"></label>`).join('');
+document.querySelectorAll('[data-p]').forEach(e=>{const v=P[e.dataset.p];e.type==='checkbox'?e.checked=v:e.value=v});
+['inv','fin','prod','ch'].forEach(rt);
+const st=(()=>{try{return localStorage.getItem('theme')}catch(e){return null}})();if(st)document.documentElement.dataset.theme=st;
+document.addEventListener('input',e=>{
+ const t=e.target,d=t.dataset;
+ if(d.k)D[d.k][d.i][d.j]=t.type==='number'?(+t.value||0):t.value;
+ else if(d.p)P[d.p]=t.type==='checkbox'?t.checked:(+t.value||0);
+ else if(d.a)D.adj[d.a]=+t.value||0;
+ else if(t.id==='gCA'||t.id==='gCH'){$('#'+t.id+'o').textContent=t.value.replace('.',',')+' %';return}
+ else if(t.id==='cur'){CU=t.value;try{localStorage.setItem('cur',CU)}catch(e){}}
+ else if(t.id!=='yr')return;
+ calc();
+});
+const x=(fr,en,ar)=>L==='fr'?fr:L==='en'?en:ar;
+const CURL={TND:{fr:'DT',en:'TND',ar:'د.ت'},EUR:{fr:'€',en:'€',ar:'€'},USD:{fr:'$',en:'$',ar:'$'}};
+const PART=[[' (variable)',' (variable)',' (متغيرة)'],[' (fixe)',' (fixed)',' (ثابتة)']];
+const DIC={};`Business Plan prévisionnel¦Financial Business Plan¦خطة العمل التوقعية
+Étude de rentabilité sur 5 ans¦5-year profitability study¦دراسة الجدوى على 5 سنوات
+Rapport¦Report¦تقرير
+Langue¦Language¦اللغة
+Devise¦Currency¦العملة
+Basculer thème clair ou sombre¦Switch light or dark theme¦التبديل بين المظهر الفاتح والداكن
+Thème clair / sombre¦Light / dark theme¦المظهر الفاتح / الداكن
+1 · Investissement¦1 · Investment¦1 · الاستثمار
+2 · Produits et CA¦2 · Products & revenue¦2 · المنتجات والإيرادات
+3 · Crédits¦3 · Loans¦3 · القروض
+4 · Charges¦4 · Expenses¦4 · الأعباء
+5 · Résultat¦5 · Income¦5 · النتيجة
+6 · Rentabilité¦6 · Profitability¦6 · المردودية
+7 · Critères¦7 · Criteria¦7 · المعايير
+Coût et financement¦Cost and financing¦الكلفة والتمويل
+Saisissez vos investissements et vos sources de financement. Les deux totaux doivent être égaux.¦Enter your investments and financing sources. Both totals must match.¦أدخل استثماراتك ومصادر التمويل. يجب أن يتساوى المجموعان.
+Investissement¦Investment¦الاستثمار
+Financement¦Financing¦التمويل
++ Ajouter une ligne¦+ Add a line¦+ إضافة سطر
+Total investissement¦Total investment¦إجمالي الاستثمار
+Total financement¦Total financing¦إجمالي التمويل
+Apport personnel¦Personal contribution¦المساهمة الشخصية
+Crédit MLT¦Medium/long-term loan¦قرض متوسط وطويل الأجل
+Leasing¦Leasing¦الليزينغ
+Rubrique¦Item¦البند
+Montant (DT)¦Amount (DT)¦المبلغ (DT)
+Source¦Source¦المصدر
+Type¦Type¦النوع
+Supprimer la ligne¦Delete line¦حذف السطر
+Produits, capacité et recettes¦Products, capacity and revenue¦المنتجات والطاقة الإنتاجية والإيرادات
+Quantité × prix par produit, puis évolution annuelle du chiffre d’affaires.¦Quantity × price per product, then yearly revenue growth.¦الكمية × السعر لكل منتج، ثم تطور رقم المعاملات سنويًا.
+Capacité de production par produit¦Production capacity by product¦الطاقة الإنتاجية لكل منتج
+Augmentation annuelle du CA¦Yearly revenue increase¦الزيادة السنوية في رقم المعاملات
+Appliquer à tous les produits¦Apply to all products¦تطبيق على كل المنتجات
+Produit¦Product¦المنتج
+Quantité / an¦Quantity / year¦الكمية / سنة
+Prix unitaire (DT)¦Unit price (DT)¦سعر الوحدة (DT)
+Δ An 2 %¦Δ Yr 2 %¦Δ س2 %
+Δ An 3 %¦Δ Yr 3 %¦Δ س3 %
+Δ An 4 %¦Δ Yr 4 %¦Δ س4 %
+Δ An 5 %¦Δ Yr 5 %¦Δ س5 %
+An 1¦Yr 1¦س1
+An 2¦Yr 2¦س2
+An 3¦Yr 3¦س3
+An 4¦Yr 4¦س4
+An 5¦Yr 5¦س5
++ Ajouter un produit¦+ Add a product¦+ إضافة منتج
+Recettes prévisionnelles (DT)¦Forecast revenue (DT)¦الإيرادات التوقعية (DT)
+Évolution du chiffre d’affaires¦Revenue trend¦تطور رقم المعاملات
+Répartition du CA par produit¦Revenue split by product¦توزيع رقم المعاملات حسب المنتج
+Année¦Year¦السنة
+Chiffre d’affaires total¦Total revenue¦إجمالي رقم المعاملات
+Croissance du CA¦Revenue growth¦نمو رقم المعاملات
+Chiffre d’affaires¦Revenue¦رقم المعاملات
+Remboursement des crédits¦Loan repayment¦سداد القروض
+Les montants viennent des lignes « Crédit MLT » et « Leasing » du financement. Annuités constantes.¦Amounts come from the MLT loan and Leasing financing lines. Constant annuities.¦المبالغ مأخوذة من سطور «قرض متوسط وطويل الأجل» و«الليزينغ» في التمويل. أقساط ثابتة.
+Emprunt bancaire¦Bank loan¦القرض البنكي
+Crédit leasing¦Leasing credit¦قرض الليزينغ
+Taux annuel %¦Annual rate %¦المعدل السنوي %
+Durée (années)¦Term (years)¦المدة (سنوات)
+Montant¦Amount¦المبلغ
+Annuité¦Annuity¦القسط السنوي
+Total intérêts¦Total interest¦إجمالي الفوائد
+Intérêts¦Interest¦الفوائد
+Capital¦Principal¦الأصل
+Restant dû¦Balance¦الرصيد المتبقي
+Charges prévisionnelles¦Forecast expenses¦الأعباء التوقعية
+Achats MP + MC, TFSE, frais de production, personnel… Chaque ligne évolue selon son pourcentage annuel. Les charges « Variables » alimentent le seuil de rentabilité.¦Purchases, services, production and staff costs… Each line grows by its yearly percentage. Variable expenses feed the break-even point.¦المشتريات والخدمات وأعباء الإنتاج والأعوان… يتطور كل سطر بنسبته السنوية. تدخل الأعباء المتغيرة في حساب عتبة المردودية.
+Charges d’exploitation¦Operating expenses¦أعباء الاستغلال
+Hausse annuelle des prix et charges¦Yearly rise in prices and expenses¦الزيادة السنوية في الأسعار والأعباء
+Appliquer à toutes les lignes¦Apply to all lines¦تطبيق على كل السطور
+Charge¦Expense¦العبء
+Nature¦Type¦الطبيعة
+Montant An 1 (DT)¦Year 1 amount (DT)¦مبلغ السنة 1 (DT)
++ Ajouter une charge¦+ Add an expense¦+ إضافة عبء
+Durée d’amortissement (années)¦Depreciation period (years)¦مدة الاهتلاك (سنوات)
+Investissement non amortissable (DT)¦Non-depreciable investment (DT)¦استثمار غير قابل للاهتلاك (DT)
+Charges prévisionnelles (DT)¦Forecast expenses (DT)¦الأعباء التوقعية (DT)
+Charges par nature et par année¦Expenses by type and year¦الأعباء حسب الطبيعة والسنة
+Répartition des charges sur 5 ans¦Expense split over 5 years¦توزيع الأعباء على 5 سنوات
+Variable¦Variable¦متغير
+Fixe¦Fixed¦ثابت
+Crédit leasing (loyers)¦Leasing credit (rents)¦قرض الليزينغ (الأكرية)
+Dotations aux amortissements¦Depreciation¦مخصصات الاهتلاك
+Charges financières (intérêts)¦Financial expenses (interest)¦الأعباء المالية (الفوائد)
+Total charges¦Total expenses¦إجمالي الأعباء
+Variables¦Variable¦المتغيرة
+Fixes¦Fixed¦الثابتة
+Amortissements¦Depreciation¦الاهتلاكات
+État de résultat prévisionnel¦Forecast income statement¦قائمة النتائج التوقعية
+Instrument de pilotage qui estime le résultat net annuel à partir des recettes et des charges prévues. Résultat net = résultat brut avant impôt − impôt.¦Steering tool estimating yearly net income from forecast revenue and expenses. Net income = pre-tax income − tax.¦أداة قيادة تقدّر النتيجة الصافية السنوية انطلاقًا من الإيرادات والأعباء المتوقعة. النتيجة الصافية = النتيجة قبل الضريبة − الضريبة.
+Impôt¦Tax¦الضريبة
+Taux d’impôt sur les sociétés %¦Corporate tax rate %¦نسبة الضريبة على الشركات %
+Ajustement d’impôt par année (DT, ajouté à l’impôt calculé)¦Tax adjustment per year (DT, added to computed tax)¦تعديل الضريبة لكل سنة (DT، يضاف إلى الضريبة المحسوبة)
+CA cumulé 5 ans¦5-year cumulative revenue¦رقم المعاملات المجمّع لـ5 سنوات
+Total impôt¦Total tax¦إجمالي الضريبة
+Résultat net cumulé¦Cumulative net income¦النتيجة الصافية المجمّعة
+État de résultat (DT)¦Income statement (DT)¦قائمة النتائج (DT)
+Recettes, charges et résultat net¦Revenue, expenses and net income¦الإيرادات والأعباء والنتيجة الصافية
+Recettes prévisionnelles¦Forecast revenue¦الإيرادات التوقعية
+Charges variables¦Variable expenses¦الأعباء المتغيرة
+Charges fixes¦Fixed expenses¦الأعباء الثابتة
+Résultat brut avant impôt¦Pre-tax income¦النتيجة قبل الضريبة
+Résultat net après impôt¦Net income after tax¦النتيجة الصافية بعد الضريبة
+Marge nette¦Net margin¦هامش الربح الصافي
+Recettes¦Revenue¦الإيرادات
+Résultat net¦Net income¦النتيجة الصافية
+Étude de rentabilité¦Profitability study¦دراسة المردودية
+Seuil de rentabilité : SR = charges fixes ÷ taux de marge sur coûts variables. CAF = résultat net + amortissements.¦Break-even: BE = fixed expenses ÷ contribution margin ratio. Self-financing capacity = net income + depreciation.¦عتبة المردودية = الأعباء الثابتة ÷ نسبة الهامش على الكلفة المتغيرة. القدرة على التمويل الذاتي = النتيجة الصافية + الاهتلاكات.
+Seuil de rentabilité (SR)¦Break-even point (BE)¦عتبة المردودية
+Le seuil de rentabilité est le niveau de ventes où l’entreprise ne fait ni profit ni perte.¦The break-even point is the sales level where the company makes neither profit nor loss.¦عتبة المردودية هي مستوى المبيعات الذي لا تحقق عنده المؤسسة ربحًا ولا خسارة.
+CA et seuil de rentabilité¦Revenue and break-even point¦رقم المعاملات وعتبة المردودية
+Charges variables (détail, DT)¦Variable expenses (detail, DT)¦الأعباء المتغيرة (تفصيل، DT)
+Capacité d’autofinancement et cash-flow nets¦Self-financing capacity and net cash flows¦القدرة على التمويل الذاتي والتدفقات النقدية الصافية
+Déduire l’impôt du cash-flow net (recommandé : l’impôt est une sortie d’argent)¦Deduct tax from net cash flow (recommended: tax is a cash outflow)¦خصم الضريبة من التدفق النقدي الصافي (موصى به: الضريبة تدفق خارج)
+Chiffre d’affaires (CA)¦Revenue¦رقم المعاملات
+Charges variables (CV)¦Variable expenses (VC)¦الأعباء المتغيرة
+Marge sur coûts variables (CA − CV)¦Contribution margin (Revenue − VC)¦الهامش على الكلفة المتغيرة
+Taux de marge (MCV / CA)¦Margin ratio (CM / Revenue)¦نسبة الهامش
+Charges fixes (CF)¦Fixed expenses (FC)¦الأعباء الثابتة
+Seuil de rentabilité (CF / taux MCV)¦Break-even (FC / CM ratio)¦عتبة المردودية
+Marge de sécurité¦Margin of safety¦هامش الأمان
+Point mort (mois)¦Break-even time (months)¦المدة إلى التعادل (أشهر)
+Total charges variables¦Total variable expenses¦إجمالي الأعباء المتغيرة
++ Amortissements¦+ Depreciation¦+ الاهتلاكات
+Capacité d’autofinancement (CAF)¦Self-financing capacity (SFC)¦القدرة على التمويل الذاتي
+− Charges hors intérêts¦− Expenses excl. interest¦− الأعباء دون الفوائد
+− Impôt¦− Tax¦− الضريبة
+Impôt (non déduit)¦Tax (not deducted)¦الضريبة (غير مخصومة)
+Cash-flow net (CFN)¦Net cash flow (NCF)¦التدفق النقدي الصافي
+CAF¦SFC¦التمويل الذاتي
+Cash-flow net¦Net cash flow¦التدفق النقدي الصافي
+Seuil de rentabilité¦Break-even point¦عتبة المردودية
+Critères de choix¦Selection criteria¦معايير الاختيار
+VAN = −I₀ + Σ CFN ÷ (1 + i)ⁿ. Le projet est rentable si VAN > 0, si TRI > taux d’actualisation et si le délai de récupération est acceptable.¦NPV = −I₀ + Σ NCF ÷ (1 + i)ⁿ. The project is profitable if NPV > 0, IRR > discount rate and the payback period is acceptable.¦القيمة الحالية = −I₀ + Σ التدفقات ÷ (1 + i)ⁿ. المشروع مربح إذا كانت القيمة الحالية > 0 وكان المعدل الداخلي > معدل الخصم وكانت فترة الاسترداد مقبولة.
+Taux d’actualisation %¦Discount rate %¦معدل الخصم %
+TRI : taux d’essai r1 %¦IRR: trial rate r1 %¦المعدل الداخلي: نسبة تجريبية r1 %
+TRI : taux d’essai r2 %¦IRR: trial rate r2 %¦المعدل الداخلي: نسبة تجريبية r2 %
+Investissement initial I₀¦Initial investment I₀¦الاستثمار الأولي I₀
+VAN¦NPV¦القيمة الحالية الصافية
+TRI¦IRR¦المعدل الداخلي
+Délai de récupération¦Payback period¦فترة الاسترداد
+Non défini¦Undefined¦غير محدد
+Cash-flow net actualisé (DT)¦Discounted net cash flow (DT)¦التدفق النقدي الصافي المحيّن (DT)
+Part de chaque année dans la VAN¦Share of each year in NPV¦حصة كل سنة في القيمة الحالية
+VAN cumulée¦Cumulative NPV¦القيمة الحالية المجمّعة
+Taux de rentabilité interne¦Internal rate of return¦معدل المردودية الداخلي
+Facteur 1 / (1 + i)ⁿ¦Factor 1 / (1 + i)ⁿ¦المعامل 1 / (1 + i)ⁿ
+CFN actualisé¦Discounted NCF¦التدفق المحيّن
+Part dans le total actualisé¦Share of discounted total¦الحصة من المجموع المحيّن
+CFN cumulés¦Cumulative NCF¦التدفقات المجمّعة
+CFN actualisés cumulés¦Cumulative discounted NCF¦التدفقات المحيّنة المجمّعة
+VAN cumulée (− I₀)¦Cumulative NPV (− I₀)¦القيمة الحالية المجمّعة (− I₀)
+Investissement I₀¦Investment I₀¦الاستثمار I₀`.split('\n').forEach(s=>{const a=s.split('¦');DIC[a[0]]=[a[1],a[2]]});
+const DEFN=`Terrain¦Land¦أرض
+Construction¦Construction¦بناء
+Équipements¦Equipment¦معدات
+Frais d’établissement¦Set-up costs¦مصاريف التأسيس
+Fonds de roulement¦Working capital¦رأس المال المتداول
+Apport personnel¦Personal contribution¦المساهمة الشخصية
+Crédit bancaire¦Bank loan¦قرض بنكي
+Crédit leasing¦Leasing credit¦قرض الليزينغ
+Produit A¦Product A¦المنتج أ
+Produit B¦Product B¦المنتج ب
+Produit C¦Product C¦المنتج ج
+Achats MP + MC¦Raw materials + goods purchases¦مشتريات المواد الأولية والبضائع
+TFSE (transports, services extérieurs)¦Transport and external services¦النقل والخدمات الخارجية
+Frais divers de production¦Misc. production costs¦مصاريف إنتاج متنوعة
+Frais de personnel¦Staff costs¦أعباء الأعوان
+Nouvelle rubrique¦New item¦بند جديد
+Nouvelle source¦New source¦مصدر جديد
+Nouveau produit¦New product¦منتج جديد
+Nouvelle charge¦New expense¦عبء جديد`.split('\n').map(s=>s.split('¦'));
+const orig=new WeakMap();
+function tr(s){let r=s;if(L!=='fr'){const k=s.trim(),d=DIC[k];if(d)r=s.replace(k,()=>d[LI[L]-1]);else PART.forEach(p=>{r=r.split(p[0]).join(p[LI[L]])})}return r.replace(/\bDT\b/g,()=>CURL[CU][L])}
+function loc(){
+ const r=document.documentElement;r.lang=L;r.dir=L==='ar'?'rtl':'ltr';
+ const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
+ while(n=w.nextNode()){const p=n.parentElement;if(!p||p.tagName==='SCRIPT')continue;if(!orig.has(n))orig.set(n,n.nodeValue);const o=orig.get(n);if(!o.trim())continue;const v=tr(o);if(v!==n.nodeValue)n.nodeValue=v}
+ document.querySelectorAll('[aria-label],[title]').forEach(e=>['aria-label','title'].forEach(a=>{if(!e.hasAttribute(a))return;const k=a==='title'?'ot':'oa';if(!(k in e.dataset))e.dataset[k]=e.getAttribute(a);e.setAttribute(a,tr(e.dataset[k]))}));
+ document.title=tr('Business Plan prévisionnel');
+ document.querySelectorAll('[data-l]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===L));
+}
+const BAL=(ok,inv,tf)=>ok?x('','✓ Balanced: total investment = total financing','✓ متوازن: إجمالي الاستثمار = إجمالي التمويل'):x('',`Gap of ${f0(Math.abs(inv-tf))} DT: financing is ${tf>inv?'higher':'lower'} than investment`,`فارق قدره ${f0(Math.abs(inv-tf))} DT: التمويل ${tf>inv?'أكبر':'أقل'} من الاستثمار`);
+const DRS=(k,cum,cfn,inv,dr,drT)=>{const pv=k>0?cum[k-1]:0;return k<0?x('','The investment is not recovered within the 5 years.','لم يُسترجع الاستثمار خلال 5 سنوات.'):x('',`At the start of year ${k+1}, cumulative NCF is ${f0(pv)} DT against an investment of ${f0(inv)} DT, so payback falls between year ${k} and year ${k+1}.<br>d = ${k} + (${f0(inv)} − ${f0(pv)}) / ${f0(cfn[k])} = <b>${dr.toFixed(4)}</b> → <b>${drT}</b>.`,`في بداية السنة ${k+1} بلغت التدفقات المجمّعة ${f0(pv)} DT مقابل استثمار قدره ${f0(inv)} DT، فتقع فترة الاسترداد بين السنة ${k} والسنة ${k+1}.<br>d = ${k} + (${f0(inv)} − ${f0(pv)}) / ${f0(cfn[k])} = <b>${dr.toFixed(4)}</b> ← <b>${drT}</b>.`)};
+const TRIS=(tri,i,P,v1,v2,ti)=>{const q=v2!==v1?f2(-v1/(v2-v1)):'—',t=tri===null?x('','undefined','غير محدد'):pc(tri),ts=ti===null?'—':ti.toFixed(2)+' %';return x('',`<b>Exact calculation</b> (NPV = 0): IRR = <b>${t}</b>${tri!==null?(tri>i?' > discount rate: profitable project.':' ≤ discount rate: unprofitable project.'):''}<br><b>Linear interpolation</b>: r1 = ${P.r1} % → NPV1 = ${f0(v1)}; r2 = ${P.r2} % → NPV2 = ${f0(v2)}<br>(IRR − r1) / (r2 − r1) = −NPV1 / (NPV2 − NPV1) = ${q}<br>IRR ≈ r1 + ${q} × (r2 − r1) = <b>${ts}</b>`,`<b>الحساب الدقيق</b> (القيمة الحالية = 0): المعدل الداخلي = <b>${t}</b>${tri!==null?(tri>i?' > معدل الخصم: مشروع مربح.':' ≤ معدل الخصم: مشروع غير مربح.'):''}<br><b>الاستكمال الخطي</b>: r1 = ${P.r1} % ← القيمة1 = ${f0(v1)}؛ r2 = ${P.r2} % ← القيمة2 = ${f0(v2)}<br>(المعدل − r1) / (r2 − r1) = −القيمة1 / (القيمة2 − القيمة1) = ${q}<br>المعدل ≈ r1 + ${q} × (r2 − r1) = <b>${ts}</b>`)};
+function setLang(l){L=l;try{localStorage.setItem('lang',l)}catch(e){}
+ ['inv','fin','prod','ch'].forEach(k=>D[k].forEach(r=>{const e=DEFN.find(z=>z.includes(r[0]));if(e)r[0]=e[LI[l]]}));
+ ['inv','fin','prod','ch'].forEach(rt);calc()}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(b)setLang(b.dataset.l);if(e.target.closest('#print')){try{print()}catch(_){}}});
+let pTh;
+addEventListener('beforeprint',()=>{const r=document.documentElement;pTh=r.dataset.theme;r.dataset.theme='light';$('#repT').textContent=document.title;$('#repD').textContent=new Date().toLocaleDateString({fr:'fr-FR',en:'en-GB',ar:'ar-TN'}[L])+' · '+CURL[CU][L]});
+addEventListener('afterprint',()=>{const r=document.documentElement;pTh?r.dataset.theme=pTh:delete r.dataset.theme});
+try{const c=localStorage.getItem('cur'),l=localStorage.getItem('lang');if(CURL[c]){CU=c;$('#cur').value=c}if(l&&LI[l]&&l!=='fr')setLang(l)}catch(e){}
+document.addEventListener('click',e=>{
+ const s=e.target.closest('[data-s]'),a=e.target.closest('[data-add]'),x=e.target.closest('[data-del]');
+ if(s){document.querySelectorAll('section').forEach(z=>z.hidden=z.id!=='s'+s.dataset.s);document.querySelectorAll('#nav button').forEach(b=>b.setAttribute('aria-pressed',b===s));scrollTo(0,0)}
+ if(a){D[a.dataset.add].push([...NEW[a.dataset.add]]);rt(a.dataset.add);calc()}
+ if(x){const[k,i]=x.dataset.del.split(':');D[k].splice(+i,1);rt(k);calc()}
+ if(e.target.closest('#aCA')){const v=+$('#gCA').value;D.prod.forEach(r=>{for(let j=3;j<7;j++)r[j]=v});rt('prod');calc()}
+ if(e.target.closest('#aCH')){const v=+$('#gCH').value;D.ch.forEach(r=>{for(let j=3;j<7;j++)r[j]=v});rt('ch');calc()}
+ if(e.target.closest('#theme')){const r=document.documentElement,dk=r.dataset.theme==='dark'||(!r.dataset.theme&&matchMedia('(prefers-color-scheme:dark)').matches);r.dataset.theme=dk?'light':'dark';try{localStorage.setItem('theme',r.dataset.theme)}catch(e){}}
+});
+calc();
+</script>
+</body>
+</html>

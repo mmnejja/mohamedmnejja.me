@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Information Systems Audit & Cybersecurity Toolkit</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--navy:#0A2540;--em:#00A86B;--bg:#F5F7FA;--card:#FFFFFF;--tx:#0A2540;--mu:#64748b;--bd:#e2e8f0;--side:#0A2540}
+[data-theme=dark]{--bg:#0C1928;--card:#112238;--tx:#e8eef5;--mu:#93a4b8;--bd:#233a55;--side:#081320}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.5 system-ui,'Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--tx);transition:background .3s,color .3s}
+.app{display:flex;min-height:100vh}
+.side{width:250px;background:var(--side);color:#fff;position:fixed;inset-block:0;inset-inline-start:0;padding:16px 10px;overflow:auto;transition:transform .3s;z-index:20;display:flex;flex-direction:column;gap:2px}
+.side h1{font-size:15px;margin:0 8px 16px;line-height:1.3}.side h1 i{color:var(--em)}
+.nav{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:8px;color:#cbd5e1;cursor:pointer;border:0;background:none;width:100%;text-align:start;font:inherit;transition:.2s}
+.nav i{width:18px;text-align:center}.nav:hover{background:#ffffff18}.nav.on{background:var(--em);color:#fff}
+.sig{margin-top:auto;padding:12px 8px;font-size:11px;color:#94a3b8;border-top:1px solid #ffffff22}
+.main{margin-inline-start:250px;flex:1;min-width:0}
+.top{display:flex;gap:10px;align-items:center;padding:10px 20px;background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:10}
+.sp{flex:1}.menu{display:none}
+.pg{padding:20px}
+button,select,input,textarea{font:inherit;color:var(--tx)}
+input,select,textarea{background:var(--bg);border:1px solid var(--bd);border-radius:7px;padding:7px 10px;width:100%}
+.btn{background:var(--em);color:#fff;border:0;padding:7px 14px;border-radius:7px;cursor:pointer;transition:.2s;width:auto}
+.btn:hover{filter:brightness(1.1)}.btn.s{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+.ic{background:none;border:0;cursor:pointer;padding:5px 8px;border-radius:6px;color:var(--mu);width:auto}.ic:hover{background:var(--bg);color:var(--em)}
+.lb{background:none;border:1px solid var(--bd);padding:4px 9px;border-radius:6px;cursor:pointer;color:var(--mu);transition:.2s}.lb.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+[data-theme=dark] .lb.on{background:var(--em);border-color:var(--em)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:16px;transition:.3s}
+.card h3{margin:0 0 10px;font-size:15px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-bottom:16px}.grid .card{margin:0}
+.g2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.k{display:flex;gap:12px;align-items:center}.k i{font-size:20px;color:var(--em);background:var(--bg);width:44px;height:44px;border-radius:10px;display:grid;place-items:center}
+.k b{font-size:22px;display:block;line-height:1.1}.k span{color:var(--mu);font-size:12px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bd);text-align:start;vertical-align:top}
+th{font-size:12px;color:var(--mu);text-transform:uppercase;letter-spacing:.3px}tr:hover td{background:var(--bg)}
+.b{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;margin:1px;color:#fff;white-space:nowrap}
+.b.g{background:#00A86B}.b.y{background:#d97706}.b.o{background:#ea580c}.b.r{background:#dc2626}.b.n{background:#64748b}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}.bar input{max-width:240px}.bar select{max-width:200px}
+.ov{position:fixed;inset:0;background:#0008;display:grid;place-items:center;z-index:50;padding:12px}
+.mdl{background:var(--card);border-radius:12px;padding:20px;width:min(640px,100%);max-height:90vh;overflow:auto}
+.f{display:block;margin-bottom:10px;font-size:12px;color:var(--mu)}.er{color:#dc2626;min-height:18px}
+.hm{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;max-width:360px}
+.hc{aspect-ratio:1;display:grid;place-items:center;border-radius:6px;font-weight:700;color:#fff}
+.hc.g{background:#00A86B}.hc.y{background:#d97706}.hc.o{background:#ea580c}.hc.r{background:#dc2626}
+.cv{height:240px;position:relative}
+.banner{background:#d9770622;border:1px solid #d97706;color:var(--tx);padding:8px 12px;border-radius:8px;margin-bottom:16px;font-size:12px}
+.fade{animation:f .4s}@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.foot{padding:16px 20px;color:var(--mu);font-size:12px}
+.rep h2{color:var(--em)}.rep .fd{border-inline-start:3px solid var(--em);padding-inline-start:10px;margin:10px 0}
+@media(max-width:900px){.side{transform:translateX(-100%)}[dir=rtl] .side{transform:translateX(100%)}.side.open{transform:none!important}.main{margin-inline-start:0}.menu{display:inline-block}}
+@media print{.side,.top,.noprint,.foot{display:none!important}.main{margin:0}body{background:#fff;color:#000}.card{border:0}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+/* ---------- i18n: key|EN|FR|AR ---------- */
+const T=`app|IS Audit & Cybersecurity Toolkit|Boîte à outils Audit SI & Cybersécurité|أدوات تدقيق النظم والأمن السيبراني
+dash|Dashboard|Tableau de bord|لوحة القيادة
+controls|IT Controls (ITGC & RCM)|Contrôles IT (ITGC & RCM)|ضوابط تقنية المعلومات
+risks|IT Risk Register|Registre des risques IT|سجل المخاطر
+iam|IAM Assessment|Évaluation IAM|تقييم الهوية والوصول
+sod|SoD Analyzer|Analyseur SoD|محلل فصل المهام
+maturity|Cybersecurity Maturity|Maturité cybersécurité|نضج الأمن السيبراني
+compliance|Compliance & Mapping|Conformité & mapping|الامتثال والمطابقة
+findings|Findings & Reporting|Constats & reporting|الملاحظات والتقارير
+settings|Settings & Data|Paramètres & données|الإعدادات والبيانات
+add|Add|Ajouter|إضافة
+edit|Edit|Modifier|تعديل
+del|Delete|Supprimer|حذف
+save|Save|Enregistrer|حفظ
+cancel|Cancel|Annuler|إلغاء
+search|Search…|Rechercher…|بحث…
+all|All|Tous|الكل
+none|No records|Aucun enregistrement|لا توجد سجلات
+exportCsv|Export CSV|Export CSV|تصدير CSV
+importCsv|Import CSV|Import CSV|استيراد CSV
+confirm|Delete this record?|Supprimer cet enregistrement ?|حذف هذا السجل؟
+exportJson|Export JSON backup|Exporter la sauvegarde JSON|تصدير نسخة JSON
+importJson|Restore JSON backup|Restaurer une sauvegarde JSON|استعادة نسخة JSON
+resetDemo|Reset demo data|Réinitialiser les données démo|إعادة بيانات العرض
+clearAll|Delete all data|Supprimer toutes les données|حذف كل البيانات
+sample|Fictional demo data – not real client information|Données démo fictives – aucune information client réelle|بيانات تجريبية وهمية – ليست معلومات حقيقية
+kTotC|Total IT controls|Total contrôles IT|إجمالي الضوابط
+kTested|Controls tested|Contrôles testés|الضوابط المختبرة
+kEff|Effective controls|Contrôles efficaces|ضوابط فعّالة
+kIneff|Ineffective controls|Contrôles inefficaces|ضوابط غير فعّالة
+kRisks|Total IT risks|Total risques IT|إجمالي المخاطر
+kHigh|High & critical risks|Risques élevés & critiques|مخاطر عالية وحرجة
+kOpen|Open findings|Constats ouverts|ملاحظات مفتوحة
+kMat|Cyber maturity|Maturité cyber|نضج الأمن السيبراني
+kComp|Compliance score|Score de conformité|نسبة الامتثال
+score|Control effectiveness score|Score d'efficacité des contrôles|نسبة فعالية الضوابط
+cRisk|Risk distribution|Répartition des risques|توزيع المخاطر
+cCtl|Control effectiveness|Efficacité des contrôles|فعالية الضوابط
+cComp|Compliance by framework|Conformité par référentiel|الامتثال حسب الإطار
+cFind|Findings by severity|Constats par sévérité|الملاحظات حسب الخطورة
+topRisks|High-priority risks|Risques prioritaires|المخاطر ذات الأولوية
+recentF|Recent findings|Constats récents|أحدث الملاحظات
+inherent|Inherent|Inhérent|كامن
+residual|Residual|Résiduel|متبقٍ
+heat|Risk heatmap (inherent, 5×5)|Matrice des risques (inhérent, 5×5)|خريطة المخاطر (5×5)
+recs|Prioritized remediation|Remédiation priorisée|المعالجة حسب الأولوية
+recCritical|Immediate action, executive escalation|Action immédiate, escalade à la direction|إجراء فوري وتصعيد للإدارة
+recHigh|Treat within 30 days|Traiter sous 30 jours|المعالجة خلال 30 يومًا
+recMedium|Plan treatment this quarter|Planifier ce trimestre|التخطيط خلال الربع
+recLow|Monitor and accept|Surveiller et accepter|المراقبة والقبول
+conflicts|Detected conflicts|Conflits détectés|التعارضات المكتشفة
+matrix|Conflict matrix|Matrice des conflits|مصفوفة التعارض
+rules|SoD rules library (editable)|Bibliothèque de règles SoD (modifiable)|مكتبة قواعد فصل المهام
+sodNote|Rule-based matching on imported permissions only. No ERP/SAP connection.|Détection par règles sur les permissions importées uniquement. Aucune connexion ERP/SAP.|كشف بالقواعد على الصلاحيات المستوردة فقط. لا يوجد ربط مع ERP/SAP.
+dormant|Dormant (>90 days)|Dormant (>90 jours)|خامل (>90 يومًا)
+privNoMfa|Privileged without MFA|Privilégié sans MFA|صلاحيات عالية بدون MFA
+excess|Excessive permissions|Permissions excessives|صلاحيات مفرطة
+noReview|Access review incomplete|Revue d'accès incomplète|مراجعة الوصول غير مكتملة
+csvNote|CSV columns: id,name,role,perms (separated by ;),mfa,priv,last,review|Colonnes CSV : id,name,role,perms (séparées par ;),mfa,priv,last,review|أعمدة CSV: id,name,role,perms (مفصولة بـ ;),mfa,priv,last,review
+fwNote|Self-assessment conceptually aligned with ISO/IEC 27001:2022, NIST CSF 2.0, COBIT and CIS Controls. Not a certification.|Auto-évaluation alignée conceptuellement sur ISO/IEC 27001:2022, NIST CSF 2.0, COBIT et CIS Controls. Pas une certification.|تقييم ذاتي متوافق مفاهيميًا مع ISO 27001 وNIST CSF 2.0 وCOBIT وCIS. ليس شهادة.
+gaps|Gaps & recommended actions|Écarts & actions recommandées|الفجوات والإجراءات الموصى بها
+act1|Ad hoc activities. Assign an owner, document a basic procedure and start keeping evidence.|Activités ponctuelles. Désigner un responsable, documenter une procédure de base et conserver les preuves.|أنشطة غير منظمة. عيّن مسؤولًا ووثّق إجراءً أساسيًا وابدأ بحفظ الأدلة.
+act2|Practices exist but are inconsistent. Formalize the process, define roles and schedule regular reviews.|Pratiques existantes mais irrégulières. Formaliser le processus, définir les rôles et planifier des revues régulières.|ممارسات موجودة لكنها غير متسقة. أضفِ الطابع الرسمي على العملية وحدد الأدوار وجدول مراجعات دورية.
+act3|Documented and approved. Define KPIs, measure performance and test operating effectiveness.|Documenté et approuvé. Définir des indicateurs, mesurer la performance et tester l'efficacité opérationnelle.|موثق ومعتمد. حدد مؤشرات أداء وقِس الأداء واختبر فعالية التشغيل.
+act4|Monitored with metrics. Automate controls and use trend analysis to drive improvements.|Suivi par des indicateurs. Automatiser les contrôles et exploiter les tendances pour s'améliorer.|مراقب بمؤشرات. أتمتة الضوابط واستخدام تحليل الاتجاهات للتحسين.
+act5|Continuous improvement in place. Maintain it with periodic benchmarking and independent assurance.|Amélioration continue en place. Maintenir par des benchmarks périodiques et une assurance indépendante.|تحسين مستمر قائم. حافظ عليه بمقارنات دورية وتأكيد مستقل.
+lv1|Initial|Initial|أولي
+lv2|Developing|En développement|قيد التطور
+lv3|Defined|Défini|محدد
+lv4|Managed|Maîtrisé|مُدار
+lv5|Optimized|Optimisé|مُحسّن
+sampleBanner|SAMPLE control library – illustrative only, not official standard text. Import your own authorized library via CSV.|Bibliothèque ÉCHANTILLON – illustrative, pas le texte officiel des normes. Importez votre bibliothèque autorisée en CSV.|مكتبة عيّنة توضيحية فقط وليست نص المعيار الرسمي. استورد مكتبتك المرخصة بملف CSV.
+report|Audit report|Rapport d'audit|تقرير التدقيق
+print|Print / PDF|Imprimer / PDF|طباعة / PDF
+back|Back|Retour|رجوع
+org|Organization|Organisation|المؤسسة
+mission|Mission|Mission|المهمة
+objective|Objectives|Objectifs|الأهداف
+scope|Scope|Périmètre|النطاق
+exec|Executive summary|Synthèse|الملخص التنفيذي
+concl|Overall conclusion|Conclusion générale|الاستنتاج العام
+dateNote|Date-range filter not implemented; dashboard shows all stored data.|Filtre de dates non implémenté ; le tableau affiche toutes les données.|فلتر التاريخ غير مفعّل؛ تُعرض كل البيانات.
+imported|records imported|enregistrements importés|سجلات مستوردة
+badFile|Invalid file|Fichier invalide|ملف غير صالح
+dupId|ID already exists|Cet ID existe déjà|المعرف موجود مسبقًا
+noChart|Charts need an internet connection (Chart.js CDN)|Les graphiques nécessitent internet (CDN Chart.js)|الرسوم تحتاج اتصالًا بالإنترنت
+id|ID|ID|المعرف
+domain|Domain|Domaine|المجال
+desc|Description|Description|الوصف
+owner|Owner|Responsable|المسؤول
+design|Design|Conception|التصميم
+oper|Operating|Fonctionnement|التشغيل
+evidence|Evidence|Preuve|الدليل
+comment|Auditor comments|Commentaires|تعليقات المدقق
+_status|Classification|Classification|التصنيف
+title|Title|Titre|العنوان
+cat|Category|Catégorie|الفئة
+system|System|Système|النظام
+L|Likelihood|Probabilité|الاحتمال
+I|Impact|Impact|الأثر
+rL|Residual L|Prob. résiduelle|احتمال متبقٍ
+rI|Residual I|Impact résiduel|أثر متبقٍ
+_inh|Inherent|Inhérent|كامن
+_res|Residual|Résiduel|متبقٍ
+_lvl|Level|Niveau|المستوى
+controls_|Existing controls|Contrôles existants|الضوابط الحالية
+treatment|Treatment|Traitement|المعالجة
+due|Due date|Échéance|الاستحقاق
+status|Status|Statut|الحالة
+name|Name|Nom|الاسم
+role|Role|Rôle|الدور
+perms|Permissions|Permissions|الصلاحيات
+mfa|MFA|MFA|MFA
+priv|Privileged|Privilégié|متميز
+last|Last login|Dernière connexion|آخر دخول
+review|Reviewed|Revu|تمت المراجعة
+_flags|Risk flags|Alertes|المؤشرات
+sev|Severity|Sévérité|الخطورة
+progress|Progress %|Avancement %|التقدم %
+criteria|Criteria|Critère|المعيار
+condition|Condition|Constat|الحالة الراهنة
+cause|Cause|Cause|السبب
+consequence|Consequence|Conséquence|النتيجة
+rec|Recommendation|Recommandation|التوصية
+fw|Framework|Référentiel|الإطار
+ref|Reference|Référence|المرجع
+mapTo|Mapped to|Mappé à|مطابق مع
+rel|Relationship|Relation|العلاقة
+a|Function A|Fonction A|الوظيفة أ
+b|Function B|Fonction B|الوظيفة ب
+mitig|Mitigation|Atténuation|التخفيف
+user|User|Utilisateur|المستخدم
+funcs|Conflicting functions|Fonctions en conflit|الوظائف المتعارضة
+level|Risk level|Niveau de risque|مستوى الخطورة
+Effective|Effective|Efficace|فعّال
+Partial|Partially effective|Partiellement efficace|فعّال جزئيًا
+Ineffective|Ineffective|Inefficace|غير فعّال
+NotTested|Not tested|Non testé|لم يُختبر
+Low|Low|Faible|منخفض
+Medium|Medium|Moyen|متوسط
+High|High|Élevé|عالٍ
+Critical|Critical|Critique|حرج
+Open|Open|Ouvert|مفتوح
+In Progress|In progress|En cours|قيد التنفيذ
+Closed|Closed|Clôturé|مغلق
+Compliant|Compliant|Conforme|مطابق
+Non-compliant|Non-compliant|Non conforme|غير مطابق
+Y|Yes|Oui|نعم
+N|No|Non|لا
+Mitigate|Mitigate|Atténuer|تخفيف
+Accept|Accept|Accepter|قبول
+Transfer|Transfer|Transférer|نقل
+Avoid|Avoid|Éviter|تجنب
+Equivalent|Equivalent|Équivalent|مكافئ
+Partially Similar|Partially similar|Partiellement similaire|مشابه جزئيًا
+Complementary|Complementary|Complémentaire|مكمّل
+Framework-Specific|Framework-specific|Spécifique au référentiel|خاص بالإطار
+Access|Access management|Gestion des accès|إدارة الوصول
+Change|Change management|Gestion des changements|إدارة التغيير
+Backup|Backup & DR|Sauvegarde & PRA|النسخ الاحتياطي والتعافي
+Operations|IT operations|Exploitation IT|عمليات تقنية المعلومات
+Governance|Governance|Gouvernance|الحوكمة
+Risk Management|Risk management|Gestion des risques|إدارة المخاطر
+Asset Management|Asset management|Gestion des actifs|إدارة الأصول
+Identity & Access|Identity & access|Identité & accès|الهوية والوصول
+Data Protection|Data protection|Protection des données|حماية البيانات
+Network Security|Network security|Sécurité réseau|أمن الشبكات
+Incident Response|Incident response|Réponse aux incidents|الاستجابة للحوادث
+Business Continuity|Business continuity|Continuité d'activité|استمرارية الأعمال
+Vulnerability Management|Vulnerability management|Gestion des vulnérabilités|إدارة الثغرات
+Security Awareness|Security awareness|Sensibilisation|التوعية الأمنية`;
+const L={en:{},fr:{},ar:{}};
+T.split('\n').forEach(l=>{const p=l.split('|');L.en[p[0]]=p[1];L.fr[p[0]]=p[2];L.ar[p[0]]=p[3]});
+let lang=localStorage.getItem('isat_lang')||'en';
+const t=k=>(L[lang]&&L[lang][k])||L.en[k]||k;
+
+/* ---------- constants & helpers ---------- */
+const ST=['Effective','Partial','Ineffective','NotTested'],SEV=['Critical','High','Medium','Low'],YN=['Y','N'],OS=['Open','In Progress','Closed'];
+const DOM=['Governance','Risk Management','Asset Management','Identity & Access','Data Protection','Network Security','Incident Response','Business Continuity','Vulnerability Management','Security Awareness'];
+const FWS=['ISO 27001','ISO 27002','NIST CSF 2.0','COBIT','CIS Controls','SWIFT CSCF'];
+const REL=['Equivalent','Partially Similar','Complementary','Framework-Specific'];
+const CLS=Object.assign(Object.create(null),{Effective:'g',Compliant:'g',Low:'g',Closed:'g',Partial:'y',Medium:'y','In Progress':'y',High:'o',Open:'o',Ineffective:'r',Critical:'r','Non-compliant':'r',NotTested:'n'});
+const $=s=>document.querySelector(s);
+function h(tag,a={},...k){const e=document.createElement(tag);for(const[x,v]of Object.entries(a)){if(v==null||v===false)continue;if(x==='class')e.className=v;else if(x.startsWith('on'))e[x]=v;else e.setAttribute(x,v)}k.flat(9).forEach(c=>e.append(c instanceof Node?c:document.createTextNode(c??'')));return e}
+const cst=c=>{const v=[c.design,c.oper];return v.includes('Ineffective')?'Ineffective':v.includes('Partial')?'Partial':v.includes('NotTested')?'NotTested':'Effective'};
+const lvl=s=>s>=17?'Critical':s>=10?'High':s>=5?'Medium':'Low';
+const score=()=>{const m=S.controls.map(cst).filter(x=>x!='NotTested');return m.length?Math.round(m.reduce((a,x)=>a+(x=='Effective'?1:x=='Partial'?.5:0),0)/m.length*100):0};
+const matAvg=()=>S.mat.reduce((a,b)=>a+b,0)/S.mat.length;
+const compPct=fw=>{const i=S.comp.filter(c=>!fw||c.fw==fw);return i.length?Math.round(i.reduce((a,c)=>a+(c.status=='Compliant'?1:c.status=='Partial'?.5:0),0)/i.length*100):0};
+const flags=u=>{const f=[],p=u.perms.split(';').map(x=>x.trim()).filter(Boolean);if((Date.now()-new Date(u.last))/864e5>90)f.push('dormant');if(u.priv=='Y'&&u.mfa!='Y')f.push('privNoMfa');if(p.length>=3)f.push('excess');if(u.review!='Y')f.push('noReview');return f};
+const toCSV=(rows,keys)=>[keys.join(','),...rows.map(r=>keys.map(k=>'"'+String(r[k]??'').replace(/"/g,'""').replace(/^([=+\-@])/,"'$1")+'"').join(','))].join('\n');
+function dl(name,text,mime='text/csv'){const a=h('a',{href:URL.createObjectURL(new Blob([text],{type:mime})),download:name});document.body.append(a);a.click();a.remove()}
+function parseCSV(s){const rows=[];let r=[],f='',q=false;for(let i=0;i<s.length;i++){const c=s[i];if(q){if(c=='"'){if(s[i+1]=='"'){f+='"';i++}else q=false}else f+=c}else if(c=='"')q=true;else if(c==','){r.push(f);f=''}else if(c=='\n'||c=='\r'){if(c=='\r'&&s[i+1]=='\n')i++;r.push(f);f='';if(r.some(x=>x))rows.push(r);r=[]}else f+=c}r.push(f);if(r.some(x=>x))rows.push(r);return rows}
+function pick(accept,cb){const i=h('input',{type:'file',accept,style:'display:none'});document.body.append(i);i.oncancel=()=>i.remove();i.onchange=()=>{const f=i.files[0];i.remove();if(!f)return;const r=new FileReader();r.onload=()=>cb(String(r.result));r.readAsText(f)};i.click()}
+
+/* ---------- demo data (fictional) ---------- */
+function demo(){
+ const E={E:'Effective',P:'Partial',I:'Ineffective',N:'NotTested'},pre={Access:'AC',Change:'CM',Backup:'BK',Operations:'OP'},own={Access:'IAM Lead',Change:'Change Manager',Backup:'Infrastructure Lead',Operations:'IT Ops Manager'},cnt={};
+ const controls=[['Access','User provisioning requires documented approval','EE'],['Access','Leavers deprovisioned within 48 hours','PI'],['Access','Privileged access reviewed quarterly','EP'],['Access','Central password policy enforced','EE'],['Access','MFA on remote and admin access','PP'],['Access','Periodic user access review','PN'],['Change','Changes formally requested','EE'],['Change','Changes approved by CAB','EP'],['Change','Testing before deployment','PP'],['Change','Developers restricted from production','EE'],['Change','Emergency changes approved retroactively','II'],['Change','Change log traceability','EN'],['Backup','Backup policy approved','EE'],['Backup','Backup job monitoring','EP'],['Backup','Restoration tests performed','PI'],['Backup','DR plan tested annually','PN'],['Backup','BCP approved and updated','EE'],['Operations','Job scheduling monitored','EE'],['Operations','Incident management process','EP'],['Operations','Security logs reviewed','PI'],['Operations','Infrastructure availability monitoring','EE']]
+ .map(([d,s,x])=>{const p=pre[d];cnt[p]=(cnt[p]||0)+1;return{id:p+'-0'+cnt[p],domain:d,desc:s,owner:own[d],design:E[x[0]],oper:E[x[1]],evidence:'EV-'+p+cnt[p],comment:''}});
+ const risks=[['Ransomware attack','Cyber','File servers',4,5,3,4],['Unpatched ERP vulnerabilities','Cyber','ERP',4,4,3,3],['Excess privileged access','Access','ERP',4,4,2,3],['Weak vendor oversight','Third party','HR cloud',3,4,2,3],['Data center outage','Availability','Core DC',2,5,1,4],['Backup restore failure','Availability','Backup',3,5,2,4],['Phishing compromise','Cyber','Email',5,4,3,3],['Unauthorized production change','Change','ERP',3,4,2,2],['Customer data leakage','Data','CRM',3,5,2,4],['Dormant account misuse','Access','Directory',4,3,2,2],['Log monitoring gaps','Operations','SIEM',3,3,2,2],['Shadow IT','Governance','Endpoints',4,3,3,2],['Fraud via SoD conflict','Fraud','ERP',3,5,2,4],['Regulatory non-compliance','Compliance','All',2,4,1,3],['End-of-life software','Technology','Servers',4,3,3,2]]
+ .map((r,i)=>({id:'R-'+String(i+1).padStart(2,'0'),title:r[0],desc:'Fictional demo risk: '+r[0],cat:r[1],system:r[2],L:r[3],I:r[4],controls:'See ITGC register',rL:r[5],rI:r[6],owner:i%2?'CISO':'IT Manager',treatment:'Mitigate',due:'2026-12-31',status:'Open'}));
+ const users=[['A. Ben Salah','AP Clerk','Create Vendor;Approve Payment','Y','N','2026-11-01','Y'],['S. Trabelsi','AP Manager','Approve Payment;Approve Invoice','Y','N','2026-11-05','Y'],['K. Mansour','Buyer','Create PO;Approve PO','N','N','2026-10-28','N'],['L. Jlassi','Accountant','Create Invoice;Approve Invoice','Y','N','2026-11-03','Y'],['M. Gharbi','Treasury','Maintain Vendor Bank;Execute Payment','Y','N','2026-11-06','Y'],['N. Hamdi','IT Admin','Create User;Approve User Access;Admin DB','N','Y','2026-11-07','N'],['R. Dridi','HR Officer','Create Employee','Y','N','2026-11-04','Y'],['F. Karray','DBA','Admin DB;Backup Admin','Y','Y','2026-11-07','Y'],['H. Chebbi','Sales','Create Sales Order','Y','N','2026-11-02','Y'],['Y. Zouari','Finance Director','Approve Payment;Approve PO','Y','N','2026-11-06','Y'],['I. Bouazizi','Ex-contractor','Create Vendor','N','N','2026-06-10','N'],['T. Messaoudi','Auditor','Read Only','Y','N','2026-11-05','Y'],['O. Naceur','Buyer','Create PO','Y','N','2026-11-01','Y'],['D. Khelifi','Security Admin','Admin Firewall;Create User','N','Y','2026-11-06','N'],['B. Sassi','AR Clerk','Create Invoice','Y','N','2026-10-30','Y'],['W. Hammami','Warehouse','Goods Receipt','Y','N','2026-07-15','N'],['C. Rekik','Controller','Approve Invoice;Post Journal;Create Journal','Y','N','2026-11-07','Y'],['E. Mejri','Procurement Mgr','Approve PO;Create Vendor','Y','N','2026-11-04','Y'],['G. Toumi','Service Account','Admin DB;Batch Run','N','Y','2026-11-08','N'],['P. Oueslati','Intern','Read Only','N','N','2026-04-01','N']]
+ .map((u,i)=>({id:'U-'+String(i+1).padStart(2,'0'),name:u[0],role:u[1],perms:u[2],mfa:u[3],priv:u[4],last:u[5],review:u[6]}));
+ const rules=[['Create Vendor','Approve Payment','High'],['Create PO','Approve PO','High'],['Create Invoice','Approve Invoice','High'],['Maintain Vendor Bank','Execute Payment','Critical'],['Create User','Approve User Access','Critical'],['Create Journal','Post Journal','High'],['Create Vendor','Approve PO','Medium'],['Goods Receipt','Approve Invoice','Medium'],['Admin DB','Approve User Access','High'],['Create Employee','Run Payroll','High']]
+ .map((r,i)=>({id:'SOD-'+String(i+1).padStart(2,'0'),a:r[0],b:r[1],level:r[2],desc:r[0]+' and '+r[1]+' held by one user may allow undetected fraud or error.',mitig:'Separate the duties or add an independent compensating review.'}));
+ const fo=[['Leavers keep access beyond 48 hours','High','In Progress',40],['Emergency changes lack retroactive approval','High','Open',0],['Backup restoration not tested','Critical','Open',10],['Privileged users without MFA','Critical','Open',20],['Security logs not reviewed','Medium','In Progress',50],['SoD conflicts in ERP','High','Open',0],['Dormant accounts still active','Medium','Closed',100],['Access review incomplete','Medium','In Progress',60],['DR plan not tested','High','Open',0],['Password policy exceptions','Low','Closed',100],['Change test evidence missing','Medium','Open',10],['Shared service accounts','High','In Progress',30],['Patch SLA breaches','High','Open',15],['Vendor risk assessments outdated','Low','Open',0],['Incidents lack root cause','Low','Closed',100]];
+ const findings=fo.map((f,i)=>({id:'F-'+String(i+1).padStart(2,'0'),title:f[0],sev:f[1],owner:i%2?'CISO':'IT Manager',due:'2026-12-'+String(10+i).padStart(2,'0'),status:f[2],progress:f[3],criteria:'Approved IT policy and ITGC requirement (fictional).',condition:f[0]+'.',cause:'Control not consistently enforced.',consequence:'Increased exposure to unauthorized activity or service disruption.',rec:'Define, enforce and monitor the control; report progress to management.'}));
+ const comp=[['ISO 27001','Access control policy','Compliant'],['ISO 27001','Supplier security reviews','Partial'],['ISO 27002','Logging and monitoring','Partial'],['ISO 27002','Backup management','Compliant'],['NIST CSF 2.0','Asset inventory','Partial'],['NIST CSF 2.0','Incident response plan','Non-compliant'],['COBIT','Change enablement','Compliant'],['COBIT','Managed security services','Partial'],['CIS Controls','Secure configuration','Partial'],['CIS Controls','Vulnerability management','Non-compliant'],['SWIFT CSCF','Restrict internet access','Compliant'],['SWIFT CSCF','Multi-factor for operators','Partial']]
+ .map((c,i)=>({id:'S-'+String(i+1).padStart(2,'0'),ref:'SAMPLE-'+(i+1),fw:c[0],title:c[1],status:c[2],evidence:'',mapTo:'SAMPLE-'+((i+4)%12+1),rel:REL[i%4]}));
+ return{demo:true,controls,risks,users,rules,findings,comp,mat:[3,2,3,3,2,2,3,2,2,2],meta:{org:'Demo Corp (fictional)',mission:'FY2026 ITGC & cybersecurity review',scope:'ERP, directory, backup and network infrastructure',objective:'Assess design and operating effectiveness of key IT controls',conclusion:'Controls are partially effective; remediation of critical and high findings is required.'}}
+}
+let S;
+try{S=JSON.parse(localStorage.getItem('isat_data'));if(!S||!Array.isArray(S.controls))S=demo()}catch(e){S=demo()}
+const save=()=>{try{localStorage.setItem('isat_data',JSON.stringify(S))}catch(e){alert('Storage error: '+e.message)}};
+const nid=(key,p)=>{let n=S[key].length+1,id;do{id=p+'-'+String(n++).padStart(2,'0')}while(S[key].some(x=>x.id==id));return id};
+document.documentElement.dataset.theme=localStorage.getItem('isat_theme')||'light';
+
+/* ---------- generic CRUD ---------- */
+function form(key,cfg,rec,done){
+ const ov=h('div',{class:'ov'}),ins={},err=h('div',{class:'er'});
+ const fs=cfg.fields.map(([k,ty,o])=>{
+  const i=ty=='s'?h('select',{},o.map(v=>h('option',{value:v},t(String(v))))):ty=='a'?h('textarea',{rows:2}):h('input',{type:ty=='d'?'date':'text'});
+  i.value=rec?(rec[k]??''):(ty=='s'?o[0]:k=='id'?nid(key,cfg.p):ty=='n'?o[0]:'');
+  ins[k]=i;return h('label',{class:'f'},t(k=='controls'?'controls_':k),i)});
+ const ok=()=>{const n={};
+  for(const[k,ty,o]of cfg.fields){let v=ins[k].value.trim();
+   if(ty=='s'&&typeof o[0]=='number')v=+v;
+   if(ty=='n'){v=+v;if(ins[k].value.trim()===''||!(v>=o[0]&&v<=o[1])){err.textContent=t(k)+': '+o[0]+'–'+o[1];return}}
+   if((k==cfg.fields[0][0]||k==cfg.fields[1][0])&&ty!='s'&&!v){err.textContent=t(k)+' *';return}
+   n[k]=v}
+  if(!rec&&S[key].some(x=>x.id==n.id)){err.textContent=t('dupId');return}
+  rec?Object.assign(rec,n):S[key].push(n);save();ov.remove();done()};
+ ov.append(h('div',{class:'mdl'},h('h3',{},t(rec?'edit':'add')),fs,err,h('div',{class:'bar'},h('button',{class:'btn',onclick:ok},t('save')),h('button',{class:'btn s',onclick:()=>ov.remove()},t('cancel')))));
+ document.body.append(ov)}
+function crud(key,cfg){
+ let q='',fv='';const tbl=h('div',{class:'tw'});
+ const list=()=>S[key].filter(r=>(!q||JSON.stringify(r).toLowerCase().includes(q))&&(!fv||String(r[cfg.filter])==fv));
+ const cell=(r,c)=>{const v=cfg.calc&&cfg.calc[c]?cfg.calc[c](r):r[c];
+  if(Array.isArray(v))return h('td',{},v.map(f=>h('span',{class:'b r'},t(f))));
+  return h('td',{},CLS[v]?h('span',{class:'b '+CLS[v]},t(v)):(L.en[v]&&(v=='Y'||v=='N')?t(v):String(v??'')))};
+ const draw=()=>{const rs=list();tbl.replaceChildren(h('table',{},h('thead',{},h('tr',{},cfg.cols.map(c=>h('th',{},t(c))),h('th',{}))),h('tbody',{},rs.length?rs.map(r=>h('tr',{},cfg.cols.map(c=>cell(r,c)),h('td',{style:'white-space:nowrap'},h('button',{class:'ic',title:t('edit'),onclick:()=>form(key,cfg,r,render)},h('i',{class:'fa fa-pen'})),h('button',{class:'ic',title:t('del'),onclick:()=>{if(confirm(t('confirm'))){S[key]=S[key].filter(x=>x!==r);save();render()}}},h('i',{class:'fa fa-trash'}))))):h('tr',{},h('td',{colspan:cfg.cols.length+1},t('none'))))))};
+ const bar=h('div',{class:'bar'},h('input',{placeholder:t('search'),oninput:e=>{q=e.target.value.toLowerCase();draw()}}));
+ if(cfg.filter){const vals=[...new Set(S[key].map(r=>r[cfg.filter]))];const s=h('select',{onchange:e=>{fv=e.target.value;draw()}},h('option',{value:''},t('all')),vals.map(v=>h('option',{value:v},t(String(v)))));bar.append(s)}
+ bar.append(h('button',{class:'btn',onclick:()=>form(key,cfg,null,render)},h('i',{class:'fa fa-plus'}),' '+t('add')),
+  h('button',{class:'btn s',onclick:()=>dl(key+'.csv',toCSV(S[key],cfg.fields.map(f=>f[0])))},h('i',{class:'fa fa-download'}),' '+t('exportCsv')));
+ if(cfg.imp)bar.append(h('button',{class:'btn s',onclick:()=>pick('.csv',txt=>{const rows=parseCSV(txt),hd=(rows[0]||[]).map(x=>x.replace(/^\uFEFF/,'').trim());let n=0;
+  rows.slice(1).forEach(r=>{const o={};for(const[k,ty,op]of cfg.fields){const i=hd.indexOf(k);let v=i>=0?(r[i]||'').trim():'';if(ty=='s'&&!op.map(String).includes(v))v=op[0];if(ty=='s'&&typeof op[0]=='number')v=+v;if(ty=='n'){v=+v;if(!(v>=op[0]&&v<=op[1]))v=op[0]}o[k]=v}
+   if(!o.id)o.id=nid(key,cfg.p);if(!S[key].some(x=>x.id==o.id)){S[key].push(o);n++}});
+  save();alert(n+' '+t('imported'));render()})},h('i',{class:'fa fa-upload'}),' '+t('importCsv')));
+ draw();return h('div',{class:'card'},bar,tbl)}
+const CF={
+ controls:{p:'CTL',fields:[['id','t'],['domain','s',['Access','Change','Backup','Operations']],['desc','a'],['owner','t'],['design','s',ST],['oper','s',ST],['evidence','t'],['comment','a']],cols:['id','domain','desc','design','oper','_status'],calc:{_status:cst},filter:'domain'},
+ risks:{p:'R',fields:[['id','t'],['title','t'],['desc','a'],['cat','t'],['system','t'],['L','s',[1,2,3,4,5]],['I','s',[1,2,3,4,5]],['controls','a'],['rL','s',[1,2,3,4,5]],['rI','s',[1,2,3,4,5]],['owner','t'],['treatment','s',['Mitigate','Accept','Transfer','Avoid']],['due','d'],['status','s',OS]],cols:['id','title','cat','_inh','_res','_lvl','owner','status'],calc:{_inh:r=>r.L*r.I,_res:r=>r.rL*r.rI,_lvl:r=>lvl(r.rL*r.rI)},filter:'cat'},
+ users:{p:'U',imp:1,fields:[['id','t'],['name','t'],['role','t'],['perms','a'],['mfa','s',YN],['priv','s',YN],['last','d'],['review','s',YN]],cols:['id','name','role','perms','mfa','priv','last','review','_flags'],calc:{_flags:flags},filter:'role'},
+ rules:{p:'SOD',fields:[['id','t'],['a','t'],['b','t'],['level','s',SEV],['desc','a'],['mitig','a']],cols:['id','a','b','level'],filter:'level'},
+ comp:{p:'S',imp:1,fields:[['id','t'],['ref','t'],['fw','s',FWS],['title','t'],['status','s',['Compliant','Partial','Non-compliant']],['evidence','a'],['mapTo','t'],['rel','s',REL]],cols:['ref','fw','title','status','mapTo','rel'],filter:'fw'},
+ findings:{p:'F',fields:[['id','t'],['title','t'],['sev','s',SEV],['owner','t'],['due','d'],['status','s',OS],['progress','n',[0,100]],['criteria','a'],['condition','a'],['cause','a'],['consequence','a'],['rec','a']],cols:['id','title','sev','owner','due','status','progress'],calc:{progress:r=>r.progress+'%'},filter:'sev'}
+};
+
+/* ---------- charts ---------- */
+function ch(type,labels,sets,opt={}){const cv=h('canvas');requestAnimationFrame(()=>{if(typeof Chart=='undefined'){cv.replaceWith(h('small',{},t('noChart')));return}const cs=getComputedStyle(document.body);Chart.defaults.color=cs.getPropertyValue('--mu').trim();Chart.defaults.borderColor=cs.getPropertyValue('--bd').trim();new Chart(cv,{type,data:{labels,datasets:sets},options:Object.assign({responsive:true,maintainAspectRatio:false},opt)})});return h('div',{class:'cv'},cv)}
+const COL={Effective:'#00A86B',Partial:'#d97706',Ineffective:'#dc2626',NotTested:'#94a3b8',Critical:'#dc2626',High:'#ea580c',Medium:'#d97706',Low:'#00A86B'};
+const cnt=(arr,keys)=>keys.map(k=>arr.filter(x=>x==k).length);
+const card=(title,...k)=>h('div',{class:'card'},h('h3',{},title),...k);
+
+/* ---------- pages ---------- */
+const PG={
+dash(){
+ const c=S.controls,st=c.map(cst),res=r=>r.rL*r.rI,rs=S.risks;
+ const K=[['kTotC',c.length,'fa-list-check'],['kTested',st.filter(x=>x!='NotTested').length,'fa-vial'],['kEff',cnt(st,['Effective'])[0],'fa-circle-check'],['kIneff',cnt(st,['Ineffective'])[0],'fa-circle-xmark'],['kRisks',rs.length,'fa-triangle-exclamation'],['kHigh',rs.filter(r=>res(r)>=10).length,'fa-fire'],['kOpen',S.findings.filter(f=>f.status!='Closed').length,'fa-folder-open'],['kMat',matAvg().toFixed(1)+' / 5','fa-shield-halved'],['kComp',compPct()+'%','fa-scale-balanced']];
+ const lv=['Low','Medium','High','Critical'],fw=FWS.filter(f=>S.comp.some(c=>c.fw==f));
+ return h('div',{},h('p',{class:'noprint',style:'color:var(--mu);font-size:12px'},t('dateNote')),
+  h('div',{class:'grid'},K.map(([k,v,i])=>h('div',{class:'card k'},h('i',{class:'fa '+i}),h('div',{},h('b',{},String(v)),h('span',{},t(k)))))),
+  h('div',{class:'grid g2'},
+   card(t('cRisk'),ch('bar',lv.map(t),[{label:t('inherent'),data:cnt(rs.map(r=>lvl(r.L*r.I)),lv),backgroundColor:'#0A2540'},{label:t('residual'),data:cnt(rs.map(r=>lvl(res(r))),lv),backgroundColor:'#00A86B'}])),
+   card(t('cCtl')+' – '+score()+'%',ch('doughnut',ST.map(t),[{data:cnt(st,ST),backgroundColor:ST.map(x=>COL[x])}])),
+   card(t('cComp'),ch('bar',fw,[{data:fw.map(compPct),backgroundColor:'#00A86B'}],{scales:{y:{max:100,min:0}},plugins:{legend:{display:false}}})),
+   card(t('cFind'),ch('doughnut',SEV.map(t),[{data:cnt(S.findings.map(f=>f.sev),SEV),backgroundColor:SEV.map(x=>COL[x])}]))),
+  h('div',{class:'grid g2'},
+   card(t('topRisks'),h('div',{class:'tw'},h('table',{},[...rs].sort((a,b)=>res(b)-res(a)).slice(0,5).map(r=>h('tr',{},h('td',{},r.id),h('td',{},r.title),h('td',{},h('span',{class:'b '+CLS[lvl(res(r))]},t(lvl(res(r)))))))))),
+   card(t('recentF'),h('div',{class:'tw'},h('table',{},S.findings.slice(-5).reverse().map(f=>h('tr',{},h('td',{},f.id),h('td',{},f.title),h('td',{},h('span',{class:'b '+CLS[f.sev]},t(f.sev)))))))))
+ )},
+controls(){return h('div',{},card(t('score'),h('b',{style:'font-size:28px;color:var(--em)'},score()+'%')),crud('controls',CF.controls))},
+risks(){
+ const g=h('div',{class:'hm'});for(let l=5;l>=1;l--)for(let i=1;i<=5;i++){const n=S.risks.filter(r=>r.L==l&&r.I==i).length;g.append(h('div',{class:'hc '+CLS[lvl(l*i)],title:t('L')+' '+l+' × '+t('I')+' '+i},n||''))}
+ const top=[...S.risks].sort((a,b)=>b.rL*b.rI-a.rL*a.rI).slice(0,5);
+ return h('div',{},h('div',{class:'grid g2'},card(t('heat'),g,h('small',{style:'color:var(--mu)'},t('L')+' ↑  ·  '+t('I')+' →')),
+  card(t('recs'),h('table',{},top.map(r=>{const l=lvl(r.rL*r.rI);return h('tr',{},h('td',{},r.id),h('td',{},r.title),h('td',{},h('span',{class:'b '+CLS[l]},t(l))),h('td',{},t('rec'+l)))})))),crud('risks',CF.risks))},
+iam(){
+ const f=S.users.map(flags).flat();
+ return h('div',{},h('div',{class:'grid'},['dormant','privNoMfa','excess','noReview'].map(k=>h('div',{class:'card k'},h('i',{class:'fa fa-user-shield'}),h('div',{},h('b',{},f.filter(x=>x==k).length),h('span',{},t(k)))))),
+  h('p',{style:'color:var(--mu);font-size:12px'},t('csvNote')),crud('users',CF.users))},
+sod(){
+ const out=[];let n=0;S.users.forEach(u=>{const p=u.perms.split(';').map(x=>x.trim().toLowerCase());S.rules.forEach(r=>{if(p.includes(r.a.toLowerCase())&&p.includes(r.b.toLowerCase()))out.push({id:'C-'+String(++n).padStart(3,'0'),user:u.id+' – '+u.name,rule:r.id,funcs:r.a+' + '+r.b,level:r.level,desc:r.desc,mitig:r.mitig})})});
+ const us=[...new Set(out.map(o=>o.user))],cols=['id','user','funcs','level','desc','mitig'];
+ return h('div',{},h('div',{class:'banner'},t('sodNote')),h('p',{style:'color:var(--mu);font-size:12px'},t('csvNote')),
+  h('div',{class:'grid'},SEV.map(s=>h('div',{class:'card k'},h('i',{class:'fa fa-code-compare'}),h('div',{},h('b',{},out.filter(o=>o.level==s).length),h('span',{},t(s)))))),
+  card(t('conflicts')+' ('+out.length+')',h('div',{class:'bar'},h('button',{class:'btn s',onclick:()=>dl('sod-findings.csv',toCSV(out,cols))},h('i',{class:'fa fa-download'}),' '+t('exportCsv'))),
+   h('div',{class:'tw'},h('table',{},h('thead',{},h('tr',{},cols.map(c=>h('th',{},t(c))))),h('tbody',{},out.length?out.map(o=>h('tr',{},cols.map(c=>h('td',{},c=='level'?h('span',{class:'b '+CLS[o.level]},t(o.level)):o[c])))):h('tr',{},h('td',{colspan:6},t('none'))))))),
+  card(t('matrix'),h('div',{class:'tw'},h('table',{},h('thead',{},h('tr',{},h('th',{},t('user')),S.rules.map(r=>h('th',{},r.id)))),h('tbody',{},us.map(u=>h('tr',{},h('td',{},u),S.rules.map(r=>{const x=out.find(o=>o.user==u&&o.rule==r.id);return h('td',{},x?h('span',{class:'b '+CLS[x.level]},'●'):'')}))))))),
+  h('h3',{},t('rules')),crud('rules',CF.rules))},
+maturity(){
+ const gaps=DOM.map((d,i)=>[d,S.mat[i]]).sort((a,b)=>a[1]-b[1]);
+ return h('div',{},h('div',{class:'banner'},t('fwNote')),h('div',{class:'grid g2'},
+  card(t('kMat')+': '+matAvg().toFixed(1)+' / 5',h('table',{},DOM.map((d,i)=>h('tr',{},h('td',{},t(d)),h('td',{},h('select',{onchange:e=>{S.mat[i]=+e.target.value;save();render()}},[1,2,3,4,5].map(v=>h('option',{value:v,selected:S.mat[i]==v?'selected':null},v+' – '+t('lv'+v))))))))),
+  card(t('maturity'),ch('radar',DOM.map(t),[{data:S.mat,backgroundColor:'#00A86B44',borderColor:'#00A86B'}],{scales:{r:{min:0,max:5,ticks:{stepSize:1}}},plugins:{legend:{display:false}}}))),
+  card(t('gaps'),h('div',{class:'tw'},h('table',{},gaps.map(([d,v])=>h('tr',{},h('td',{},t(d)),h('td',{},h('span',{class:'b '+['','r','o','y','g','g'][v]},v+' – '+t('lv'+v))),h('td',{},t('act'+v))))))))},
+compliance(){
+ return h('div',{},h('div',{class:'banner'},t('sampleBanner')),h('div',{class:'grid'},FWS.map(f=>h('div',{class:'card k'},h('i',{class:'fa fa-scale-balanced'}),h('div',{},h('b',{},compPct(f)+'%'),h('span',{},f))))),crud('comp',CF.comp))},
+findings(){return h('div',{},h('div',{class:'bar'},h('button',{class:'btn',onclick:()=>{page='report';render()}},h('i',{class:'fa fa-file-lines'}),' '+t('report')),h('button',{class:'btn s',onclick:()=>dl('findings.json',JSON.stringify(S.findings,null,2),'application/json')},h('i',{class:'fa fa-download'}),' JSON')),crud('findings',CF.findings))},
+report(){
+ const m=S.meta,sec=(k,v)=>h('div',{},h('h3',{},t(k)),h('p',{},v)),f=S.findings;
+ return h('div',{class:'card rep'},h('div',{class:'bar noprint'},h('button',{class:'btn',onclick:()=>window.print()},h('i',{class:'fa fa-print'}),' '+t('print')),h('button',{class:'btn s',onclick:()=>{page='findings';render()}},t('back'))),
+  h('h2',{},t('report')),h('p',{},h('b',{},m.org)),sec('mission',m.mission),sec('objective',m.objective),sec('scope',m.scope),
+  sec('exec',`${t('findings')}: ${f.length} · ${t('kOpen')}: ${f.filter(x=>x.status!='Closed').length} · ${t('Critical')}/${t('High')}: ${f.filter(x=>x.sev=='Critical'||x.sev=='High').length} · ${t('score')}: ${score()}% · ${t('kMat')}: ${matAvg().toFixed(1)}/5`),
+  h('h3',{},t('findings')),SEV.flatMap(s=>f.filter(x=>x.sev==s)).map(x=>h('div',{class:'fd'},h('b',{},x.id+' – '+x.title+' '),h('span',{class:'b '+CLS[x.sev]},t(x.sev)),h('br'),['criteria','condition','cause','consequence','rec'].map(k=>h('div',{},h('b',{},t(k)+': '),x[k])),h('small',{},`${t('owner')}: ${x.owner} · ${t('due')}: ${x.due} · ${t('status')}: ${t(x.status)} · ${x.progress}%`))),
+  sec('concl',m.conclusion),h('p',{style:'color:var(--mu)'},'Mohamed - Accountant & Auditor | Ex-PwC'))},
+settings(){
+ const m=S.meta;
+ return h('div',{},card(t('report'),['org','mission','objective','scope','concl'].map(k=>{const key=k=='concl'?'conclusion':k;return h('label',{class:'f'},t(k),h('input',{value:m[key]||'',onchange:e=>{m[key]=e.target.value.trim();save()}}))})),
+  card(t('settings'),h('div',{class:'bar'},
+   h('button',{class:'btn',onclick:()=>dl('isat-backup.json',JSON.stringify(S,null,2),'application/json')},h('i',{class:'fa fa-download'}),' '+t('exportJson')),
+   h('button',{class:'btn s',onclick:()=>pick('.json',txt=>{try{const o=JSON.parse(txt);if(!['controls','risks','users','rules','findings','comp'].every(k=>Array.isArray(o[k]))||!Array.isArray(o.mat)||o.mat.length!=10)throw 0;S=o;S.meta=S.meta||{};save();render()}catch(e){alert(t('badFile'))}})},h('i',{class:'fa fa-upload'}),' '+t('importJson')),
+   h('button',{class:'btn s',onclick:()=>{if(confirm(t('resetDemo')+'?')){S=demo();save();render()}}},h('i',{class:'fa fa-rotate'}),' '+t('resetDemo')),
+   h('button',{class:'btn',style:'background:#dc2626',onclick:()=>{if(confirm(t('clearAll')+'?')){S={demo:false,controls:[],risks:[],users:[],rules:[],findings:[],comp:[],mat:DOM.map(()=>1),meta:{org:'',mission:'',scope:'',objective:'',conclusion:''}};save();render()}}},h('i',{class:'fa fa-trash'}),' '+t('clearAll'))),
+   h('p',{style:'color:var(--mu);font-size:12px'},'LocalStorage · 100% offline data · no AI · '+t('sample'))))}
+};
+const N=[['dash','fa-gauge-high'],['controls','fa-list-check'],['risks','fa-triangle-exclamation'],['iam','fa-user-shield'],['sod','fa-code-compare'],['maturity','fa-shield-halved'],['compliance','fa-scale-balanced'],['findings','fa-clipboard-list'],['settings','fa-gear']];
+let page='dash';
+
+/* ---------- shell ---------- */
+function render(){
+ document.documentElement.lang=lang;document.documentElement.dir=lang=='ar'?'rtl':'ltr';document.title=t('app');
+ const dark=document.documentElement.dataset.theme=='dark';
+ const side=h('aside',{class:'side'},h('h1',{},h('i',{class:'fa fa-shield-halved'}),' '+t('app')),
+  N.map(([k,ic])=>h('button',{class:'nav'+(page==k||(page=='report'&&k=='findings')?' on':''),onclick:()=>{page=k;render()}},h('i',{class:'fa '+ic}),t(k))),
+  h('div',{class:'sig'},'Mohamed - Accountant & Auditor | Ex-PwC'));
+ const top=h('header',{class:'top noprint'},h('button',{class:'ic menu',onclick:()=>side.classList.toggle('open')},h('i',{class:'fa fa-bars'})),
+  h('span',{},'Toolkit › '+t(page)),h('span',{class:'sp'}),
+  ['en','fr','ar'].map(l=>h('button',{class:'lb'+(l==lang?' on':''),onclick:()=>{lang=l;localStorage.setItem('isat_lang',l);render()}},l.toUpperCase())),
+  h('button',{class:'ic',title:'Light / Dark',onclick:()=>{const d=document.documentElement.dataset.theme=='dark'?'light':'dark';document.documentElement.dataset.theme=d;localStorage.setItem('isat_theme',d);render()}},h('i',{class:'fa '+(dark?'fa-sun':'fa-moon')})));
+ $('#app').replaceChildren(h('div',{class:'app'},side,h('main',{class:'main'},top,h('div',{class:'pg fade'},S.demo?h('div',{class:'banner noprint'},t('sample')):'',PG[page]()),h('div',{class:'foot'},'Mohamed - Accountant & Auditor | Ex-PwC'))));
+}
+render();
+</script>
+</body>
+</html>
