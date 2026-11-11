@@ -38,11 +38,17 @@ jobs:
           test -s dist/mohamedmnejja-portfolio/404.html
           grep -q '<base href="/">' dist/mohamedmnejja-portfolio/404.html
 
-      - name: Add deep-link entry points
-        run: |
-          for route in business-plan-profitability linkedin-profile-analytics chart-of-accounts-ai audit-sampling-tool internal-audit-risk-management-system is-audit-cybersecurity-toolkit esg-sustainability-platform; do
+            - name: Add Angular deep-link entry points
+          run: |
+          for route in \
+            business-plan-profitability \
+            linkedin-profile-analytics \
+            chart-of-accounts-ai \
+            opportunities
+          do
             mkdir -p "dist/mohamedmnejja-portfolio/$route"
-            cp dist/mohamedmnejja-portfolio/index.html "dist/mohamedmnejja-portfolio/$route/index.html"
+            cp dist/mohamedmnejja-portfolio/index.html \
+               "dist/mohamedmnejja-portfolio/$route/index.html"
           done
 
       - name: Add .nojekyll
