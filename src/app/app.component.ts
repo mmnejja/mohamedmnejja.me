@@ -23,10 +23,26 @@ export class AppComponent implements OnInit {
       route: '/', 
       fragment: 'projects',
       sublinks: [
-        { label: 'Chart of Accounts', route: '/', fragment: 'chart-of-accounts' },
+        { label: 'Chart of Accounts', route: '/chart-of-accounts-ai', fragment: undefined },
         {
           label: 'Business Plan Profitability',
           route: '/business-plan-profitability'
+        },
+        {
+          label: 'Audit Sampling Tool',
+          route: '/audit-sampling-tool'
+        },
+        {
+          label: 'Internal Audit & Risk Management System',
+          route: '/internal-audit-risk-management-system'
+        },
+        {
+          label: 'IS Audit & Cybersecurity Toolkit',
+          route: '/is-audit-cybersecurity-toolkit'
+        },
+        {
+          label: 'ESG Sustainability Platform',
+          route: '/esg-sustainability-platform'
         }
       ]
     },

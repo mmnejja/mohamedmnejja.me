@@ -36,6 +36,34 @@ export class HomePageComponent {
       tags: ['Finance', 'Planning', 'Profitability'],
       actionLabel: 'Open Business Plan',
       route: '/business-plan-profitability'
+    },
+    {
+      title: 'Audit Sampling Tool',
+      description: 'A professional audit sampling application designed to automate audit sample selection, calculate sample sizes, assess transaction risks, and generate audit working papers.',
+      tags: ['Audit', 'Sampling', 'ISA 530', 'Financial Audit'],
+      actionLabel: 'Open Audit Sampling Tool',
+      route: '/audit-sampling-tool'
+    },
+    {
+      title: 'Internal Audit & Risk Management System',
+      description: 'A comprehensive internal audit and risk management platform designed to support audit planning, risk assessment, internal controls evaluation, audit execution, and reporting.',
+      tags: ['Internal Audit', 'Risk Management', 'Internal Control', 'Audit Planning'],
+      actionLabel: 'Open IARMS',
+      route: '/internal-audit-risk-management-system'
+    },
+    {
+      title: 'IS Audit & Cybersecurity Toolkit',
+      description: 'A comprehensive toolkit designed to support Information Systems auditing, IT controls assessment, cybersecurity reviews, risk identification, and security assessment activities.',
+      tags: ['IT Audit', 'Cybersecurity', 'Information Systems', 'Risk Assessment'],
+      actionLabel: 'Open IS Audit & Cybersecurity Toolkit',
+      route: '/is-audit-cybersecurity-toolkit'
+    },
+    {
+      title: 'ESG Sustainability Platform',
+      description: 'An integrated ESG and sustainability management platform for monitoring Environmental, Social, and Governance performance, assessing ESRS compliance, calculating carbon emissions, evaluating double materiality, benchmarking performance, and generating sustainability reports.',
+      tags: ['ESG', 'Sustainability', 'CSRD / ESRS', 'Carbon Accounting', 'Double Materiality', 'Reporting'],
+      actionLabel: 'Open ESG Sustainability Platform',
+      route: '/esg-sustainability-platform'
     }
   ];
 

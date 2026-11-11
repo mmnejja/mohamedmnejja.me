@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IARMS – Integrated Audit & Risk Management System</title>
+<style>
+:root{--bg:#F5F7FA;--card:#FFFFFF;--tx:#1E293B;--bd:#E2E8F0;--pri:#0A2540;--acc:#00A86B;--mut:#64748B;--r:#DC2626;--a:#F59E0B;--x:#7F1D1D}
+[data-theme=dark]{--bg:#0C1928;--card:#132338;--tx:#E2E8F0;--bd:#26405C;--mut:#94A3B8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 "Segoe UI",Tahoma,Arial,sans-serif;transition:background .3s,color .3s}
+[dir=rtl] body{font-family:Tahoma,"Segoe UI",Arial,sans-serif}
+.app{display:flex;min-height:100vh}
+.side{width:240px;background:var(--pri);color:#fff;flex-shrink:0;padding:16px 0;transition:transform .3s}
+.logo{padding:0 20px 16px;border-bottom:1px solid #ffffff22}
+.logo b{font-size:22px;color:var(--acc);display:block}
+.logo small{opacity:.7;font-size:11px}
+nav a{display:flex;gap:10px;padding:11px 20px;color:#cbd5e1;cursor:pointer;border-inline-start:3px solid transparent;transition:.2s}
+nav a:hover{background:#ffffff12}
+nav a.on{background:#ffffff1f;color:#fff;border-inline-start-color:var(--acc)}
+.wrap{flex:1;min-width:0}
+.top{display:flex;align-items:center;gap:12px;background:var(--card);border-bottom:1px solid var(--bd);padding:10px 20px;position:sticky;top:0;z-index:5}
+.top h1{font-size:18px;margin:0;flex:1}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+.ib,.b{border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:6px 12px;border-radius:6px;cursor:pointer;font:inherit;transition:.2s}
+.ib:hover,.b:hover{border-color:var(--acc)}
+.ib.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.b.p{background:var(--acc);color:#fff;border-color:var(--acc)}
+.b.d{color:var(--r)}
+.menu{display:none}
+main{padding:20px;transition:opacity .25s,transform .25s}
+main.fade{opacity:0;transform:translateY(8px)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;box-shadow:0 1px 3px #0000000d;margin-bottom:16px}
+.card h4{margin:0 0 10px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px;border-top:3px solid var(--acc)}
+.kpi b{font-size:26px;display:block}.kpi span{color:var(--mut);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.flow{background:var(--pri);color:#fff;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px}
+.row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:12px}
+.row span:first-child{width:110px;flex-shrink:0}
+.row div{flex:1;background:var(--bd);border-radius:4px;height:14px;overflow:hidden}
+.row i{display:block;height:100%;background:var(--pri);transition:width .5s}
+[data-theme=dark] .row i{background:#3b6a99}
+.row i.g{background:var(--acc)}.row i.a{background:var(--a)}.row i.r{background:var(--r)}.row i.x{background:var(--x)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:9px 10px;text-align:start;border-bottom:1px solid var(--bd);vertical-align:middle}
+th{font-size:12px;color:var(--mut);text-transform:uppercase;white-space:nowrap}
+tr:hover td{background:#00a86b0d}
+.bar{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.bar input,.bar select,form input,form select,form textarea,.m select,.m input{padding:8px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--tx);font:inherit;width:100%}
+.bar input{flex:1;min-width:180px;width:auto}
+.bg{display:inline-block;padding:2px 9px;border-radius:12px;font-size:12px;background:var(--bd);color:var(--tx);white-space:nowrap}
+.bg.g{background:#00a86b26;color:var(--acc)}.bg.a{background:#f59e0b26;color:#B45309}.bg.r{background:#dc262626;color:var(--r)}.bg.x{background:var(--x);color:#fff}
+[data-theme=dark] .bg.a{color:#FBBF24}
+.demo{font-size:10px;background:var(--pri);color:#fff;border-radius:4px;padding:1px 5px;margin-inline-start:4px}
+.pb{background:var(--bd);border-radius:10px;height:16px;position:relative;min-width:90px}
+.pb i{display:block;height:100%;background:var(--acc);border-radius:10px;transition:width .4s}
+.pb b{position:absolute;inset:0;text-align:center;font-size:11px;line-height:16px}
+a.chip{color:var(--acc);cursor:pointer;margin-inline-end:6px;white-space:nowrap}
+a.chip:hover{text-decoration:underline}
+.hm{width:auto;margin:auto}.hm td{width:52px;height:46px;text-align:center;font-weight:700;color:#fff;cursor:pointer;border:2px solid var(--card)}
+.hm td.g{background:#00A86B}.hm td.a{background:#F59E0B}.hm td.r{background:#EA580C}.hm td.x{background:#B91C1C}
+.hm td:hover{opacity:.8}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:flex-start;justify-content:center;padding:30px 12px;overflow:auto;z-index:20}
+.modal.on{display:flex}
+.m{background:var(--card);color:var(--tx);border-radius:10px;padding:20px;width:100%;max-width:760px;animation:pop .2s}
+@keyframes pop{from{transform:scale(.96);opacity:0}}
+form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+form label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--mut)}
+form label.w,form .acts{grid-column:1/-1}
+.acts{display:flex;gap:8px;justify-content:flex-end}
+.kv th{width:35%}
+h5{margin:16px 0 6px;color:var(--acc)}
+#toast{position:fixed;bottom:20px;inset-inline-end:20px;z-index:30;display:flex;flex-direction:column;gap:6px}
+#toast div{background:var(--pri);color:#fff;padding:10px 16px;border-radius:6px;border-inline-start:4px solid var(--acc);animation:pop .2s}
+#toast div.er{border-color:var(--r)}
+.hd{display:none}
+.sig{padding:14px 20px;text-align:center;color:var(--mut);font-size:12px;font-weight:600;border-top:1px solid var(--bd)}
+@media(max-width:800px){.side{position:fixed;inset-block:0;inset-inline-start:0;z-index:15;transform:translateX(-100%)}[dir=rtl] .side{transform:translateX(100%)}.side.open{transform:none}.menu{display:block}form{grid-template-columns:1fr}}
+@media print{.side,.top,.noprint,.b,.ib{display:none!important}.hd{display:block}main{padding:0}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="logo"><b>IARMS</b><small id="sub"></small></div>
+    <nav id="nav"></nav>
+  </aside>
+  <div class="wrap">
+    <header class="top">
+      <button class="ib menu" onclick="document.getElementById('side').classList.toggle('open')">☰</button>
+      <h1 id="title"></h1>
+      <div class="tools">
+        <button class="ib" onclick="setLang('en')" id="l-en">🇬🇧 EN</button>
+        <button class="ib" onclick="setLang('fr')" id="l-fr">🇫🇷 FR</button>
+        <button class="ib" onclick="setLang('ar')" id="l-ar">🇹🇳 AR</button>
+        <button class="ib" id="themeBtn" onclick="toggleTheme()"></button>
+      </div>
+    </header>
+    <main id="main"></main>
+    <footer class="sig">Mohamed - Accountant &amp; Auditor | Ex-PwC</footer>
+  </div>
+</div>
+<div id="modal" class="modal" onclick="if(event.target===this)closeM()"><div class="m" id="mbody"></div></div>
+<div id="toast"></div>
+<input type="file" id="imp" accept=".json" hidden>
+<script>
+'use strict';
+/* ===== IARMS – Integrated Audit & Risk Management System (vanilla JS, LocalStorage) ===== */
+const $=s=>document.querySelector(s), TODAY=new Date().toISOString().slice(0,10), dd=n=>new Date(Date.now()+n*864e5).toISOString().slice(0,10);
+const CAT=['Financial','Operational','Compliance','IT','Cybersecurity','Fraud'],DEP=['Finance','Accounting','HR','Procurement','IT','Operations'];
+const EFF=['Effective','Partially Effective','Ineffective','Not Evaluated'],OPE=['Effective','Partially Effective','Ineffective','Not Tested'];
+/* ---- Data model: f = [key,type(t text,a area,d date,n number,s select,r ref,m multi-ref),options] ---- */
+const X={
+ risks:{p:'RSK',f:[['title','t'],['category','s',CAT],['dept','s',DEP],['owner','t'],['il','n',1,5],['ii','n',1,5],['rl','n',1,5],['ri','n',1,5],['status','s',['Open','Mitigating','Closed']],['review','d'],['controls','m','controls']],cols:['title','category','dept','owner','inh','res','status']},
+ controls:{p:'CTL',f:[['name','t'],['type','s',['Preventive','Detective','Corrective']],['dept','s',DEP],['owner','t'],['design','s',EFF],['operating','s',OPE]],cols:['name','type','dept','owner','design','operating']},
+ audits:{p:'AUD',f:[['title','t'],['lead','t'],['start','d'],['end','d'],['status','s',['Planned','In Progress','Under Review','Completed']],['progress','n',0,100],['controls','m','controls']],cols:['title','lead','start','end','status','progress']},
+ findings:{p:'FND',f:[['title','t'],['audit','r','audits'],['risk','r','risks'],['control','r','controls'],['severity','s',['Critical','High','Medium','Low']],['criteria','a'],['condition','a'],['cause','a'],['consequence','a'],['recommendation','a'],['owner','t'],['due','d'],['status','s',['Open','In Progress','Under Review','Closed','Reopened']]],cols:['title','audit','severity','owner','due','status']},
+ actions:{p:'ACT',f:[['finding','r','findings'],['desc','t'],['owner','t'],['due','d'],['progress','n',0,100],['status','s',['Not Started','In Progress','Under Review','Completed','Rejected']],['validated','s',['Pending','Validated','Rejected']]],cols:['desc','finding','owner','due','progress','status','validated']}};
+const F={il:'Inherent Likelihood',ii:'Inherent Impact',rl:'Residual Likelihood',ri:'Residual Impact',dept:'Department',review:'Review Date',design:'Design Effectiveness',operating:'Operating Effectiveness',lead:'Lead Auditor',start:'Start Date',end:'End Date',due:'Due Date',desc:'Action Description',validated:'Validation',inh:'Inherent Risk',res:'Residual Risk',controls:'Internal Controls',id:'ID',risk:'Risk',control:'Control',audit:'Audit',finding:'Finding'};
+const L=k=>t(F[k]||k[0].toUpperCase()+k.slice(1)), nm=r=>r.title||r.name||r.desc;
+const NAV=[['dashboard','Executive Dashboard','▦'],['risks','Risk Management','⚠'],['controls','Internal Controls','⛨'],['audits','Audit Management','◎'],['findings','Audit Findings','⚑'],['actions','Corrective Actions','✔'],['reports','Reports & Analytics','▤'],['settings','Settings','⚙']];
+/* ---- Translations: English text is the key; [French, Arabic] ---- */
+const D={};`Executive Dashboard|Tableau de bord exécutif|لوحة القيادة التنفيذية
+Risk Management|Gestion des risques|إدارة المخاطر
+Internal Controls|Contrôles internes|الضوابط الداخلية
+Audit Management|Gestion des audits|إدارة التدقيق
+Audit Findings|Constats d'audit|ملاحظات التدقيق
+Corrective Actions|Actions correctives|الإجراءات التصحيحية
+Reports & Analytics|Rapports et analyses|التقارير والتحليلات
+Settings|Paramètres|الإعدادات
+Enterprise Risk · Internal Audit · Internal Control|Risques · Audit interne · Contrôle interne|المخاطر · التدقيق الداخلي · الرقابة الداخلية
+Risk → Control → Audit Test → Finding → Corrective Action → Validation → Reassessment|Risque → Contrôle → Test d'audit → Constat → Action corrective → Validation → Réévaluation|الخطر ← الضابط ← اختبار التدقيق ← الملاحظة ← الإجراء التصحيحي ← التحقق ← إعادة التقييم
+Add|Ajouter|إضافة
+Edit|Modifier|تعديل
+Delete|Supprimer|حذف
+View|Voir|عرض
+Save|Enregistrer|حفظ
+Cancel|Annuler|إلغاء
+Close|Fermer|إغلاق
+Search|Rechercher|بحث
+Export CSV|Exporter CSV|تصدير CSV
+Print|Imprimer|طباعة
+Generated on|Généré le|تاريخ الإنشاء
+Saved|Enregistré|تم الحفظ
+Deleted|Supprimé|تم الحذف
+Delete this record?|Supprimer cet enregistrement ?|هل تريد حذف هذا السجل؟
+linked records will be affected|enregistrements liés seront affectés|سجلات مرتبطة ستتأثر
+Sample data|Données de démonstration|بيانات تجريبية
+No data|Aucune donnée|لا توجد بيانات
+Related Risks|Risques liés|المخاطر المرتبطة
+Related Controls|Contrôles liés|الضوابط المرتبطة
+Related Findings|Constats liés|الملاحظات المرتبطة
+Related Actions|Actions liées|الإجراءات المرتبطة
+Audit Tests|Tests d'audit|اختبارات التدقيق
+Test Result|Résultat du test|نتيجة الاختبار
+Exceptions|Exceptions|الاستثناءات
+Create Finding|Créer un constat|إنشاء ملاحظة
+Add Action|Ajouter une action|إضافة إجراء
+Close Finding|Clôturer le constat|إغلاق الملاحظة
+Reopen Finding|Rouvrir le constat|إعادة فتح الملاحظة
+Validate|Valider|تحقق
+Reject|Rejeter|رفض
+Cannot close: every action must be validated by the auditor|Clôture impossible : chaque action doit être validée par l'auditeur|لا يمكن الإغلاق: يجب أن يتحقق المدقق من كل إجراء
+Progress must be 100% before validation|La progression doit être de 100 % avant validation|يجب أن يكون التقدم 100% قبل التحقق
+Reassess residual risk now?|Réévaluer le risque résiduel maintenant ?|هل تريد إعادة تقييم الخطر المتبقي الآن؟
+Reset Demo Data|Réinitialiser les données de démo|إعادة تعيين البيانات التجريبية
+Clear Data|Effacer les données|مسح البيانات
+Export JSON|Exporter JSON|تصدير JSON
+Import JSON|Importer JSON|استيراد JSON
+Are you sure?|Êtes-vous sûr ?|هل أنت متأكد؟
+Appearance|Apparence|المظهر
+Language|Langue|اللغة
+Data|Données|البيانات
+Imported|Importé|تم الاستيراد
+Invalid file|Fichier invalide|ملف غير صالح
+Report|Rapport|تقرير
+Records|Enregistrements|السجلات
+Likelihood|Probabilité|الاحتمال
+Impact|Impact|الأثر
+Inherent Heatmap|Carte thermique inhérente|الخريطة الحرارية الكامنة
+Residual Heatmap|Carte thermique résiduelle|الخريطة الحرارية المتبقية
+Total Risks|Total des risques|إجمالي المخاطر
+Critical Risks|Risques critiques|المخاطر الحرجة
+High Risks|Risques élevés|المخاطر العالية
+Ineffective Controls|Contrôles inefficaces|ضوابط غير فعالة
+Active Audits|Audits actifs|مهام تدقيق نشطة
+Open Findings|Constats ouverts|ملاحظات مفتوحة
+Overdue Actions|Actions en retard|إجراءات متأخرة
+Avg Remediation|Remédiation moyenne|متوسط المعالجة
+Inherent Risk by Severity|Risque inhérent par gravité|الخطر الكامن حسب الخطورة
+Residual Risk by Severity|Risque résiduel par gravité|الخطر المتبقي حسب الخطورة
+Risks by Department|Risques par département|المخاطر حسب القسم
+Findings by Status|Constats par statut|الملاحظات حسب الحالة
+Control Effectiveness|Efficacité des contrôles|فعالية الضوابط
+Actions by Status|Actions par statut|الإجراءات حسب الحالة
+Top 5 Critical Risks|Top 5 des risques critiques|أهم 5 مخاطر حرجة
+Title|Titre|العنوان
+Category|Catégorie|الفئة
+Department|Département|القسم
+Owner|Responsable|المسؤول
+Inherent Likelihood|Probabilité inhérente|الاحتمال الكامن
+Inherent Impact|Impact inhérent|الأثر الكامن
+Residual Likelihood|Probabilité résiduelle|الاحتمال المتبقي
+Residual Impact|Impact résiduel|الأثر المتبقي
+Status|Statut|الحالة
+Review Date|Date de revue|تاريخ المراجعة
+Name|Nom|الاسم
+Type|Type|النوع
+Design Effectiveness|Efficacité de conception|فعالية التصميم
+Operating Effectiveness|Efficacité opérationnelle|الفعالية التشغيلية
+Lead Auditor|Auditeur principal|المدقق الرئيسي
+Start Date|Date de début|تاريخ البدء
+End Date|Date de fin|تاريخ الانتهاء
+Progress|Progression|التقدم
+Audit|Audit|التدقيق
+Risk|Risque|الخطر
+Control|Contrôle|الضابط
+Severity|Gravité|الخطورة
+Criteria|Critère|المعيار
+Condition|Condition|الوضع الحالي
+Cause|Cause|السبب
+Consequence|Conséquence|النتيجة
+Recommendation|Recommandation|التوصية
+Due Date|Échéance|تاريخ الاستحقاق
+Finding|Constat|الملاحظة
+Action Description|Description de l'action|وصف الإجراء
+Validation|Validation|التحقق
+Inherent Risk|Risque inhérent|الخطر الكامن
+Residual Risk|Risque résiduel|الخطر المتبقي
+Financial|Financier|مالي
+Operational|Opérationnel|تشغيلي
+Compliance|Conformité|امتثال
+IT|Informatique|تقنية المعلومات
+Cybersecurity|Cybersécurité|الأمن السيبراني
+Fraud|Fraude|احتيال
+Finance|Finance|المالية
+Accounting|Comptabilité|المحاسبة
+HR|RH|الموارد البشرية
+Procurement|Achats|المشتريات
+Operations|Opérations|العمليات
+Open|Ouvert|مفتوح
+Mitigating|En atténuation|قيد التخفيف
+Closed|Clôturé|مغلق
+Preventive|Préventif|وقائي
+Detective|Détectif|كشفي
+Corrective|Correctif|تصحيحي
+Effective|Efficace|فعال
+Partially Effective|Partiellement efficace|فعال جزئياً
+Ineffective|Inefficace|غير فعال
+Not Evaluated|Non évalué|غير مقيّم
+Not Tested|Non testé|غير مختبر
+Planned|Planifié|مخطط
+In Progress|En cours|قيد التنفيذ
+Under Review|En revue|قيد المراجعة
+Completed|Terminé|مكتمل
+Critical|Critique|حرج
+High|Élevé|عالٍ
+Medium|Moyen|متوسط
+Low|Faible|منخفض
+Moderate|Modéré|معتدل
+Not Started|Non démarré|لم يبدأ
+Overdue|En retard|متأخر
+Rejected|Rejeté|مرفوض
+Reopened|Rouvert|أُعيد فتحه
+Pending|En attente|قيد الانتظار
+Validated|Validé|تم التحقق`.split('\n').forEach(l=>{const a=l.split('|');D[a[0]]=[a[1],a[2]]});
+let S=JSON.parse(localStorage.iarms||'null'),lang=localStorage.lang||'en',theme=localStorage.theme||'light',page='dashboard',Q={};
+const t=k=>lang=='en'?k:(D[k]&&D[k][lang=='fr'?0:1])||k, save=()=>localStorage.iarms=JSON.stringify(S);
+/* ---- Demo data ---- */
+function seed(){const mk=(e,rows)=>rows.map((v,i)=>{const o={id:X[e].p+'-'+String(i+1).padStart(3,'0'),demo:true};X[e].f.forEach((f,j)=>o[f[0]]=v[j]);return o});
+ const d={risks:mk('risks',[
+ ['Unauthorized access to financial systems','Cybersecurity','IT','CIO',4,5,3,3,'Mitigating',dd(20),['CTL-001','CTL-002']],
+ ['Weak segregation of duties in payments','Fraud','Finance','CFO',4,4,3,3,'Open',dd(-5),['CTL-003']],
+ ['Delayed bank reconciliation','Financial','Accounting','Chief Accountant',3,4,2,3,'Mitigating',dd(45),['CTL-004']],
+ ['Missing supplier approval documentation','Compliance','Procurement','Procurement Manager',3,3,3,3,'Open',dd(60),['CTL-005']],
+ ['Incomplete payroll validation','Operational','HR','HR Director',3,4,3,3,'Open',dd(10),['CTL-006']],
+ ['Inadequate data backup procedures','IT','IT','IT Manager',3,5,2,4,'Mitigating',dd(90),['CTL-002']]]),
+ controls:mk('controls',[
+ ['Periodic user access review','Detective','IT','IT Security Lead','Effective','Ineffective'],
+ ['Daily backup and restore test','Preventive','IT','IT Manager','Partially Effective','Not Tested'],
+ ['Dual approval of payments','Preventive','Finance','CFO','Ineffective','Ineffective'],
+ ['Monthly bank reconciliation','Detective','Accounting','Chief Accountant','Effective','Partially Effective'],
+ ['Supplier onboarding checklist','Preventive','Procurement','Procurement Manager','Effective','Not Tested'],
+ ['Payroll validation review','Detective','HR','HR Director','Not Evaluated','Not Tested']]),
+ audits:mk('audits',[
+ ['Financial systems access audit','A. Ben Salah',dd(-40),dd(10),'In Progress',67,['CTL-001','CTL-003','CTL-004']],
+ ['Procurement and payroll audit','S. Trabelsi',dd(15),dd(60),'Planned',0,['CTL-005','CTL-006']]]),
+ findings:mk('findings',[
+ ['No periodic access reviews','AUD-001','RSK-001','CTL-001','High','Access rights reviewed quarterly','No review performed in 12 months','No owner assigned','Leavers keep access','Perform quarterly reviews','IT Manager',dd(30),'In Progress'],
+ ['Payments released by a single approver','AUD-001','RSK-002','CTL-003','Critical','Two approvers above threshold','Single approver on 14 payments','ERP workflow not enforced','Fraud exposure','Enforce dual approval in ERP','CFO',dd(-3),'Open'],
+ ['Late bank reconciliations','AUD-001','RSK-003','CTL-004','Medium','Reconciliation within 10 days','Average delay of 25 days','Staff shortage','Undetected errors','Automate schedule','Chief Accountant',dd(40),'Under Review']]),
+ actions:mk('actions',[
+ ['FND-001','Implement quarterly access review','IT Security Lead',dd(25),40,'In Progress','Pending'],
+ ['FND-002','Enforce dual approval in ERP','CFO',dd(-10),30,'In Progress','Pending'],
+ ['FND-003','Automate reconciliation schedule','Chief Accountant',dd(20),100,'Completed','Validated'],
+ ['FND-003','Review unreconciled items weekly','Chief Accountant',dd(20),100,'Completed','Pending']])};
+ d.audits[0].tests={'CTL-001':{res:'Ineffective',exc:'No evidence of review'},'CTL-003':{res:'Ineffective',exc:'14 single-approver payments'}};d.audits[1].tests={};return d}
+if(!S){S=seed();save()}
+/* ---- Helpers ---- */
+const sev=s=>s>=17?'Critical':s>=10?'High':s>=5?'Moderate':'Low';
+const C={Critical:'x',High:'r',Ineffective:'r',Overdue:'r',Rejected:'r',Reopened:'r',Medium:'a',Moderate:'a','Partially Effective':'a',Pending:'a','In Progress':'a','Under Review':'a',Mitigating:'a',Effective:'g',Low:'g',Completed:'g',Validated:'g',Closed:'g'},cls=v=>C[v]||'n';
+const bg=(x,v)=>`<span class="bg ${cls(v)}">${x}</span>`, st=a=>a.status!='Completed'&&a.status!='Rejected'&&a.due<TODAY?'Overdue':a.status;
+const find=(e,id)=>S[e].find(x=>x.id==id), chip=(e,r)=>r?`<a class=chip onclick="view('${e}','${r.id}')">${r.id}</a>`:'';
+const nid=e=>X[e].p+'-'+String(Math.max(0,...S[e].map(r=>+r.id.split('-')[1]))+1).padStart(3,'0');
+function toast(m,er){const d=document.createElement('div');d.textContent=m;if(er)d.className='er';$('#toast').append(d);setTimeout(()=>d.remove(),3200)}
+function modal(h){$('#mbody').innerHTML=h;$('#modal').classList.add('on')}function closeM(){$('#modal').classList.remove('on')}
+function cell(e,k,r){const v=r[k],f=X[e].f.find(x=>x[0]==k);
+ if(k=='id')return r.id+(r.demo?`<span class=demo>${t('Sample data')}</span>`:'');
+ if(k=='inh'||k=='res'){const s=k=='inh'?r.il*r.ii:r.rl*r.ri;return bg(s+' · '+t(sev(s)),sev(s))}
+ if(k=='progress')return `<div class=pb><i style="width:${v||0}%"></i><b>${v||0}%</b></div>`;
+ if(e=='actions'&&k=='status')return bg(t(st(r)),st(r));
+ if(!f)return v||'';
+ if(f[1]=='r')return v?chip(f[2],find(f[2],v)):'—';
+ if(f[1]=='m')return (v||[]).map(i=>chip(f[2],find(f[2],i))).join('')||'—';
+ if(f[1]=='s')return bg(t(v),v);
+ return v||'—'}
+function tbl(e,rows,cols){cols=cols||['id',...X[e].cols];
+ if(!rows.length)return `<p>${t('No data')}</p>`;
+ return `<div class=tw><table><tr>${cols.map(c=>`<th>${L(c)}</th>`).join('')}<th class=noprint></th></tr>`+rows.map(r=>`<tr>${cols.map(c=>`<td>${cell(e,c,r)}</td>`).join('')}<td class=noprint style="white-space:nowrap"><button class=b onclick="view('${e}','${r.id}')">${t('View')}</button> <button class=b onclick="openForm('${e}','${r.id}')">${t('Edit')}</button> <button class="b d" onclick="del('${e}','${r.id}')">✕</button></td></tr>`).join('')+'</table></div>'}
+const flt=(e,q)=>S[e].filter(r=>JSON.stringify(r).toLowerCase().includes((q||'').toLowerCase()));
+function srch(e,v){Q[e]=v;$('#tb').innerHTML=tbl(e,flt(e,v))}
+function list(e){return `<div class=card><div class=bar><input placeholder="${t('Search')}" value="${Q[e]||''}" oninput="srch('${e}',this.value)"><button class="b p" onclick="openForm('${e}')">+ ${t('Add')}</button></div><div id=tb>${tbl(e,flt(e,Q[e]))}</div></div>`}
+/* ---- Forms / CRUD ---- */
+function inp(f,v,e){const k=f[0],rq=['title','name','desc','finding','audit'].includes(k)?'required':'';
+ if(f[1]=='a')return `<label class=w>${L(k)}<textarea name=${k} rows=2>${v||''}</textarea></label>`;
+ let c;if(f[1]=='s')c=`<select name=${k}>${f[2].map(o=>`<option value="${o}" ${o==v?'selected':''}>${t(o)}</option>`).join('')}</select>`;
+ else if(f[1]=='r')c=`<select name=${k} ${rq}><option value="">—</option>${S[f[2]].map(o=>`<option value="${o.id}" ${o.id==v?'selected':''}>${o.id} ${nm(o)}</option>`).join('')}</select>`;
+ else if(f[1]=='m')c=`<select name=${k} multiple size=4>${S[f[2]].map(o=>`<option value="${o.id}" ${(v||[]).includes(o.id)?'selected':''}>${o.id} ${nm(o)}</option>`).join('')}</select>`;
+ else c=`<input name=${k} type="${f[1]=='n'?'number':f[1]=='d'?'date':'text'}" ${f[1]=='n'?`min=${f[2]} max=${f[3]}`:''} value="${v??''}" ${rq}>`;
+ return `<label ${f[1]=='m'?'class=w':''}>${L(k)}${c}</label>`}
+function openForm(e,id,pre){const r=id?find(e,id):Object.assign({},pre);
+ modal(`<h3>${id||t('Add')}</h3><form onsubmit="return sv(event,'${e}','${id||''}')">${X[e].f.map(f=>inp(f,r[f[0]]??(f[1]=='n'?f[2]:undefined),e)).join('')}<div class=acts><button type=button class=b onclick="closeM()">${t('Cancel')}</button><button class="b p">${t('Save')}</button></div></form>`)}
+function sv(ev,e,id){ev.preventDefault();const fd=new FormData(ev.target),r=id?find(e,id):{id:nid(e)};
+ X[e].f.forEach(f=>{const k=f[0];r[k]=f[1]=='m'?fd.getAll(k):f[1]=='n'?Math.min(f[3],Math.max(f[2],+fd.get(k)||0)):fd.get(k)});
+ if(!id)S[e].push(r);
+ if(e=='actions'){if(r.progress>=100&&r.status!='Rejected')r.status='Completed';const f=find('findings',r.finding);if(f&&['Open','Reopened'].includes(f.status))f.status='In Progress'}
+ if(e=='findings'&&r.status=='Closed'&&!canClose(r)){r.status='Under Review';toast(t('Cannot close: every action must be validated by the auditor'),1)}
+ save();closeM();toast(t('Saved'));render();return false}
+function deps(e,id){const out=[];Object.keys(X).forEach(o=>X[o].f.forEach(f=>{if(f[2]==e&&(f[1]=='r'||f[1]=='m'))S[o].forEach(r=>{if(f[1]=='r'?r[f[0]]==id:(r[f[0]]||[]).includes(id))out.push([o,r,f])})}));return out}
+function del(e,id){const d=deps(e,id);if(!confirm(t('Delete this record?')+(d.length?`\n${d.length} ${t('linked records will be affected')}`:'')))return;
+ d.forEach(([o,r,f])=>{if(f[1]=='m')r[f[0]]=r[f[0]].filter(x=>x!=id);else if(o=='actions')S.actions=S.actions.filter(a=>a!==r);else r[f[0]]=''});
+ if(e=='controls')S.audits.forEach(a=>{if(a.tests)delete a.tests[id]});
+ S[e]=S[e].filter(r=>r.id!=id);save();closeM();toast(t('Deleted'));render()}
+/* ---- Integrated workflow ---- */
+const acts=fid=>S.actions.filter(a=>a.finding==fid), canClose=f=>{const A=acts(f.id);return A.length>0&&A.every(a=>a.validated=='Validated')};
+function setTest(aid,cid){const a=find('audits',aid),res=$('#t'+cid).value,exc=$('#x'+cid).value;a.tests=a.tests||{};
+ if(res)a.tests[cid]={res,exc};else delete a.tests[cid];const c=find('controls',cid);c.operating=res||'Not Tested';
+ a.progress=Math.round(Object.keys(a.tests).filter(k=>a.controls.includes(k)).length/(a.controls.length||1)*100);save();view('audits',aid);toast(t('Saved'))}
+function mkFinding(aid,cid){const c=find('controls',cid),T=find('audits',aid).tests[cid];closeM();
+ openForm('findings',null,{audit:aid,control:cid,risk:(S.risks.find(r=>r.controls.includes(cid))||{}).id||'',title:'Deficiency: '+c.name,severity:T.res=='Ineffective'?'High':'Medium',status:'Open',condition:T.exc})}
+function closeF(id,reopen){const f=find('findings',id);if(reopen)f.status='Reopened';else if(canClose(f))f.status='Closed';else return toast(t('Cannot close: every action must be validated by the auditor'),1);save();view('findings',id);render()}
+function valid(id,v){const a=find('actions',id),f=find('findings',a.finding);
+ if(v=='Validated'&&a.progress<100)return toast(t('Progress must be 100% before validation'),1);
+ a.validated=v;if(v=='Rejected'){a.status='In Progress';if(f)f.status='Reopened'}
+ else if(f&&canClose(f)&&f.status!='Closed')f.status='Under Review';
+ save();render();closeM();
+ if(v=='Validated'&&f&&f.risk&&confirm(t('Reassess residual risk now?')))openForm('risks',f.risk);else view('actions',id)}
+/* ---- Detail views with relations ---- */
+const sec=(k,h)=>`<h5>${t(k)}</h5>${h||'—'}`, chips=(e,a)=>a.map(r=>chip(e,r)+' '+nm(r)).join('<br>');
+function view(e,id){const r=find(e,id);let h=`<h3>${r.id} — ${nm(r)}</h3><table class=kv>${X[e].f.map(f=>`<tr><th>${L(f[0])}</th><td>${cell(e,f[0],r)}</td></tr>`).join('')}</table>`;
+ if(e=='risks'){const F2=S.findings.filter(f=>f.risk==id);h+=sec('Related Controls',chips('controls',(r.controls||[]).map(i=>find('controls',i)).filter(Boolean)))+sec('Related Findings',chips('findings',F2))+sec('Related Actions',chips('actions',S.actions.filter(a=>F2.some(f=>f.id==a.finding))))}
+ if(e=='controls'){const A=S.audits.filter(a=>a.controls.includes(id));h+=sec('Related Risks',chips('risks',S.risks.filter(x=>x.controls.includes(id))))+sec('Audit Tests',A.map(a=>`${chip('audits',a)} ${nm(a)}: ${(a.tests||{})[id]?bg(t(a.tests[id].res),a.tests[id].res)+' '+(a.tests[id].exc||''):'—'}`).join('<br>'))+sec('Related Findings',chips('findings',S.findings.filter(f=>f.control==id)))}
+ if(e=='audits'){h+=sec('Audit Tests',`<table><tr><th>${L('control')}</th><th>${t('Test Result')}</th><th>${t('Exceptions')}</th><th></th></tr>`+r.controls.map(cid=>{const c=find('controls',cid),T=(r.tests||{})[cid]||{};return c?`<tr><td>${chip('controls',c)} ${c.name}</td><td><select id="t${cid}" onchange="setTest('${id}','${cid}')">${['','Effective','Partially Effective','Ineffective'].map(o=>`<option value="${o}" ${o==T.res||(!o&&!T.res)?'selected':''}>${o?t(o):'—'}</option>`).join('')}</select></td><td><input id="x${cid}" value="${T.exc||''}" onchange="setTest('${id}','${cid}')"></td><td>${T.res&&T.res!='Effective'?`<button class=b onclick="mkFinding('${id}','${cid}')">${t('Create Finding')}</button>`:''}</td></tr>`:''}).join('')+'</table>')+sec('Related Findings',chips('findings',S.findings.filter(f=>f.audit==id)))}
+ if(e=='findings'){const A=acts(id);h+=sec('Related Actions',A.map(a=>`${chip('actions',a)} ${a.desc} ${cell('actions','progress',a)} ${cell('actions','validated',a)}`).join('<br>'))+`<p class=acts><button class=b onclick="closeM();openForm('actions',null,{finding:'${id}',status:'Not Started',validated:'Pending'})">+ ${t('Add Action')}</button>${r.status=='Closed'?`<button class=b onclick="closeF('${id}',1)">${t('Reopen Finding')}</button>`:`<button class="b p" onclick="closeF('${id}')">${t('Close Finding')}</button>`}</p>`}
+ if(e=='actions'){const f=find('findings',r.finding);h+=sec('Related Risks',f&&f.risk?chip('risks',find('risks',f.risk)):'')+sec('Related Controls',f&&f.control?chip('controls',find('controls',f.control)):'')+`<p class=acts><button class=b onclick="valid('${id}','Rejected')">${t('Reject')}</button><button class="b p" onclick="valid('${id}','Validated')">${t('Validate')}</button></p>`}
+ modal(h+`<p class=acts><button class=b onclick="closeM()">${t('Close')}</button></p>`)}
+/* ---- Dashboard ---- */
+const cnt=(a,fn)=>a.filter(fn).length;
+function bars(k,d){const mx=Math.max(1,...d.map(x=>x[1]));return `<div class=card><h4>${t(k)}</h4>${d.map(x=>`<div class=row><span>${t(x[0])}</span><div><i class="${cls(x[0])}" style="width:${x[1]/mx*100}%"></i></div><b>${x[1]}</b></div>`).join('')}</div>`}
+function dash(){const R=S.risks,is=r=>r.il*r.ii,rs=r=>r.rl*r.ri,A=S.actions,ov=A.filter(a=>st(a)=='Overdue'),avg=A.length?Math.round(A.reduce((s,a)=>s+a.progress,0)/A.length):0,
+ K=[['Total Risks',R.length],['Critical Risks',cnt(R,r=>rs(r)>=17)],['High Risks',cnt(R,r=>rs(r)>=10&&rs(r)<17)],['Internal Controls',S.controls.length],['Ineffective Controls',cnt(S.controls,c=>c.design=='Ineffective'||c.operating=='Ineffective')],['Active Audits',cnt(S.audits,a=>a.status=='In Progress')],['Open Findings',cnt(S.findings,f=>f.status!='Closed')],['Overdue Actions',ov.length],['Avg Remediation',avg+'%']],
+ sv=(fn)=>['Low','Moderate','High','Critical'].map(s=>[s,cnt(R,r=>sev(fn(r))==s)]),by=(arr,k,vals)=>vals.map(v=>[v,cnt(arr,x=>x[k]==v)]);
+ return `<div class=flow>${t('Risk → Control → Audit Test → Finding → Corrective Action → Validation → Reassessment')}</div><div class=kpis>${K.map(k=>`<div class=kpi><b>${k[1]}</b><span>${t(k[0])}</span></div>`).join('')}</div><div class=grid>${bars('Inherent Risk by Severity',sv(is))}${bars('Residual Risk by Severity',sv(rs))}${bars('Risks by Department',DEP.map(d=>[d,cnt(R,r=>r.dept==d)]))}${bars('Findings by Status',by(S.findings,'status',X.findings.f[12][2]))}${bars('Control Effectiveness',by(S.controls,'operating',OPE))}${bars('Actions by Status',['Not Started','In Progress','Under Review','Completed','Rejected'].map(s=>[s,cnt(A,a=>a.status==s)]).concat([['Overdue',ov.length]]))}</div><div class=grid><div class=card><h4>${t('Top 5 Critical Risks')}</h4>${tbl('risks',[...R].sort((a,b)=>rs(b)-rs(a)).slice(0,5),['id','title','res'])}</div><div class=card><h4>${t('Overdue Actions')}</h4>${tbl('actions',ov,['id','desc','owner','due'])}</div></div>`}
+/* ---- Heatmap ---- */
+function heat(k){let h='<table class=hm>';for(let l=5;l>=1;l--){h+='<tr>';for(let i=1;i<=5;i++){const n=cnt(S.risks,r=>k=='inh'?r.il==l&&r.ii==i:r.rl==l&&r.ri==i);h+=`<td class="${cls(sev(l*i))}" onclick="hmc('${k}',${l},${i})">${n||''}</td>`}h+='</tr>'}return h+`</table><p style="text-align:center;color:var(--mut)">${t('Impact')} → / ${t('Likelihood')} ↑</p>`}
+function hmc(k,l,i){const R=S.risks.filter(r=>k=='inh'?r.il==l&&r.ii==i:r.rl==l&&r.ri==i);modal(`<h3>${t('Likelihood')} ${l} × ${t('Impact')} ${i} = ${l*i}</h3>${tbl('risks',R)}<p class=acts><button class=b onclick="closeM()">${t('Close')}</button></p>`)}
+/* ---- Reports ---- */
+let RP='risks';
+function csv(e){const c=X[e],rows=[['id',...c.f.map(f=>f[0])],...S[e].map(r=>[r.id,...c.f.map(f=>Array.isArray(r[f[0]])?r[f[0]].join(';'):r[f[0]]??'')])];dl('\ufeff'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),e+'.csv','text/csv')}
+function dl(x,n,ty){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([x],{type:ty}));a.download=n;a.click()}
+function reports(){const e=RP,N=NAV.find(n=>n[0]==e)[1];return `<div class="bar noprint">${NAV.slice(1,6).map(n=>`<button class="ib ${n[0]==e?'on':''}" onclick="RP='${n[0]}';render()">${t(n[1])}</button>`).join('')}<button class="b p" onclick="csv('${e}')">${t('Export CSV')}</button><button class=b onclick="window.print()">${t('Print')}</button></div><div class=card><h3>IARMS — ${t('Report')}: ${t(N)}</h3><p>${t('Generated on')}: ${TODAY} · ${t('Records')}: ${S[e].length}</p>${tbl(e,S[e])}</div>`}
+/* ---- Settings ---- */
+function settings(){return `<div class=card><h4>${t('Appearance')}</h4><button class=b onclick="toggleTheme()">☀ / ☾</button></div><div class=card><h4>${t('Language')}</h4><button class=b onclick="setLang('en')">English</button> <button class=b onclick="setLang('fr')">Français</button> <button class=b onclick="setLang('ar')">العربية</button></div><div class=card><h4>${t('Data')}</h4><div class=bar><button class=b onclick="dl(JSON.stringify(S,null,1),'iarms-backup.json','application/json')">${t('Export JSON')}</button><button class=b onclick="$('#imp').click()">${t('Import JSON')}</button><button class=b onclick="if(confirm(t('Are you sure?'))){S=seed();save();render()}">${t('Reset Demo Data')}</button><button class="b d" onclick="if(confirm(t('Are you sure?'))){S={risks:[],controls:[],audits:[],findings:[],actions:[]};save();render()}">${t('Clear Data')}</button></div></div>`}
+$('#imp').onchange=ev=>{const fr=new FileReader();fr.onload=()=>{try{const o=JSON.parse(fr.result);if(!Object.keys(X).every(k=>Array.isArray(o[k])))throw 0;S=o;save();render();toast(t('Imported'))}catch(x){toast(t('Invalid file'),1)}};fr.readAsText(ev.target.files[0])};
+/* ---- Shell: navigation, theme, language ---- */
+const P={dashboard:dash,risks:()=>`<div class=grid><div class=card><h4>${t('Inherent Heatmap')}</h4>${heat('inh')}</div><div class=card><h4>${t('Residual Heatmap')}</h4>${heat('res')}</div></div>`+list('risks'),controls:()=>list('controls'),audits:()=>list('audits'),findings:()=>list('findings'),actions:()=>list('actions'),reports,settings};
+function go(p){page=p;$('#side').classList.remove('open');render()}
+function render(){const h=document.documentElement;h.lang=lang;h.dir=lang=='ar'?'rtl':'ltr';h.dataset.theme=theme;
+ $('#sub').textContent=t('Enterprise Risk · Internal Audit · Internal Control');
+ $('#nav').innerHTML=NAV.map(n=>`<a class="${n[0]==page?'on':''}" onclick="go('${n[0]}')"><span>${n[2]}</span>${t(n[1])}</a>`).join('');
+ $('#title').textContent=t(NAV.find(n=>n[0]==page)[1]);$('#themeBtn').textContent=theme=='dark'?'☀':'☾';
+ ['en','fr','ar'].forEach(l=>$('#l-'+l).classList.toggle('on',l==lang));$('#main').innerHTML=P[page]()}
+function setLang(l){lang=l;localStorage.lang=l;const m=$('#main');m.classList.add('fade');setTimeout(()=>{render();m.classList.remove('fade')},220)}
+function toggleTheme(){theme=theme=='dark'?'light':'dark';localStorage.theme=theme;render()}
+render();
+</script>
+</body>
+</html>
