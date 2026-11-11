@@ -51,6 +51,23 @@ jobs:
       - name: Preserve custom domain
         run: cp CNAME dist/mohamedmnejja-portfolio/CNAME
 
+       - name: Verify deployment files
+         run: |
+            echo "Checking deployment directory..."
+            ls -la dist/mohamedmnejja-portfolio/
+        
+            echo "Checking generated files..."
+            test -s dist/mohamedmnejja-portfolio/index.html
+            test -s dist/mohamedmnejja-portfolio/404.html
+            test -s dist/mohamedmnejja-portfolio/CNAME
+        
+            echo "Checking project routes..."
+            test -s dist/mohamedmnejja-portfolio/linkedin-profile-analytics/index.html
+            test -s dist/mohamedmnejja-portfolio/chart-of-accounts-ai/index.html
+             -s dist/mohamedmnejja-portfolio/business-plan-profitability/index.html
+        
+            echo "SUCCESS: All deployment files exist."
+
       - name: Publish to Pages repository
         uses: peaceiris/actions-gh-pages@v4
         with:
