@@ -32,9 +32,11 @@ jobs:
       - name: Build Angular application
         run: npx ng build --configuration production --base-href /
 
-      - name: Add SPA fallback
+      
+      - name: Add SPA Fallback
         run: |
           cp dist/mohamedmnejja-portfolio/index.html dist/mohamedmnejja-portfolio/404.html
+
           test -s dist/mohamedmnejja-portfolio/404.html
           grep -q '<base href="/">' dist/mohamedmnejja-portfolio/404.html
 
